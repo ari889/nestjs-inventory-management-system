@@ -1,0 +1,629 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider      = "prisma-client"
+  output        = "../src/generated/prisma"
+  moduleFormat  = "cjs"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+
+// roles table
+model Role {
+  id Int @default(autoincrement()) @id
+  role_name String
+  deletable Boolean @default(true) // true = Yes, False = No
+  users User[]
+  moduleRole ModuleRole[]
+  permissionRole PermissionRole[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// users table
+model User{
+  id Int @default(autoincrement()) @id
+  name String
+  email String @unique
+  phone_no String?
+  email_veriafied_at  DateTime?   @default(now())
+  password String
+  roleId Int
+  role Role @relation(fields: [roleId], references: [id])
+  avatar String?
+  gender Boolean @default(true) // true = Male, False = Female
+  status Boolean @default(true) // true = Active, False = Inactive
+
+  createdBy Int
+  creator   User @relation("UserCreatedBy", fields: [createdBy], references: [id])
+  createdUsers User[] @relation("UserCreatedBy")
+
+  updatedBy Int?
+  updater   User? @relation("UserUpdatedBy", fields: [updatedBy], references: [id])
+  updatedUsers User[] @relation("UserUpdatedBy")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  departmentCreator Department[] @relation("DepartmentCreatedBy")
+  departmentUpdater Department[] @relation("DepartmentUpdatedBy")
+
+  hrmSettingCreator HrmSetting[] @relation("HrmSettingCreatedBy")
+  hrmSettingUpdater HrmSetting[] @relation("HrmSettingUpdatedBy")
+
+  employeeCreator Employee[] @relation("EmployeeCreatedBy")
+  employeeUpdater Employee[] @relation("EmployeeUpdatedBy")
+
+  attendanceCreator Attendance[] @relation("AttendanceCreatedBy")
+  attendanceUpdater Attendance[] @relation("AttendanceUpdatedBy")
+
+  accountCreator Account[] @relation("AccountCreatedBy")
+  accountUpdater Account[] @relation("AccountUpdatedBy")
+
+  payrollCreator Payroll[] @relation("PayrollCreatedBy")
+  payrollUpdater Payroll[] @relation("PayrollUpdatedBy")
+
+  expenseCategoryCreator ExpenseCategory[] @relation("ExpenseCategoryCreatedBy")
+  expenseCategoryUpdater ExpenseCategory[] @relation("ExpenseCategoryUpdatedBy")
+
+  warehouseCreator Warehouse[] @relation("WarehouseCreatedBy")
+  warehouseUpdater Warehouse[] @relation("WarehouseUpdatedBy")
+
+  expenseCreator Expense[] @relation("ExpenseCreatedBy")
+  expenseUpdater Expense[] @relation("ExpenseUpdatedBy")
+
+  customerGroupCreator CustomerGroup[] @relation("CustomerGroupCreatedBy")
+  customerGroupUpdater CustomerGroup[] @relation("CustomerGroupUpdatedBy")
+
+  customerCreator Customer[] @relation("CustomerCreatedBy")
+  customerUpdater Customer[] @relation("CustomerUpdatedBy")
+
+  categoryCreator Category[] @relation("CategoryCreatedBy")
+  categoryUpdater Category[] @relation("CategoryUpdatedBy")
+
+  brandCreator Brand[] @relation("BrandCreatedBy")
+  brandUpdater Brand[] @relation("BrandUpdatedBy")
+
+  taxCreator Tax[] @relation("TaxCreatedBy")
+  taxUpdater Tax[] @relation("TaxUpdatedBy")
+
+  unitCreator Unit[] @relation("UnitCreatedBy")
+  unitUpdater Unit[] @relation("UnitUpdatedBy")
+
+  productCreator Product[] @relation("ProductCreatedBy")
+  productUpdater Product[] @relation("ProductUpdatedBy")
+
+  supplierCreator Supplier[] @relation("SupplierCreatedBy")
+  supplierUpdater Supplier[] @relation("SupplierUpdatedBy")
+
+  purchaseCreator Purchase[] @relation("PurchaseCreatedBy")
+  purchaseUpdater Purchase[] @relation("PurchaseUpdatedBy")
+
+  saleCreator Sale[] @relation("SaleCreatedBy")
+  saleUpdater Sale[] @relation("SaleUpdatedBy")
+}
+
+model Menu{
+  id Int @default(autoincrement()) @id
+  menu_name String
+  modules Module[]
+  deletable Boolean @default(true) // true = Yes, False = No
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Target {
+  SELF  @map("_self")
+  BLANK @map("_blank")
+}
+
+model Module{
+  id Int @default(autoincrement()) @id
+  menuId Int
+  menu Menu @relation(fields: [menuId], references: [id])
+  type Boolean @default(true) // true = Divider, False = Module
+  moduleName String?
+  dividerTitle String?
+  iconClass String?
+  url String?
+  order Int @default(1)
+  parentId Int?
+  parent Module? @relation("ParentID", fields: [parentId], references: [id])
+  parents Module[] @relation("ParentID")
+  target Target @default(SELF)
+  moduleRole ModuleRole[]
+  permissions Permission[]
+  deletable Boolean @default(true) // true = Yes, False = No
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ModuleRole {
+  id Int @default(autoincrement()) @id
+  moduleId Int
+  module Module @relation(fields: [moduleId], references: [id])
+  roleId Int
+  role Role @relation(fields: [roleId], references: [id])
+  deletable Boolean @default(true) // true = Yes, False = No
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Permission {
+  id Int @default(autoincrement()) @id
+  moduleId Int?
+  module Module? @relation(fields: [moduleId], references: [id])
+  name String
+  slug String @unique
+  permissionRole PermissionRole[]
+  deletable Boolean @default(true) // true = Yes, False = No
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PermissionRole{
+  id Int @default(autoincrement()) @id
+  permissionId Int
+  permission Permission @relation(fields: [permissionId], references: [id])
+  roleId Int
+  role Role @relation(fields: [roleId], references: [id])
+  deletable Boolean @default(true) // true = Yes, False = No
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HrmSetting {
+  id Int @default(autoincrement()) @id
+  checkIn String
+  checkOut String
+  createdBy Int
+  creator   User @relation("HrmSettingCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("HrmSettingUpdatedBy", fields: [updatedBy], references: [id])
+}
+
+model Department {
+  id Int @default(autoincrement()) @id
+  name String
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("DepartmentCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("DepartmentUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  departments Employee[]
+}
+
+model Employee {
+  id Int @default(autoincrement()) @id
+  name String
+  image String?
+  phone String @unique
+  address String
+  city String
+  state String
+  zip String
+  postalCode String?
+  country String
+  departmentId Int
+  department Department @relation(fields: [departmentId], references: [id])
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("EmployeeCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("EmployeeUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  attendances Attendance[]
+  payrolls Payroll[]
+}
+
+model Attendance{
+  id Int @default(autoincrement()) @id
+  employeeId Int
+  employee Employee @relation(fields: [employeeId], references: [id])
+  checkIn DateTime
+  checkOut DateTime?
+  date DateTime
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("AttendanceCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("AttendanceUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id Int @default(autoincrement()) @id
+  accountNo String
+  name String
+  initialBalance Decimal
+  note String?
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("AccountCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("AccountUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  payrolls Payroll[]
+  expenses Expense[]
+}
+
+enum PaymentMethods {
+  CASH @map("1")
+  CHEQUE @map("2")
+  BANK @map("3")
+}
+
+model Payroll {
+  id Int @default(autoincrement()) @id
+  employeeId Int
+  employee Employee @relation(fields: [employeeId], references: [id])
+  accountId Int
+  account Account @relation(fields: [accountId], references: [id])
+  amount Decimal
+  paymentMethods PaymentMethods @default(CASH)
+  createdBy Int
+  creator   User @relation("PayrollCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("PayrollUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Warehouse {
+  id Int @default(autoincrement()) @id
+  name String
+  phone String?
+  email String?
+  address String?
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("WarehouseCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("WarehouseUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  expenses Expense[]
+  warehouseProducts WarehouseProduct[]
+  purchases Purchase[]
+  sale Sale[]
+}
+
+model ExpenseCategory {
+  id Int @default(autoincrement()) @id
+  name String
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("ExpenseCategoryCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("ExpenseCategoryUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  expenses Expense[]
+}
+
+model Expense {
+  id Int @default(autoincrement()) @id
+  expenseCategoryId Int?
+  expenseCategory ExpenseCategory? @relation(fields: [expenseCategoryId], references: [id])
+  warehouseId Int?
+  warehouse Warehouse? @relation(fields: [warehouseId], references: [id])
+  accountId Int?
+  account Account? @relation(fields: [accountId], references: [id])
+  amount Decimal
+  note String?
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("ExpenseCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("ExpenseUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CustomerGroup{
+  id Int @default(autoincrement()) @id
+  groupName String
+  percentage Float?
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("CustomerGroupCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("CustomerGroupUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  customers Customer[]
+}
+
+model Customer{
+  id Int @default(autoincrement()) @id
+  customerGroupId Int
+  customerGroup CustomerGroup @relation(fields: [customerGroupId], references: [id])
+  name String
+  companyName String?
+  taxNumber String?
+  email String?
+  phone String?
+  address String?
+  city String?
+  state String?
+  postalCode String?
+  country String?
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("CustomerCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("CustomerUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sales Sale[]
+}
+
+model Category{
+  id Int @default(autoincrement()) @id
+  name String
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("CategoryCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("CategoryUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+}
+
+model Brand {
+  id Int @default(autoincrement()) @id
+  title String
+  image String?
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("BrandCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("BrandUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+}
+
+model Tax {
+  id Int @default(autoincrement()) @id
+  name String @unique
+  rate Decimal
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("TaxCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("TaxUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+}
+
+model Unit {
+  id Int @default(autoincrement()) @id
+  unitCode String
+  unitName String
+  baseUnit Int?
+  operator String @default("*")
+  operationValue Decimal @default(1)
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("UnitCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("UnitUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  baseProducts Product[] @relation("ProductBaseUnit")
+  purchaseProductsUnit Product[] @relation("ProductPurchaseUnit")
+  saleProductsUnit Product[] @relation("ProductSaleUnit")
+  purchaseProducts PurchaseProduct[]
+  saleProducts SaleProduct[]
+}
+
+model Product {
+  id Int @default(autoincrement()) @id
+  name String
+  code String @unique
+  barcodeSymbology String
+  image String?
+  brandId Int?
+  brand Brand? @relation(fields: [brandId], references: [id])
+  categoryId Int
+  category Category @relation(fields: [categoryId], references: [id])
+  unitId Int
+  unit Unit @relation("ProductBaseUnit", fields: [unitId], references: [id])
+  purchaseUnitId Int
+  purchaseUnit Unit @relation("ProductPurchaseUnit", fields: [purchaseUnitId], references: [id])
+  saleUnitId Int
+  saleUnit Unit @relation("ProductSaleUnit", fields: [saleUnitId], references: [id])
+  cost Decimal
+  price Decimal
+  qty Int?
+  alertQty Int?
+  taxId Int?
+  tax Tax? @relation(fields: [taxId], references: [id])
+  taxMethod Boolean @default(true) // true = Exclusive, False = Inclusive
+  description String?
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("ProductCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("ProductUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  warehouseProducts WarehouseProduct[]
+  pruchaseProducts PurchaseProduct[]
+  saleProducts SaleProduct[]
+}
+
+model WarehouseProduct{
+  id Int @default(autoincrement()) @id
+  productId Int?
+  product Product? @relation(fields: [productId], references: [id])
+  warehouseId Int?
+  warehouse Warehouse? @relation(fields: [warehouseId], references: [id])
+  qty Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Supplier {
+  id Int @default(autoincrement()) @id
+  name String
+  companyName String?
+  vatNumber String?
+  email String? @unique
+  phone String? @unique
+  address String?
+  city String?
+  state String?
+  postalCode String?
+  country String?
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("SupplierCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("SupplierUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  purchases Purchase[]
+}
+
+enum PurchaseStatus {
+  RECEIVED @map("1") // Received
+  PARTIAL @map("2") // Partial
+  PENDING @map("3") // Pending
+  ORDERED @map("4") // Ordered
+}
+
+model Purchase {
+  id Int @default(autoincrement()) @id
+  purchaseNo String @unique
+  supplierId Int?
+  supplier Supplier? @relation(fields: [supplierId], references: [id])
+  warehouseId Int?
+  warehouse Warehouse? @relation(fields: [warehouseId], references: [id])
+  item Float
+  totalQty Float
+  totalDiscount Decimal
+  totalTax Decimal
+  totalCost Decimal
+  orderTaxRate Decimal?
+  orderTax Decimal?
+  orderDiscount Decimal?
+  shippingCost Decimal?
+  grandTotal Decimal
+  paidAmount Decimal
+  purchaseStatus PurchaseStatus
+  paymentStatus Boolean @default(false) // true = Paid, False = Due
+  document String?
+  note String?
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("PurchaseCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("PurchaseUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  purchaseProducts PurchaseProduct[]
+}
+
+model PurchaseProduct {
+  id Int @default(autoincrement()) @id
+  purchaseId Int?
+  purchase Purchase? @relation(fields: [purchaseId], references: [id])
+  productId Int?
+  product Product? @relation(fields: [productId], references: [id])
+  qty Decimal
+  received Decimal
+  unitId Int
+  unit Unit @relation(fields: [unitId], references: [id])
+  netUnitCost Decimal
+  discount Decimal
+  taxRate Decimal
+  tax Decimal
+  total Decimal
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum PaymentStatus {
+  PAID @map("1") // Paid
+  PARTIAL @map("2") // Partial
+  DUE @map("3") // Due
+}
+
+model Sale {
+  id Int @default(autoincrement()) @id
+  saleNo String @unique
+  customerId Int?
+  customer Customer? @relation(fields: [customerId], references: [id])
+  warehouseId Int?
+  warehouse Warehouse? @relation(fields: [warehouseId], references: [id])
+  item Float
+  totalQty Float
+  totalDiscount Decimal
+  totalTax Decimal
+  totalPrice Decimal
+  orderTaxRate Decimal?
+  orderTax Decimal?
+  orderDiscount Decimal?
+  shippingCost Decimal?
+  grandTotal Decimal
+  paidAmount Decimal
+  saleStatus Boolean @default(false) // true = Completed, False = Pending
+  paymentStatus PaymentStatus
+  document String
+  note String?
+  status Boolean @default(true) // true = Active, False = Inactive
+  createdBy Int
+  creator   User @relation("SaleCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("SaleUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  saleProducts SaleProduct[]
+}
+
+model SaleProduct {
+  id Int @default(autoincrement()) @id
+  saleId Int?
+  sale Sale? @relation(fields: [saleId], references: [id])
+  productId Int?
+  product Product? @relation(fields: [productId], references: [id])
+  qty Decimal
+  saleUnitId Int
+  saleUnit Unit @relation(fields: [saleUnitId], references: [id])
+  netUnitPrice Decimal
+  discount Decimal
+  taxRate Decimal
+  tax Decimal
+  total Decimal
+}
