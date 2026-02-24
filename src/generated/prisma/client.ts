@@ -182,3 +182,8 @@ export type Sale = Prisma.SaleModel
  * 
  */
 export type SaleProduct = Prisma.SaleProductModel
+/**
+ * Model Setting
+ * 
+ */
+export type Setting = Prisma.SettingModel

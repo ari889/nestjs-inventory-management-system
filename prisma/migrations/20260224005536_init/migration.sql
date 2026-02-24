@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE `Role` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `role_name` VARCHAR(191) NOT NULL,
+    `roleName` VARCHAR(191) NOT NULL,
     `deletable` BOOLEAN NOT NULL DEFAULT true,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -14,8 +14,8 @@ CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
-    `phone_no` VARCHAR(191) NULL,
-    `email_veriafied_at` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `phoneNo` VARCHAR(191) NULL,
+    `emailVeriafiedAt` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3),
     `password` VARCHAR(191) NOT NULL,
     `roleId` INTEGER NOT NULL,
     `avatar` VARCHAR(191) NULL,
@@ -33,7 +33,7 @@ CREATE TABLE `User` (
 -- CreateTable
 CREATE TABLE `Menu` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `menu_name` VARCHAR(191) NOT NULL,
+    `menuName` VARCHAR(191) NOT NULL,
     `deletable` BOOLEAN NOT NULL DEFAULT true,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -493,6 +493,18 @@ CREATE TABLE `SaleProduct` (
     `tax` DECIMAL(65, 30) NOT NULL,
     `total` DECIMAL(65, 30) NOT NULL,
 
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Setting` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
+    `value` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `Setting_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

@@ -36,7 +36,7 @@ export type MenuSumAggregateOutputType = {
 
 export type MenuMinAggregateOutputType = {
   id: number | null
-  menu_name: string | null
+  menuName: string | null
   deletable: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -44,7 +44,7 @@ export type MenuMinAggregateOutputType = {
 
 export type MenuMaxAggregateOutputType = {
   id: number | null
-  menu_name: string | null
+  menuName: string | null
   deletable: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -52,7 +52,7 @@ export type MenuMaxAggregateOutputType = {
 
 export type MenuCountAggregateOutputType = {
   id: number
-  menu_name: number
+  menuName: number
   deletable: number
   createdAt: number
   updatedAt: number
@@ -70,7 +70,7 @@ export type MenuSumAggregateInputType = {
 
 export type MenuMinAggregateInputType = {
   id?: true
-  menu_name?: true
+  menuName?: true
   deletable?: true
   createdAt?: true
   updatedAt?: true
@@ -78,7 +78,7 @@ export type MenuMinAggregateInputType = {
 
 export type MenuMaxAggregateInputType = {
   id?: true
-  menu_name?: true
+  menuName?: true
   deletable?: true
   createdAt?: true
   updatedAt?: true
@@ -86,7 +86,7 @@ export type MenuMaxAggregateInputType = {
 
 export type MenuCountAggregateInputType = {
   id?: true
-  menu_name?: true
+  menuName?: true
   deletable?: true
   createdAt?: true
   updatedAt?: true
@@ -181,7 +181,7 @@ export type MenuGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type MenuGroupByOutputType = {
   id: number
-  menu_name: string
+  menuName: string
   deletable: boolean
   createdAt: Date
   updatedAt: Date
@@ -212,7 +212,7 @@ export type MenuWhereInput = {
   OR?: Prisma.MenuWhereInput[]
   NOT?: Prisma.MenuWhereInput | Prisma.MenuWhereInput[]
   id?: Prisma.IntFilter<"Menu"> | number
-  menu_name?: Prisma.StringFilter<"Menu"> | string
+  menuName?: Prisma.StringFilter<"Menu"> | string
   deletable?: Prisma.BoolFilter<"Menu"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Menu"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Menu"> | Date | string
@@ -221,7 +221,7 @@ export type MenuWhereInput = {
 
 export type MenuOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  menu_name?: Prisma.SortOrder
+  menuName?: Prisma.SortOrder
   deletable?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -234,7 +234,7 @@ export type MenuWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.MenuWhereInput | Prisma.MenuWhereInput[]
   OR?: Prisma.MenuWhereInput[]
   NOT?: Prisma.MenuWhereInput | Prisma.MenuWhereInput[]
-  menu_name?: Prisma.StringFilter<"Menu"> | string
+  menuName?: Prisma.StringFilter<"Menu"> | string
   deletable?: Prisma.BoolFilter<"Menu"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Menu"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Menu"> | Date | string
@@ -243,7 +243,7 @@ export type MenuWhereUniqueInput = Prisma.AtLeast<{
 
 export type MenuOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  menu_name?: Prisma.SortOrder
+  menuName?: Prisma.SortOrder
   deletable?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -259,14 +259,14 @@ export type MenuScalarWhereWithAggregatesInput = {
   OR?: Prisma.MenuScalarWhereWithAggregatesInput[]
   NOT?: Prisma.MenuScalarWhereWithAggregatesInput | Prisma.MenuScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Menu"> | number
-  menu_name?: Prisma.StringWithAggregatesFilter<"Menu"> | string
+  menuName?: Prisma.StringWithAggregatesFilter<"Menu"> | string
   deletable?: Prisma.BoolWithAggregatesFilter<"Menu"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Menu"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Menu"> | Date | string
 }
 
 export type MenuCreateInput = {
-  menu_name: string
+  menuName: string
   deletable?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -275,7 +275,7 @@ export type MenuCreateInput = {
 
 export type MenuUncheckedCreateInput = {
   id?: number
-  menu_name: string
+  menuName: string
   deletable?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -283,7 +283,7 @@ export type MenuUncheckedCreateInput = {
 }
 
 export type MenuUpdateInput = {
-  menu_name?: Prisma.StringFieldUpdateOperationsInput | string
+  menuName?: Prisma.StringFieldUpdateOperationsInput | string
   deletable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -292,7 +292,7 @@ export type MenuUpdateInput = {
 
 export type MenuUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  menu_name?: Prisma.StringFieldUpdateOperationsInput | string
+  menuName?: Prisma.StringFieldUpdateOperationsInput | string
   deletable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -301,14 +301,14 @@ export type MenuUncheckedUpdateInput = {
 
 export type MenuCreateManyInput = {
   id?: number
-  menu_name: string
+  menuName: string
   deletable?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
 export type MenuUpdateManyMutationInput = {
-  menu_name?: Prisma.StringFieldUpdateOperationsInput | string
+  menuName?: Prisma.StringFieldUpdateOperationsInput | string
   deletable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -316,7 +316,7 @@ export type MenuUpdateManyMutationInput = {
 
 export type MenuUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  menu_name?: Prisma.StringFieldUpdateOperationsInput | string
+  menuName?: Prisma.StringFieldUpdateOperationsInput | string
   deletable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -330,7 +330,7 @@ export type MenuOrderByRelevanceInput = {
 
 export type MenuCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  menu_name?: Prisma.SortOrder
+  menuName?: Prisma.SortOrder
   deletable?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -342,7 +342,7 @@ export type MenuAvgOrderByAggregateInput = {
 
 export type MenuMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  menu_name?: Prisma.SortOrder
+  menuName?: Prisma.SortOrder
   deletable?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -350,7 +350,7 @@ export type MenuMaxOrderByAggregateInput = {
 
 export type MenuMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  menu_name?: Prisma.SortOrder
+  menuName?: Prisma.SortOrder
   deletable?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -380,7 +380,7 @@ export type MenuUpdateOneRequiredWithoutModulesNestedInput = {
 }
 
 export type MenuCreateWithoutModulesInput = {
-  menu_name: string
+  menuName: string
   deletable?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -388,7 +388,7 @@ export type MenuCreateWithoutModulesInput = {
 
 export type MenuUncheckedCreateWithoutModulesInput = {
   id?: number
-  menu_name: string
+  menuName: string
   deletable?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -411,7 +411,7 @@ export type MenuUpdateToOneWithWhereWithoutModulesInput = {
 }
 
 export type MenuUpdateWithoutModulesInput = {
-  menu_name?: Prisma.StringFieldUpdateOperationsInput | string
+  menuName?: Prisma.StringFieldUpdateOperationsInput | string
   deletable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -419,7 +419,7 @@ export type MenuUpdateWithoutModulesInput = {
 
 export type MenuUncheckedUpdateWithoutModulesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  menu_name?: Prisma.StringFieldUpdateOperationsInput | string
+  menuName?: Prisma.StringFieldUpdateOperationsInput | string
   deletable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -458,7 +458,7 @@ export type MenuCountOutputTypeCountModulesArgs<ExtArgs extends runtime.Types.Ex
 
 export type MenuSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  menu_name?: boolean
+  menuName?: boolean
   deletable?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -470,13 +470,13 @@ export type MenuSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type MenuSelectScalar = {
   id?: boolean
-  menu_name?: boolean
+  menuName?: boolean
   deletable?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type MenuOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "menu_name" | "deletable" | "createdAt" | "updatedAt", ExtArgs["result"]["menu"]>
+export type MenuOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "menuName" | "deletable" | "createdAt" | "updatedAt", ExtArgs["result"]["menu"]>
 export type MenuInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   modules?: boolean | Prisma.Menu$modulesArgs<ExtArgs>
   _count?: boolean | Prisma.MenuCountOutputTypeDefaultArgs<ExtArgs>
@@ -489,7 +489,7 @@ export type $MenuPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    menu_name: string
+    menuName: string
     deletable: boolean
     createdAt: Date
     updatedAt: Date
@@ -864,7 +864,7 @@ export interface Prisma__MenuClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface MenuFieldRefs {
   readonly id: Prisma.FieldRef<"Menu", 'Int'>
-  readonly menu_name: Prisma.FieldRef<"Menu", 'String'>
+  readonly menuName: Prisma.FieldRef<"Menu", 'String'>
   readonly deletable: Prisma.FieldRef<"Menu", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Menu", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Menu", 'DateTime'>

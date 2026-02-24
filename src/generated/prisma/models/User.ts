@@ -44,8 +44,8 @@ export type UserMinAggregateOutputType = {
   id: number | null
   name: string | null
   email: string | null
-  phone_no: string | null
-  email_veriafied_at: Date | null
+  phoneNo: string | null
+  emailVeriafiedAt: Date | null
   password: string | null
   roleId: number | null
   avatar: string | null
@@ -61,8 +61,8 @@ export type UserMaxAggregateOutputType = {
   id: number | null
   name: string | null
   email: string | null
-  phone_no: string | null
-  email_veriafied_at: Date | null
+  phoneNo: string | null
+  emailVeriafiedAt: Date | null
   password: string | null
   roleId: number | null
   avatar: string | null
@@ -78,8 +78,8 @@ export type UserCountAggregateOutputType = {
   id: number
   name: number
   email: number
-  phone_no: number
-  email_veriafied_at: number
+  phoneNo: number
+  emailVeriafiedAt: number
   password: number
   roleId: number
   avatar: number
@@ -111,8 +111,8 @@ export type UserMinAggregateInputType = {
   id?: true
   name?: true
   email?: true
-  phone_no?: true
-  email_veriafied_at?: true
+  phoneNo?: true
+  emailVeriafiedAt?: true
   password?: true
   roleId?: true
   avatar?: true
@@ -128,8 +128,8 @@ export type UserMaxAggregateInputType = {
   id?: true
   name?: true
   email?: true
-  phone_no?: true
-  email_veriafied_at?: true
+  phoneNo?: true
+  emailVeriafiedAt?: true
   password?: true
   roleId?: true
   avatar?: true
@@ -145,8 +145,8 @@ export type UserCountAggregateInputType = {
   id?: true
   name?: true
   email?: true
-  phone_no?: true
-  email_veriafied_at?: true
+  phoneNo?: true
+  emailVeriafiedAt?: true
   password?: true
   roleId?: true
   avatar?: true
@@ -249,8 +249,8 @@ export type UserGroupByOutputType = {
   id: number
   name: string
   email: string
-  phone_no: string | null
-  email_veriafied_at: Date | null
+  phoneNo: string | null
+  emailVeriafiedAt: Date | null
   password: string
   roleId: number
   avatar: string | null
@@ -289,8 +289,8 @@ export type UserWhereInput = {
   id?: Prisma.IntFilter<"User"> | number
   name?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
-  phone_no?: Prisma.StringNullableFilter<"User"> | string | null
-  email_veriafied_at?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  phoneNo?: Prisma.StringNullableFilter<"User"> | string | null
+  emailVeriafiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   password?: Prisma.StringFilter<"User"> | string
   roleId?: Prisma.IntFilter<"User"> | number
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
@@ -349,8 +349,8 @@ export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  phone_no?: Prisma.SortOrderInput | Prisma.SortOrder
-  email_veriafied_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneNo?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVeriafiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   password?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -413,8 +413,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringFilter<"User"> | string
-  phone_no?: Prisma.StringNullableFilter<"User"> | string | null
-  email_veriafied_at?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  phoneNo?: Prisma.StringNullableFilter<"User"> | string | null
+  emailVeriafiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   password?: Prisma.StringFilter<"User"> | string
   roleId?: Prisma.IntFilter<"User"> | number
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
@@ -473,8 +473,8 @@ export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  phone_no?: Prisma.SortOrderInput | Prisma.SortOrder
-  email_veriafied_at?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneNo?: Prisma.SortOrderInput | Prisma.SortOrder
+  emailVeriafiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   password?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -498,8 +498,8 @@ export type UserScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"User"> | number
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
-  phone_no?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  email_veriafied_at?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  phoneNo?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  emailVeriafiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
   roleId?: Prisma.IntWithAggregatesFilter<"User"> | number
   avatar?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -514,8 +514,8 @@ export type UserScalarWhereWithAggregatesInput = {
 export type UserCreateInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -571,8 +571,8 @@ export type UserUncheckedCreateInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -627,8 +627,8 @@ export type UserUncheckedCreateInput = {
 export type UserUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -684,8 +684,8 @@ export type UserUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -741,8 +741,8 @@ export type UserCreateManyInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -757,8 +757,8 @@ export type UserCreateManyInput = {
 export type UserUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -771,8 +771,8 @@ export type UserUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -814,8 +814,8 @@ export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  phone_no?: Prisma.SortOrder
-  email_veriafied_at?: Prisma.SortOrder
+  phoneNo?: Prisma.SortOrder
+  emailVeriafiedAt?: Prisma.SortOrder
   password?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
@@ -838,8 +838,8 @@ export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  phone_no?: Prisma.SortOrder
-  email_veriafied_at?: Prisma.SortOrder
+  phoneNo?: Prisma.SortOrder
+  emailVeriafiedAt?: Prisma.SortOrder
   password?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
@@ -855,8 +855,8 @@ export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   email?: Prisma.SortOrder
-  phone_no?: Prisma.SortOrder
-  email_veriafied_at?: Prisma.SortOrder
+  phoneNo?: Prisma.SortOrder
+  emailVeriafiedAt?: Prisma.SortOrder
   password?: Prisma.SortOrder
   roleId?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
@@ -1620,8 +1620,8 @@ export type UserUpdateOneWithoutSaleUpdaterNestedInput = {
 export type UserCreateWithoutRoleInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -1676,8 +1676,8 @@ export type UserUncheckedCreateWithoutRoleInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -1761,8 +1761,8 @@ export type UserScalarWhereInput = {
   id?: Prisma.IntFilter<"User"> | number
   name?: Prisma.StringFilter<"User"> | string
   email?: Prisma.StringFilter<"User"> | string
-  phone_no?: Prisma.StringNullableFilter<"User"> | string | null
-  email_veriafied_at?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  phoneNo?: Prisma.StringNullableFilter<"User"> | string | null
+  emailVeriafiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   password?: Prisma.StringFilter<"User"> | string
   roleId?: Prisma.IntFilter<"User"> | number
   avatar?: Prisma.StringNullableFilter<"User"> | string | null
@@ -1777,8 +1777,8 @@ export type UserScalarWhereInput = {
 export type UserCreateWithoutCreatedUsersInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -1833,8 +1833,8 @@ export type UserUncheckedCreateWithoutCreatedUsersInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -1893,8 +1893,8 @@ export type UserCreateOrConnectWithoutCreatedUsersInput = {
 export type UserCreateWithoutCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -1949,8 +1949,8 @@ export type UserUncheckedCreateWithoutCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -2014,8 +2014,8 @@ export type UserCreateManyCreatorInputEnvelope = {
 export type UserCreateWithoutUpdatedUsersInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -2070,8 +2070,8 @@ export type UserUncheckedCreateWithoutUpdatedUsersInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -2130,8 +2130,8 @@ export type UserCreateOrConnectWithoutUpdatedUsersInput = {
 export type UserCreateWithoutUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -2186,8 +2186,8 @@ export type UserUncheckedCreateWithoutUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -2262,8 +2262,8 @@ export type UserUpdateToOneWithWhereWithoutCreatedUsersInput = {
 export type UserUpdateWithoutCreatedUsersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2318,8 +2318,8 @@ export type UserUncheckedUpdateWithoutCreatedUsersInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2400,8 +2400,8 @@ export type UserUpdateToOneWithWhereWithoutUpdatedUsersInput = {
 export type UserUpdateWithoutUpdatedUsersInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2456,8 +2456,8 @@ export type UserUncheckedUpdateWithoutUpdatedUsersInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2527,8 +2527,8 @@ export type UserUpdateManyWithWhereWithoutUpdaterInput = {
 export type UserCreateWithoutHrmSettingCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -2583,8 +2583,8 @@ export type UserUncheckedCreateWithoutHrmSettingCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -2643,8 +2643,8 @@ export type UserCreateOrConnectWithoutHrmSettingCreatorInput = {
 export type UserCreateWithoutHrmSettingUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -2699,8 +2699,8 @@ export type UserUncheckedCreateWithoutHrmSettingUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -2770,8 +2770,8 @@ export type UserUpdateToOneWithWhereWithoutHrmSettingCreatorInput = {
 export type UserUpdateWithoutHrmSettingCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2826,8 +2826,8 @@ export type UserUncheckedUpdateWithoutHrmSettingCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2892,8 +2892,8 @@ export type UserUpdateToOneWithWhereWithoutHrmSettingUpdaterInput = {
 export type UserUpdateWithoutHrmSettingUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2948,8 +2948,8 @@ export type UserUncheckedUpdateWithoutHrmSettingUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3003,8 +3003,8 @@ export type UserUncheckedUpdateWithoutHrmSettingUpdaterInput = {
 export type UserCreateWithoutDepartmentCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -3059,8 +3059,8 @@ export type UserUncheckedCreateWithoutDepartmentCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -3119,8 +3119,8 @@ export type UserCreateOrConnectWithoutDepartmentCreatorInput = {
 export type UserCreateWithoutDepartmentUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -3175,8 +3175,8 @@ export type UserUncheckedCreateWithoutDepartmentUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -3246,8 +3246,8 @@ export type UserUpdateToOneWithWhereWithoutDepartmentCreatorInput = {
 export type UserUpdateWithoutDepartmentCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3302,8 +3302,8 @@ export type UserUncheckedUpdateWithoutDepartmentCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3368,8 +3368,8 @@ export type UserUpdateToOneWithWhereWithoutDepartmentUpdaterInput = {
 export type UserUpdateWithoutDepartmentUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3424,8 +3424,8 @@ export type UserUncheckedUpdateWithoutDepartmentUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3479,8 +3479,8 @@ export type UserUncheckedUpdateWithoutDepartmentUpdaterInput = {
 export type UserCreateWithoutEmployeeCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -3535,8 +3535,8 @@ export type UserUncheckedCreateWithoutEmployeeCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -3595,8 +3595,8 @@ export type UserCreateOrConnectWithoutEmployeeCreatorInput = {
 export type UserCreateWithoutEmployeeUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -3651,8 +3651,8 @@ export type UserUncheckedCreateWithoutEmployeeUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -3722,8 +3722,8 @@ export type UserUpdateToOneWithWhereWithoutEmployeeCreatorInput = {
 export type UserUpdateWithoutEmployeeCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3778,8 +3778,8 @@ export type UserUncheckedUpdateWithoutEmployeeCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3844,8 +3844,8 @@ export type UserUpdateToOneWithWhereWithoutEmployeeUpdaterInput = {
 export type UserUpdateWithoutEmployeeUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3900,8 +3900,8 @@ export type UserUncheckedUpdateWithoutEmployeeUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3955,8 +3955,8 @@ export type UserUncheckedUpdateWithoutEmployeeUpdaterInput = {
 export type UserCreateWithoutAttendanceCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -4011,8 +4011,8 @@ export type UserUncheckedCreateWithoutAttendanceCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -4071,8 +4071,8 @@ export type UserCreateOrConnectWithoutAttendanceCreatorInput = {
 export type UserCreateWithoutAttendanceUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -4127,8 +4127,8 @@ export type UserUncheckedCreateWithoutAttendanceUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -4198,8 +4198,8 @@ export type UserUpdateToOneWithWhereWithoutAttendanceCreatorInput = {
 export type UserUpdateWithoutAttendanceCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4254,8 +4254,8 @@ export type UserUncheckedUpdateWithoutAttendanceCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4320,8 +4320,8 @@ export type UserUpdateToOneWithWhereWithoutAttendanceUpdaterInput = {
 export type UserUpdateWithoutAttendanceUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4376,8 +4376,8 @@ export type UserUncheckedUpdateWithoutAttendanceUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4431,8 +4431,8 @@ export type UserUncheckedUpdateWithoutAttendanceUpdaterInput = {
 export type UserCreateWithoutAccountCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -4487,8 +4487,8 @@ export type UserUncheckedCreateWithoutAccountCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -4547,8 +4547,8 @@ export type UserCreateOrConnectWithoutAccountCreatorInput = {
 export type UserCreateWithoutAccountUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -4603,8 +4603,8 @@ export type UserUncheckedCreateWithoutAccountUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -4674,8 +4674,8 @@ export type UserUpdateToOneWithWhereWithoutAccountCreatorInput = {
 export type UserUpdateWithoutAccountCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4730,8 +4730,8 @@ export type UserUncheckedUpdateWithoutAccountCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4796,8 +4796,8 @@ export type UserUpdateToOneWithWhereWithoutAccountUpdaterInput = {
 export type UserUpdateWithoutAccountUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -4852,8 +4852,8 @@ export type UserUncheckedUpdateWithoutAccountUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4907,8 +4907,8 @@ export type UserUncheckedUpdateWithoutAccountUpdaterInput = {
 export type UserCreateWithoutPayrollCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -4963,8 +4963,8 @@ export type UserUncheckedCreateWithoutPayrollCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -5023,8 +5023,8 @@ export type UserCreateOrConnectWithoutPayrollCreatorInput = {
 export type UserCreateWithoutPayrollUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -5079,8 +5079,8 @@ export type UserUncheckedCreateWithoutPayrollUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -5150,8 +5150,8 @@ export type UserUpdateToOneWithWhereWithoutPayrollCreatorInput = {
 export type UserUpdateWithoutPayrollCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5206,8 +5206,8 @@ export type UserUncheckedUpdateWithoutPayrollCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5272,8 +5272,8 @@ export type UserUpdateToOneWithWhereWithoutPayrollUpdaterInput = {
 export type UserUpdateWithoutPayrollUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5328,8 +5328,8 @@ export type UserUncheckedUpdateWithoutPayrollUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5383,8 +5383,8 @@ export type UserUncheckedUpdateWithoutPayrollUpdaterInput = {
 export type UserCreateWithoutWarehouseCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -5439,8 +5439,8 @@ export type UserUncheckedCreateWithoutWarehouseCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -5499,8 +5499,8 @@ export type UserCreateOrConnectWithoutWarehouseCreatorInput = {
 export type UserCreateWithoutWarehouseUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -5555,8 +5555,8 @@ export type UserUncheckedCreateWithoutWarehouseUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -5626,8 +5626,8 @@ export type UserUpdateToOneWithWhereWithoutWarehouseCreatorInput = {
 export type UserUpdateWithoutWarehouseCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5682,8 +5682,8 @@ export type UserUncheckedUpdateWithoutWarehouseCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5748,8 +5748,8 @@ export type UserUpdateToOneWithWhereWithoutWarehouseUpdaterInput = {
 export type UserUpdateWithoutWarehouseUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -5804,8 +5804,8 @@ export type UserUncheckedUpdateWithoutWarehouseUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5859,8 +5859,8 @@ export type UserUncheckedUpdateWithoutWarehouseUpdaterInput = {
 export type UserCreateWithoutExpenseCategoryCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -5915,8 +5915,8 @@ export type UserUncheckedCreateWithoutExpenseCategoryCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -5975,8 +5975,8 @@ export type UserCreateOrConnectWithoutExpenseCategoryCreatorInput = {
 export type UserCreateWithoutExpenseCategoryUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -6031,8 +6031,8 @@ export type UserUncheckedCreateWithoutExpenseCategoryUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -6102,8 +6102,8 @@ export type UserUpdateToOneWithWhereWithoutExpenseCategoryCreatorInput = {
 export type UserUpdateWithoutExpenseCategoryCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6158,8 +6158,8 @@ export type UserUncheckedUpdateWithoutExpenseCategoryCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6224,8 +6224,8 @@ export type UserUpdateToOneWithWhereWithoutExpenseCategoryUpdaterInput = {
 export type UserUpdateWithoutExpenseCategoryUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6280,8 +6280,8 @@ export type UserUncheckedUpdateWithoutExpenseCategoryUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6335,8 +6335,8 @@ export type UserUncheckedUpdateWithoutExpenseCategoryUpdaterInput = {
 export type UserCreateWithoutExpenseCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -6391,8 +6391,8 @@ export type UserUncheckedCreateWithoutExpenseCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -6451,8 +6451,8 @@ export type UserCreateOrConnectWithoutExpenseCreatorInput = {
 export type UserCreateWithoutExpenseUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -6507,8 +6507,8 @@ export type UserUncheckedCreateWithoutExpenseUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -6578,8 +6578,8 @@ export type UserUpdateToOneWithWhereWithoutExpenseCreatorInput = {
 export type UserUpdateWithoutExpenseCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6634,8 +6634,8 @@ export type UserUncheckedUpdateWithoutExpenseCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6700,8 +6700,8 @@ export type UserUpdateToOneWithWhereWithoutExpenseUpdaterInput = {
 export type UserUpdateWithoutExpenseUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -6756,8 +6756,8 @@ export type UserUncheckedUpdateWithoutExpenseUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6811,8 +6811,8 @@ export type UserUncheckedUpdateWithoutExpenseUpdaterInput = {
 export type UserCreateWithoutCustomerGroupCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -6867,8 +6867,8 @@ export type UserUncheckedCreateWithoutCustomerGroupCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -6927,8 +6927,8 @@ export type UserCreateOrConnectWithoutCustomerGroupCreatorInput = {
 export type UserCreateWithoutCustomerGroupUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -6983,8 +6983,8 @@ export type UserUncheckedCreateWithoutCustomerGroupUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -7054,8 +7054,8 @@ export type UserUpdateToOneWithWhereWithoutCustomerGroupCreatorInput = {
 export type UserUpdateWithoutCustomerGroupCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -7110,8 +7110,8 @@ export type UserUncheckedUpdateWithoutCustomerGroupCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7176,8 +7176,8 @@ export type UserUpdateToOneWithWhereWithoutCustomerGroupUpdaterInput = {
 export type UserUpdateWithoutCustomerGroupUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -7232,8 +7232,8 @@ export type UserUncheckedUpdateWithoutCustomerGroupUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7287,8 +7287,8 @@ export type UserUncheckedUpdateWithoutCustomerGroupUpdaterInput = {
 export type UserCreateWithoutCustomerCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -7343,8 +7343,8 @@ export type UserUncheckedCreateWithoutCustomerCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -7403,8 +7403,8 @@ export type UserCreateOrConnectWithoutCustomerCreatorInput = {
 export type UserCreateWithoutCustomerUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -7459,8 +7459,8 @@ export type UserUncheckedCreateWithoutCustomerUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -7530,8 +7530,8 @@ export type UserUpdateToOneWithWhereWithoutCustomerCreatorInput = {
 export type UserUpdateWithoutCustomerCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -7586,8 +7586,8 @@ export type UserUncheckedUpdateWithoutCustomerCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7652,8 +7652,8 @@ export type UserUpdateToOneWithWhereWithoutCustomerUpdaterInput = {
 export type UserUpdateWithoutCustomerUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -7708,8 +7708,8 @@ export type UserUncheckedUpdateWithoutCustomerUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7763,8 +7763,8 @@ export type UserUncheckedUpdateWithoutCustomerUpdaterInput = {
 export type UserCreateWithoutCategoryCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -7819,8 +7819,8 @@ export type UserUncheckedCreateWithoutCategoryCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -7879,8 +7879,8 @@ export type UserCreateOrConnectWithoutCategoryCreatorInput = {
 export type UserCreateWithoutCategoryUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -7935,8 +7935,8 @@ export type UserUncheckedCreateWithoutCategoryUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -8006,8 +8006,8 @@ export type UserUpdateToOneWithWhereWithoutCategoryCreatorInput = {
 export type UserUpdateWithoutCategoryCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -8062,8 +8062,8 @@ export type UserUncheckedUpdateWithoutCategoryCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8128,8 +8128,8 @@ export type UserUpdateToOneWithWhereWithoutCategoryUpdaterInput = {
 export type UserUpdateWithoutCategoryUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -8184,8 +8184,8 @@ export type UserUncheckedUpdateWithoutCategoryUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8239,8 +8239,8 @@ export type UserUncheckedUpdateWithoutCategoryUpdaterInput = {
 export type UserCreateWithoutBrandCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -8295,8 +8295,8 @@ export type UserUncheckedCreateWithoutBrandCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -8355,8 +8355,8 @@ export type UserCreateOrConnectWithoutBrandCreatorInput = {
 export type UserCreateWithoutBrandUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -8411,8 +8411,8 @@ export type UserUncheckedCreateWithoutBrandUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -8482,8 +8482,8 @@ export type UserUpdateToOneWithWhereWithoutBrandCreatorInput = {
 export type UserUpdateWithoutBrandCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -8538,8 +8538,8 @@ export type UserUncheckedUpdateWithoutBrandCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8604,8 +8604,8 @@ export type UserUpdateToOneWithWhereWithoutBrandUpdaterInput = {
 export type UserUpdateWithoutBrandUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -8660,8 +8660,8 @@ export type UserUncheckedUpdateWithoutBrandUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8715,8 +8715,8 @@ export type UserUncheckedUpdateWithoutBrandUpdaterInput = {
 export type UserCreateWithoutTaxCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -8771,8 +8771,8 @@ export type UserUncheckedCreateWithoutTaxCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -8831,8 +8831,8 @@ export type UserCreateOrConnectWithoutTaxCreatorInput = {
 export type UserCreateWithoutTaxUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -8887,8 +8887,8 @@ export type UserUncheckedCreateWithoutTaxUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -8958,8 +8958,8 @@ export type UserUpdateToOneWithWhereWithoutTaxCreatorInput = {
 export type UserUpdateWithoutTaxCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -9014,8 +9014,8 @@ export type UserUncheckedUpdateWithoutTaxCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9080,8 +9080,8 @@ export type UserUpdateToOneWithWhereWithoutTaxUpdaterInput = {
 export type UserUpdateWithoutTaxUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -9136,8 +9136,8 @@ export type UserUncheckedUpdateWithoutTaxUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9191,8 +9191,8 @@ export type UserUncheckedUpdateWithoutTaxUpdaterInput = {
 export type UserCreateWithoutUnitCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -9247,8 +9247,8 @@ export type UserUncheckedCreateWithoutUnitCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -9307,8 +9307,8 @@ export type UserCreateOrConnectWithoutUnitCreatorInput = {
 export type UserCreateWithoutUnitUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -9363,8 +9363,8 @@ export type UserUncheckedCreateWithoutUnitUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -9434,8 +9434,8 @@ export type UserUpdateToOneWithWhereWithoutUnitCreatorInput = {
 export type UserUpdateWithoutUnitCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -9490,8 +9490,8 @@ export type UserUncheckedUpdateWithoutUnitCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9556,8 +9556,8 @@ export type UserUpdateToOneWithWhereWithoutUnitUpdaterInput = {
 export type UserUpdateWithoutUnitUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -9612,8 +9612,8 @@ export type UserUncheckedUpdateWithoutUnitUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9667,8 +9667,8 @@ export type UserUncheckedUpdateWithoutUnitUpdaterInput = {
 export type UserCreateWithoutProductCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -9723,8 +9723,8 @@ export type UserUncheckedCreateWithoutProductCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -9783,8 +9783,8 @@ export type UserCreateOrConnectWithoutProductCreatorInput = {
 export type UserCreateWithoutProductUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -9839,8 +9839,8 @@ export type UserUncheckedCreateWithoutProductUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -9910,8 +9910,8 @@ export type UserUpdateToOneWithWhereWithoutProductCreatorInput = {
 export type UserUpdateWithoutProductCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -9966,8 +9966,8 @@ export type UserUncheckedUpdateWithoutProductCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10032,8 +10032,8 @@ export type UserUpdateToOneWithWhereWithoutProductUpdaterInput = {
 export type UserUpdateWithoutProductUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -10088,8 +10088,8 @@ export type UserUncheckedUpdateWithoutProductUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10143,8 +10143,8 @@ export type UserUncheckedUpdateWithoutProductUpdaterInput = {
 export type UserCreateWithoutSupplierCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -10199,8 +10199,8 @@ export type UserUncheckedCreateWithoutSupplierCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -10259,8 +10259,8 @@ export type UserCreateOrConnectWithoutSupplierCreatorInput = {
 export type UserCreateWithoutSupplierUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -10315,8 +10315,8 @@ export type UserUncheckedCreateWithoutSupplierUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -10386,8 +10386,8 @@ export type UserUpdateToOneWithWhereWithoutSupplierCreatorInput = {
 export type UserUpdateWithoutSupplierCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -10442,8 +10442,8 @@ export type UserUncheckedUpdateWithoutSupplierCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10508,8 +10508,8 @@ export type UserUpdateToOneWithWhereWithoutSupplierUpdaterInput = {
 export type UserUpdateWithoutSupplierUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -10564,8 +10564,8 @@ export type UserUncheckedUpdateWithoutSupplierUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10619,8 +10619,8 @@ export type UserUncheckedUpdateWithoutSupplierUpdaterInput = {
 export type UserCreateWithoutPurchaseCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -10675,8 +10675,8 @@ export type UserUncheckedCreateWithoutPurchaseCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -10735,8 +10735,8 @@ export type UserCreateOrConnectWithoutPurchaseCreatorInput = {
 export type UserCreateWithoutPurchaseUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -10791,8 +10791,8 @@ export type UserUncheckedCreateWithoutPurchaseUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -10862,8 +10862,8 @@ export type UserUpdateToOneWithWhereWithoutPurchaseCreatorInput = {
 export type UserUpdateWithoutPurchaseCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -10918,8 +10918,8 @@ export type UserUncheckedUpdateWithoutPurchaseCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10984,8 +10984,8 @@ export type UserUpdateToOneWithWhereWithoutPurchaseUpdaterInput = {
 export type UserUpdateWithoutPurchaseUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -11040,8 +11040,8 @@ export type UserUncheckedUpdateWithoutPurchaseUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11095,8 +11095,8 @@ export type UserUncheckedUpdateWithoutPurchaseUpdaterInput = {
 export type UserCreateWithoutSaleCreatorInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -11151,8 +11151,8 @@ export type UserUncheckedCreateWithoutSaleCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -11211,8 +11211,8 @@ export type UserCreateOrConnectWithoutSaleCreatorInput = {
 export type UserCreateWithoutSaleUpdaterInput = {
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -11267,8 +11267,8 @@ export type UserUncheckedCreateWithoutSaleUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -11338,8 +11338,8 @@ export type UserUpdateToOneWithWhereWithoutSaleCreatorInput = {
 export type UserUpdateWithoutSaleCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -11394,8 +11394,8 @@ export type UserUncheckedUpdateWithoutSaleCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11460,8 +11460,8 @@ export type UserUpdateToOneWithWhereWithoutSaleUpdaterInput = {
 export type UserUpdateWithoutSaleUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -11516,8 +11516,8 @@ export type UserUncheckedUpdateWithoutSaleUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11572,8 +11572,8 @@ export type UserCreateManyRoleInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   avatar?: string | null
   gender?: boolean
@@ -11587,8 +11587,8 @@ export type UserCreateManyRoleInput = {
 export type UserUpdateWithoutRoleInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -11643,8 +11643,8 @@ export type UserUncheckedUpdateWithoutRoleInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -11699,8 +11699,8 @@ export type UserUncheckedUpdateManyWithoutRoleInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -11715,8 +11715,8 @@ export type UserCreateManyCreatorInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -11731,8 +11731,8 @@ export type UserCreateManyUpdaterInput = {
   id?: number
   name: string
   email: string
-  phone_no?: string | null
-  email_veriafied_at?: Date | string | null
+  phoneNo?: string | null
+  emailVeriafiedAt?: Date | string | null
   password: string
   roleId: number
   avatar?: string | null
@@ -11746,8 +11746,8 @@ export type UserCreateManyUpdaterInput = {
 export type UserUpdateWithoutCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -11802,8 +11802,8 @@ export type UserUncheckedUpdateWithoutCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11858,8 +11858,8 @@ export type UserUncheckedUpdateManyWithoutCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11873,8 +11873,8 @@ export type UserUncheckedUpdateManyWithoutCreatorInput = {
 export type UserUpdateWithoutUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gender?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -11929,8 +11929,8 @@ export type UserUncheckedUpdateWithoutUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -11985,8 +11985,8 @@ export type UserUncheckedUpdateManyWithoutUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
-  phone_no?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email_veriafied_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVeriafiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   password?: Prisma.StringFieldUpdateOperationsInput | string
   roleId?: Prisma.IntFieldUpdateOperationsInput | number
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -12383,8 +12383,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   name?: boolean
   email?: boolean
-  phone_no?: boolean
-  email_veriafied_at?: boolean
+  phoneNo?: boolean
+  emailVeriafiedAt?: boolean
   password?: boolean
   roleId?: boolean
   avatar?: boolean
@@ -12446,8 +12446,8 @@ export type UserSelectScalar = {
   id?: boolean
   name?: boolean
   email?: boolean
-  phone_no?: boolean
-  email_veriafied_at?: boolean
+  phoneNo?: boolean
+  emailVeriafiedAt?: boolean
   password?: boolean
   roleId?: boolean
   avatar?: boolean
@@ -12459,7 +12459,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "phone_no" | "email_veriafied_at" | "password" | "roleId" | "avatar" | "gender" | "status" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "phoneNo" | "emailVeriafiedAt" | "password" | "roleId" | "avatar" | "gender" | "status" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -12558,8 +12558,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: number
     name: string
     email: string
-    phone_no: string | null
-    email_veriafied_at: Date | null
+    phoneNo: string | null
+    emailVeriafiedAt: Date | null
     password: string
     roleId: number
     avatar: string | null
@@ -12984,8 +12984,8 @@ export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'Int'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly email: Prisma.FieldRef<"User", 'String'>
-  readonly phone_no: Prisma.FieldRef<"User", 'String'>
-  readonly email_veriafied_at: Prisma.FieldRef<"User", 'DateTime'>
+  readonly phoneNo: Prisma.FieldRef<"User", 'String'>
+  readonly emailVeriafiedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly roleId: Prisma.FieldRef<"User", 'Int'>
   readonly avatar: Prisma.FieldRef<"User", 'String'>

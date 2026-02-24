@@ -412,7 +412,8 @@ export const ModelName = {
   Purchase: 'Purchase',
   PurchaseProduct: 'PurchaseProduct',
   Sale: 'Sale',
-  SaleProduct: 'SaleProduct'
+  SaleProduct: 'SaleProduct',
+  Setting: 'Setting'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -428,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "role" | "user" | "menu" | "module" | "moduleRole" | "permission" | "permissionRole" | "hrmSetting" | "department" | "employee" | "attendance" | "account" | "payroll" | "warehouse" | "expenseCategory" | "expense" | "customerGroup" | "customer" | "category" | "brand" | "tax" | "unit" | "product" | "warehouseProduct" | "supplier" | "purchase" | "purchaseProduct" | "sale" | "saleProduct"
+    modelProps: "role" | "user" | "menu" | "module" | "moduleRole" | "permission" | "permissionRole" | "hrmSetting" | "department" | "employee" | "attendance" | "account" | "payroll" | "warehouse" | "expenseCategory" | "expense" | "customerGroup" | "customer" | "category" | "brand" | "tax" | "unit" | "product" | "warehouseProduct" | "supplier" | "purchase" | "purchaseProduct" | "sale" | "saleProduct" | "setting"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2346,6 +2347,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Setting: {
+      payload: Prisma.$SettingPayload<ExtArgs>
+      fields: Prisma.SettingFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SettingFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SettingPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SettingFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SettingPayload>
+        }
+        findFirst: {
+          args: Prisma.SettingFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SettingPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SettingFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SettingPayload>
+        }
+        findMany: {
+          args: Prisma.SettingFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SettingPayload>[]
+        }
+        create: {
+          args: Prisma.SettingCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SettingPayload>
+        }
+        createMany: {
+          args: Prisma.SettingCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.SettingDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SettingPayload>
+        }
+        update: {
+          args: Prisma.SettingUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SettingPayload>
+        }
+        deleteMany: {
+          args: Prisma.SettingDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SettingUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.SettingUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SettingPayload>
+        }
+        aggregate: {
+          args: Prisma.SettingAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSetting>
+        }
+        groupBy: {
+          args: Prisma.SettingGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SettingGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SettingCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SettingCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2387,7 +2454,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const RoleScalarFieldEnum = {
   id: 'id',
-  role_name: 'role_name',
+  roleName: 'roleName',
   deletable: 'deletable',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -2400,8 +2467,8 @@ export const UserScalarFieldEnum = {
   id: 'id',
   name: 'name',
   email: 'email',
-  phone_no: 'phone_no',
-  email_veriafied_at: 'email_veriafied_at',
+  phoneNo: 'phoneNo',
+  emailVeriafiedAt: 'emailVeriafiedAt',
   password: 'password',
   roleId: 'roleId',
   avatar: 'avatar',
@@ -2418,7 +2485,7 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 
 export const MenuScalarFieldEnum = {
   id: 'id',
-  menu_name: 'menu_name',
+  menuName: 'menuName',
   deletable: 'deletable',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -2874,6 +2941,17 @@ export const SaleProductScalarFieldEnum = {
 export type SaleProductScalarFieldEnum = (typeof SaleProductScalarFieldEnum)[keyof typeof SaleProductScalarFieldEnum]
 
 
+export const SettingScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  value: 'value',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SettingScalarFieldEnum = (typeof SettingScalarFieldEnum)[keyof typeof SettingScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2883,7 +2961,7 @@ export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
 export const RoleOrderByRelevanceFieldEnum = {
-  role_name: 'role_name'
+  roleName: 'roleName'
 } as const
 
 export type RoleOrderByRelevanceFieldEnum = (typeof RoleOrderByRelevanceFieldEnum)[keyof typeof RoleOrderByRelevanceFieldEnum]
@@ -2900,7 +2978,7 @@ export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 export const UserOrderByRelevanceFieldEnum = {
   name: 'name',
   email: 'email',
-  phone_no: 'phone_no',
+  phoneNo: 'phoneNo',
   password: 'password',
   avatar: 'avatar'
 } as const
@@ -2909,7 +2987,7 @@ export type UserOrderByRelevanceFieldEnum = (typeof UserOrderByRelevanceFieldEnu
 
 
 export const MenuOrderByRelevanceFieldEnum = {
-  menu_name: 'menu_name'
+  menuName: 'menuName'
 } as const
 
 export type MenuOrderByRelevanceFieldEnum = (typeof MenuOrderByRelevanceFieldEnum)[keyof typeof MenuOrderByRelevanceFieldEnum]
@@ -3093,6 +3171,14 @@ export const SaleOrderByRelevanceFieldEnum = {
 } as const
 
 export type SaleOrderByRelevanceFieldEnum = (typeof SaleOrderByRelevanceFieldEnum)[keyof typeof SaleOrderByRelevanceFieldEnum]
+
+
+export const SettingOrderByRelevanceFieldEnum = {
+  name: 'name',
+  value: 'value'
+} as const
+
+export type SettingOrderByRelevanceFieldEnum = (typeof SettingOrderByRelevanceFieldEnum)[keyof typeof SettingOrderByRelevanceFieldEnum]
 
 
 
@@ -3294,6 +3380,7 @@ export type GlobalOmitConfig = {
   purchaseProduct?: Prisma.PurchaseProductOmit
   sale?: Prisma.SaleOmit
   saleProduct?: Prisma.SaleProductOmit
+  setting?: Prisma.SettingOmit
 }
 
 /* Types for Logging */
