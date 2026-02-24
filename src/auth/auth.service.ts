@@ -4,7 +4,6 @@ import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/generated/prisma/client';
-import { UserLoginSuccessfulResponse } from './auth.types';
 import { UserType } from 'src/users/user.types';
 
 @Injectable()
@@ -28,10 +27,7 @@ export class AuthService {
     return user;
   }
 
-  async login(
-    email: string,
-    password: string,
-  ): Promise<UserLoginSuccessfulResponse> {
+  async login(email: string, password: string) {
     const user = (await this.validateUser(email, password)) as User;
     const payload = { email: user.email, id: user.id };
 
