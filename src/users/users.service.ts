@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -10,15 +9,22 @@ export class UsersService {
     return this.prisma.user.findMany({
       select: {
         id: true,
+        name: true,
         email: true,
       },
     });
   }
 
-  async findOne(email: string): Promise<User | null> {
+  async findOne(email: string, isPassword: boolean = false) {
     return this.prisma.user.findUnique({
       where: {
         email,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        password: isPassword,
       },
     });
   }

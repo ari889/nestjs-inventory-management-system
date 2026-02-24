@@ -9,6 +9,11 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async getUsers() {
-    return this.usersService.user();
+    const users = await this.usersService.user();
+    return {
+      success: true,
+      message: 'Users fetched successfully',
+      data: users,
+    };
   }
 }
