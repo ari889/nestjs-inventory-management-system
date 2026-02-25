@@ -24,7 +24,10 @@ export class AuthService {
     if (!isValidPassword) {
       throw new UnauthorizedException('Invalid password');
     }
-    return user;
+    return {
+      id: user.id,
+      email: user.email,
+    };
   }
 
   async login(email: string, password: string) {

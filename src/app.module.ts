@@ -19,25 +19,14 @@ import { APP_GUARD } from '@nestjs/core';
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService): ThrottlerModuleOptions => {
-        console.log(
-          'THROTTLE_TTL at startup:',
-          configService.get('THROTTLE_TTL'),
-        );
-        console.log(
-          'THROTTLE_LIMIT at startup:',
-          configService.get('THROTTLE_LIMIT'),
-        );
-
-        return {
-          throttlers: [
-            {
-              ttl: Number(configService.get('THROTTLE_TTL') || 10),
-              limit: Number(configService.get('THROTTLE_LIMIT') || 1),
-            },
-          ],
-        };
-      },
+      useFactory: (configService: ConfigService): ThrottlerModuleOptions => ({
+        throttlers: [
+          {
+            ttl: Number(configService.get('THROTTLE_TTL') || 10),
+            limit: Number(configService.get('THROTTLE_LIMIT') || 1),
+          },
+        ],
+      }),
     }),
     UsersModule,
     PrismaModule,
