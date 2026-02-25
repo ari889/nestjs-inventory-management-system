@@ -40,11 +40,14 @@ export class AuthService {
       secret: this.configService.get('JWT_REFRESH_SECRET'),
       expiresIn: this.configService.get('JWT_REFRESH_EXPIRATION'),
     });
+
+    const decoded: { exp: number } = this.jwtService.decode(accessToken);
     return {
       success: true,
       message: 'Login successful!',
       accessToken,
       refreshToken,
+      expiresIn: decoded.exp,
     };
   }
 
@@ -53,10 +56,12 @@ export class AuthService {
     if (!user) throw new UnauthorizedException("User doesn't exist");
     const payload = { email: user.email, id: user.id };
     const accessToken = this.jwtService.sign(payload);
+    const decode: { exp: number } = this.jwtService.decode(accessToken);
     return {
       success: true,
       message: 'Refresh token generated successfully!',
       accessToken,
+      expiresIn: decode.exp,
     };
   }
 }

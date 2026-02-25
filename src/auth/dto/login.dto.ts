@@ -30,6 +30,9 @@ export class LoginResponseDto {
 
   @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
   refreshToken: string;
+
+  @ApiProperty({ example: 1661504000 })
+  expiresIn: number;
 }
 
 export class LoginValidateErrorDto {

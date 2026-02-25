@@ -47,6 +47,30 @@ export class AuthController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'Refresh token generated successfully!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: {
+          type: 'boolean',
+          example: true,
+        },
+        message: {
+          type: 'string',
+          example: 'Refresh token generated successfully!',
+        },
+        accessToken: {
+          type: 'string',
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+        },
+        expiresIn: {
+          type: 'number',
+          example: 1661504000,
+        },
+      },
+    },
+  })
   async refreshToken(@Request() request: { user: { email: string } }) {
     return this.authService.refreshToken(request.user.email);
   }
