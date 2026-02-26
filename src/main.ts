@@ -9,6 +9,7 @@ import { setupSwagger } from './swagger';
 import { VersioningType } from '@nestjs/common';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyCsrfProtection from '@fastify/csrf-protection';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -63,6 +64,11 @@ async function bootstrap() {
    * initialize swagger
    */
   setupSwagger(app, configService);
+
+  /**
+   * change global exception resonse
+   */
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(process.env.PORT ?? 3000);
 }

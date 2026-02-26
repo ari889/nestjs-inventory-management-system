@@ -16,13 +16,11 @@ export class AuthService {
 
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne(email, true);
-    if (!user) {
-      throw new UnauthorizedException("User doesn't exist");
-    }
+    if (!user) throw new UnauthorizedException('Invalid credentials provided!');
 
     const isValidPassword = await bcrypt.compare(pass, user.password);
     if (!isValidPassword) {
-      throw new UnauthorizedException('Invalid password');
+      throw new UnauthorizedException('Your password is incorrect!');
     }
     return {
       id: user.id,
@@ -44,24 +42,28 @@ export class AuthService {
     const decoded: { exp: number } = this.jwtService.decode(accessToken);
     return {
       success: true,
-      message: 'Login successful!',
-      accessToken,
-      refreshToken,
-      expiresIn: decoded.exp,
+      message: 'You are successfully logged in!',
+      data: {
+        accessToken,
+        refreshToken,
+        expiresIn: decoded.exp,
+      },
     };
   }
 
   async refreshToken(email: string) {
     const user = (await this.usersService.findOne(email)) as UserType;
-    if (!user) throw new UnauthorizedException("User doesn't exist");
+    if (!user) throw new UnauthorizedException('Invalid credentials provided!');
     const payload = { email: user.email, id: user.id };
     const accessToken = this.jwtService.sign(payload);
     const decode: { exp: number } = this.jwtService.decode(accessToken);
     return {
       success: true,
       message: 'Refresh token generated successfully!',
-      accessToken,
-      expiresIn: decode.exp,
+      data: {
+        accessToken,
+        expiresIn: decode.exp,
+      },
     };
   }
 }

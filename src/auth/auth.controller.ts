@@ -12,11 +12,7 @@ import { AuthService } from './auth.service';
 import { LoginSchema } from './schemas/login.schema';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { AuthGuard } from '@nestjs/passport';
-import {
-  LoginDto,
-  LoginResponseDto,
-  LoginValidateErrorDto,
-} from './dto/login.dto';
+import { LoginDto } from './dto/login.dto';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -34,10 +30,67 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiBody({ type: LoginDto })
-  @ApiOkResponse({ description: 'Login Successful!', type: LoginResponseDto })
+  @ApiOkResponse({
+    description: 'Login Successful Response!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: {
+          type: 'boolean',
+          example: true,
+        },
+        message: {
+          type: 'string',
+          example: 'You are successfully logged in!',
+        },
+        data: {
+          type: 'object',
+          properties: {
+            accessToken: {
+              type: 'string',
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+            },
+            refreshToken: {
+              type: 'string',
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+            },
+            expiresIn: {
+              type: 'number',
+              example: 1661504000,
+            },
+          },
+        },
+      },
+    },
+  })
   @ApiBadRequestResponse({
     description: 'Validation failed!',
-    type: LoginValidateErrorDto,
+    schema: {
+      type: 'object',
+      properties: {
+        success: {
+          type: 'boolean',
+          example: false,
+        },
+        message: {
+          type: 'string',
+          example: 'Validation failed!',
+        },
+        errors: {
+          type: 'object',
+          properties: {
+            email: {
+              type: 'string',
+              example: 'Enter a valid email address!',
+            },
+            password: {
+              type: 'string',
+              example: 'Password is required!',
+            },
+          },
+        },
+      },
+    },
   })
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto.email, loginDto.password);
@@ -48,7 +101,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
   @ApiOkResponse({
-    description: 'Refresh token generated successfully!',
+    description: 'Refresh generation response!',
     schema: {
       type: 'object',
       properties: {
@@ -60,13 +113,18 @@ export class AuthController {
           type: 'string',
           example: 'Refresh token generated successfully!',
         },
-        accessToken: {
-          type: 'string',
-          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-        },
-        expiresIn: {
-          type: 'number',
-          example: 1661504000,
+        data: {
+          type: 'object',
+          properties: {
+            accessToken: {
+              type: 'string',
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+            },
+            expiresIn: {
+              type: 'number',
+              example: 1661504000,
+            },
+          },
         },
       },
     },
