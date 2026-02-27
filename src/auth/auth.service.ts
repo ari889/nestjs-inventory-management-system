@@ -46,7 +46,7 @@ export class AuthService {
       data: {
         accessToken,
         refreshToken,
-        expiresIn: decoded.exp,
+        expiresIn: decoded.exp * 1000,
       },
     };
   }
@@ -62,7 +62,7 @@ export class AuthService {
       message: 'Refresh token generated successfully!',
       data: {
         accessToken,
-        expiresIn: decode.exp,
+        expiresIn: decode.exp * 1000,
       },
     };
   }
