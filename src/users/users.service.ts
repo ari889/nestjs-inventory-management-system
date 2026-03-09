@@ -17,14 +17,20 @@ export class UsersService {
 
   async findOne(email: string, isPassword: boolean = false) {
     return this.prisma.user.findUnique({
-      where: {
-        email,
-      },
       select: {
         id: true,
         name: true,
         email: true,
         password: isPassword,
+        role: {
+          select: {
+            id: true,
+            roleName: true,
+          },
+        },
+      },
+      where: {
+        email,
       },
     });
   }

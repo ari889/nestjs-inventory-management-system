@@ -9,6 +9,10 @@ import {
   ThrottlerModuleOptions,
 } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { MenusModule } from './menus/menus.module';
+import { ModulesModule } from './modules/modules.module';
+
+console.log(`.${process.env.NODE_ENV || 'development'}.env`);
 
 @Module({
   imports: [
@@ -31,6 +35,8 @@ import { APP_GUARD } from '@nestjs/core';
     UsersModule,
     PrismaModule,
     AuthModule,
+    MenusModule,
+    ModulesModule,
   ],
   providers: [
     {

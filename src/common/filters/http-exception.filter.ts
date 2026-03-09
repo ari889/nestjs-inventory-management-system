@@ -18,30 +18,33 @@ interface ResponseObject {
   errors?: object;
 }
 
-@Catch()
+@Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<FastifyReply>();
+
     const status = exception.getStatus();
     const res = exception.getResponse() as HttpExceptionResponse;
 
     if (status === 404) {
-      response.status(status).send({
+      return response.status(status).send({
         success: false,
         message: "Requested resource doesn't exist!",
       });
     }
 
-    let responseObject: ResponseObject = {
+    const responseObject: ResponseObject = {
       success: false,
-      message: exception.message || 'Something went wrong!',
+      message:
+        typeof res === 'object' && res.message
+          ? Array.isArray(res.message)
+            ? res.message.join(', ')
+            : res.message
+          : exception.message || 'Something went wrong!',
+      errors: res.errors,
     };
 
-    if (res.errors) {
-      responseObject = { ...responseObject, errors: res.errors };
-    }
-
-    response.status(status).send(responseObject);
+    return response.status(status).send(responseObject);
   }
 }
