@@ -6,6 +6,7 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
+import { Menu } from 'src/generated/prisma/client';
 
 @Injectable()
 export class MenusService {
@@ -27,7 +28,7 @@ export class MenusService {
     order: string;
     direction: string;
     search: string;
-  }) {
+  }): Promise<{ items: Menu[]; totalItems: number }> {
     const [items, totalItems] = await Promise.all([
       this.prisma.menu.findMany({
         where: {
@@ -50,6 +51,24 @@ export class MenusService {
   }
 
   /**
+   *
+   * @param id
+   * @returns Menu
+   */
+  async findMenu(id: number): Promise<Omit<Menu, 'createdAt' | 'updatedAt'>> {
+    const menu = await this.prisma.menu.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        menuName: true,
+        deletable: true,
+      },
+    });
+    if (!menu) throw new NotFoundException('Menu not found.');
+    return menu;
+  }
+
+  /**
    * Create new menu
    * @param createMenuDto
    * @returns Menu
@@ -64,7 +83,7 @@ export class MenusService {
    * @param updateMenuDto
    * @returns Menu
    */
-  async updateMenu(id: number, updateMenuDto: UpdateMenuDto) {
+  async updateMenu(id: number, updateMenuDto: UpdateMenuDto): Promise<Menu> {
     return this.prisma.menu.update({ where: { id }, data: updateMenuDto });
   }
 
@@ -73,7 +92,7 @@ export class MenusService {
    * @param id
    * @returns Menu
    */
-  async deleteMenu(id: number) {
+  async deleteMenu(id: number): Promise<Menu> {
     const menu = await this.prisma.menu.findUnique({
       where: { id },
       select: { id: true, deletable: true },

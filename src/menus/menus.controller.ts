@@ -129,6 +129,34 @@ export class MenusController {
     };
   }
 
+  @ApiOkResponse({
+    description: 'Menus fetched successfully!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: { type: 'string', example: 'Menus fetched successfully!' },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            menuName: { type: 'string', example: 'Menu 1' },
+            deletable: { type: 'boolean', example: true },
+          },
+        },
+      },
+    },
+  })
+  @Get(':id')
+  async find(@Param('id', ParseIntPipe) id: number) {
+    const menu = await this.menusService.findMenu(id);
+    return {
+      success: true,
+      message: 'Menu fetched successfully!',
+      data: menu,
+    };
+  }
+
   @UsePipes(new ZodValidationPipe(MenuSchema))
   @ApiOkResponse({
     description: 'Menus created successfully!',
@@ -172,8 +200,6 @@ export class MenusController {
    * @param updateMenuDto
    * @returns Menu
    */
-  @UsePipes(new ZodValidationPipe(MenuSchema))
-  @Patch(':id')
   @ApiOkResponse({
     description: 'Menus updated successfully!',
     schema: {
@@ -200,9 +226,10 @@ export class MenusController {
       },
     },
   })
+  @Patch(':id')
   async updateMenu(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateMenuDto: UpdateMenuDto,
+    @Body(new ZodValidationPipe(MenuSchema)) updateMenuDto: UpdateMenuDto,
   ) {
     const menu = await this.menusService.updateMenu(id, updateMenuDto);
     return {
