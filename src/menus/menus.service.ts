@@ -1,5 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateMenuDto } from './dto/create-menu.dto';
+import { UpdateMenuDto } from './dto/update-menu.dto';
 
 @Injectable()
 export class MenusService {
@@ -29,7 +35,7 @@ export class MenusService {
             contains: search,
           },
         },
-        skip: (page - 1) * limit,
+        skip: page * limit,
         take: limit,
         orderBy: {
           [order]: direction,
@@ -41,5 +47,45 @@ export class MenusService {
       items,
       totalItems,
     };
+  }
+
+  /**
+   * Create new menu
+   * @param createMenuDto
+   * @returns Menu
+   */
+  async createMenu(createMenuDto: CreateMenuDto) {
+    return this.prisma.menu.create({ data: createMenuDto });
+  }
+
+  /**
+   * Update menu by it's id
+   * @param id
+   * @param updateMenuDto
+   * @returns Menu
+   */
+  async updateMenu(id: number, updateMenuDto: UpdateMenuDto) {
+    return this.prisma.menu.update({ where: { id }, data: updateMenuDto });
+  }
+
+  /**
+   * Delete Menu by it's id
+   * @param id
+   * @returns Menu
+   */
+  async deleteMenu(id: number) {
+    const menu = await this.prisma.menu.findUnique({
+      where: { id },
+      select: { id: true, deletable: true },
+    });
+
+    if (!menu) throw new NotFoundException('Menu not found.');
+
+    if (!menu.deletable)
+      throw new ForbiddenException(
+        'You have no enough permissions to do this.',
+      );
+
+    return this.prisma.menu.delete({ where: { id } });
   }
 }

@@ -1,17 +1,29 @@
 import {
+  Body,
   Controller,
   DefaultValuePipe,
+  Delete,
   Get,
+  Param,
   ParseEnumPipe,
   ParseIntPipe,
+  Patch,
+  Post,
   Query,
   UseGuards,
+  UsePipes,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { MenusService } from './menus.service';
 import { SortDirection } from 'src/@types/default.types';
+import { MenuSchema } from './schemas/menu.schema';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
+import { CreateMenuDto } from './dto/create-menu.dto';
+import { UpdateMenuDto } from './dto/update-menu.dto';
 
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 @Controller('menus')
 export class MenusController {
   constructor(private readonly menusService: MenusService) {}
@@ -25,8 +37,6 @@ export class MenusController {
    * @param search
    * @returns Menus
    */
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @ApiQuery({
     name: 'order',
     required: false,
@@ -93,7 +103,7 @@ export class MenusController {
   })
   @Get()
   async getMenus(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe)
+    @Query('page', new DefaultValuePipe(0), ParseIntPipe)
     page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('order') order: string = 'id',
@@ -116,6 +126,130 @@ export class MenusController {
       success: true,
       message: 'Menus fetched successfully!',
       data,
+    };
+  }
+
+  @UsePipes(new ZodValidationPipe(MenuSchema))
+  @ApiOkResponse({
+    description: 'Menus created successfully!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: { type: 'string', example: 'Menus created successfully!' },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            menuName: { type: 'string', example: 'Menu 1' },
+            deletable: { type: 'boolean', example: true },
+            createdAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+            updatedAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+          },
+        },
+      },
+    },
+  })
+  @Post()
+  async createMenu(@Body() createMenuDto: CreateMenuDto) {
+    const menu = await this.menusService.createMenu(createMenuDto);
+    return {
+      success: true,
+      message: 'Menu created successfully!',
+      data: menu,
+    };
+  }
+
+  /**
+   * Update menu by it's id
+   * @param id
+   * @param updateMenuDto
+   * @returns Menu
+   */
+  @UsePipes(new ZodValidationPipe(MenuSchema))
+  @Patch(':id')
+  @ApiOkResponse({
+    description: 'Menus updated successfully!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: { type: 'string', example: 'Menus updated successfully!' },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            menuName: { type: 'string', example: 'Menu 1' },
+            deletable: { type: 'boolean', example: true },
+            createdAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+            updatedAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+          },
+        },
+      },
+    },
+  })
+  async updateMenu(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateMenuDto: UpdateMenuDto,
+  ) {
+    const menu = await this.menusService.updateMenu(id, updateMenuDto);
+    return {
+      success: true,
+      message: 'Menu updated successfully!',
+      data: menu,
+    };
+  }
+
+  /**
+   * Delete menu by it's id
+   * @param id
+   * @returns Menu
+   */
+  @ApiOkResponse({
+    description: 'Menus deleted successfully!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: { type: 'string', example: 'Menus deleted successfully!' },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            menuName: { type: 'string', example: 'Menu 1' },
+            deletable: { type: 'boolean', example: true },
+            createdAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+            updatedAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+          },
+        },
+      },
+    },
+  })
+  @Delete(':id')
+  async deleteMenu(@Param('id', ParseIntPipe) id: number) {
+    const menu = await this.menusService.deleteMenu(id);
+    return {
+      success: true,
+      message: 'Menu deleted successfully!.',
+      data: menu,
     };
   }
 }

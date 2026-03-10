@@ -23,14 +23,24 @@ console.log(`.${process.env.NODE_ENV || 'development'}.env`);
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService): ThrottlerModuleOptions => ({
-        throttlers: [
-          {
-            ttl: Number(configService.get('THROTTLE_TTL') || 10),
-            limit: Number(configService.get('THROTTLE_LIMIT') || 1),
-          },
-        ],
-      }),
+      useFactory: (configService: ConfigService): ThrottlerModuleOptions => {
+        const isDev = configService.get<string>('NODE_ENV') === 'development';
+
+        if (isDev) {
+          return {
+            throttlers: [],
+          };
+        }
+
+        return {
+          throttlers: [
+            {
+              ttl: Number(configService.get('THROTTLE_TTL') || 10),
+              limit: Number(configService.get('THROTTLE_LIMIT') || 1),
+            },
+          ],
+        };
+      },
     }),
     UsersModule,
     PrismaModule,
