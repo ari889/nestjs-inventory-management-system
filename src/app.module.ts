@@ -11,6 +11,7 @@ import {
 import { APP_GUARD } from '@nestjs/core';
 import { MenusModule } from './menus/menus.module';
 import { ModulesModule } from './modules/modules.module';
+import { PermissionsModule } from './permissions/permissions.module';
 
 console.log(`.${process.env.NODE_ENV || 'development'}.env`);
 
@@ -47,6 +48,7 @@ console.log(`.${process.env.NODE_ENV || 'development'}.env`);
     AuthModule,
     MenusModule,
     ModulesModule,
+    PermissionsModule,
   ],
   providers: [
     {

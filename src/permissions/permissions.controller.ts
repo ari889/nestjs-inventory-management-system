@@ -1,0 +1,351 @@
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Delete,
+  Get,
+  Param,
+  ParseEnumPipe,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { PermissionsService } from './permissions.service';
+import { SortDirection } from 'src/@types/default.types';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
+import {
+  PermissionItemSchema,
+  PermissionSchema,
+} from './schemas/create-permission.schema';
+import { PermissionItemDto } from './dto/permission-item.dto';
+import { CreatePermissionDto } from './dto/permission.dto';
+
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
+@Controller('permissions')
+export class PermissionsController {
+  constructor(private readonly permissionsService: PermissionsService) {}
+
+  /**
+   * Get all permission
+   * @param page
+   * @param limit
+   * @param order
+   * @param direction
+   * @returns Permission
+   */
+  @ApiQuery({
+    name: 'order',
+    required: false,
+    example: 'id',
+  })
+  @ApiQuery({
+    name: 'direction',
+    required: false,
+    enum: ['asc', 'desc'],
+    example: 'asc',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    example: 10,
+  })
+  @ApiOkResponse({
+    description: 'Menus fetched successfully!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: { type: 'string', example: 'Menus fetched successfully!' },
+        data: {
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'number', example: 1 },
+                  module: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'number', example: 1 },
+                      moduleName: { type: 'string', example: 'Module 1' },
+                    },
+                  },
+                  name: { type: 'string', example: 'Permission 1' },
+                  slug: { type: 'string', example: 'permission-1' },
+                  deletable: { type: 'boolean', example: true },
+                  createdAt: {
+                    type: 'string',
+                    example: '2021-01-01T00:00:00.000Z',
+                  },
+                  updatedAt: {
+                    type: 'string',
+                    example: '2021-01-01T00:00:00.000Z',
+                  },
+                },
+              },
+            },
+            totalItems: { type: 'number' },
+          },
+        },
+      },
+    },
+  })
+  @Get()
+  async getPermissions(
+    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('order') order: string = 'id',
+    @Query(
+      'direction',
+      new DefaultValuePipe(SortDirection.DESC),
+      new ParseEnumPipe(SortDirection),
+    )
+    direction: string = 'desc',
+  ) {
+    const permissions = await this.permissionsService.getPermissions({
+      page,
+      limit,
+      order,
+      direction,
+    });
+    return {
+      success: true,
+      message: 'Permissions fetched successfully!',
+      data: permissions,
+    };
+  }
+
+  /**
+   * Get permission by id
+   * @param id
+   * @returns Permission
+   */
+  @ApiOkResponse({
+    description: 'Permission fetched successfully!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: {
+          type: 'string',
+          example: 'Permission fetched successfully!',
+        },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            module: {
+              type: 'object',
+              properties: {
+                id: { type: 'number', example: 1 },
+                moduleName: { type: 'string', example: 'Module 1' },
+              },
+            },
+            name: { type: 'string', example: 'Permission 1' },
+            slug: { type: 'string', example: 'permission-1' },
+            deletable: { type: 'boolean', example: true },
+            createdAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+            updatedAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+          },
+        },
+      },
+    },
+  })
+  @Get(':id')
+  async findPermission(@Param('id', ParseIntPipe) id: number) {
+    const permission = await this.permissionsService.findPermission(id);
+    return {
+      success: true,
+      message: 'Permission fetched successfully!',
+      data: permission,
+    };
+  }
+
+  /**
+   * Create Permission
+   * @param permissionDto
+   * @returns Permission
+   */
+  @ApiOkResponse({
+    description: 'Permission created successfully!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: {
+          type: 'string',
+          example: 'Permission created successfully!',
+        },
+        data: {
+          type: 'array',
+          properties: {
+            id: { type: 'number', example: 1 },
+            module: {
+              type: 'object',
+              properties: {
+                id: { type: 'number', example: 1 },
+                moduleName: { type: 'string', example: 'Module 1' },
+              },
+            },
+            name: { type: 'string', example: 'Permission 1' },
+            slug: { type: 'string', example: 'permission-1' },
+            deletable: { type: 'boolean', example: true },
+            createdAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+            updatedAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+          },
+        },
+      },
+    },
+  })
+  @Post()
+  async createPermission(
+    @Body(new ZodValidationPipe(PermissionSchema))
+    permissionDto: CreatePermissionDto,
+  ) {
+    const permission =
+      await this.permissionsService.createPermission(permissionDto);
+    return {
+      success: true,
+      message: 'Permission created successfully!',
+      data: permission,
+    };
+  }
+
+  /**
+   * Update permission by id
+   * @param id
+   * @param permissionDto
+   * @returns Permission
+   */
+  @ApiOkResponse({
+    description: 'Permission updated successfully!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: {
+          type: 'string',
+          example: 'Permission updated successfully!',
+        },
+        data: {
+          type: 'object ',
+          properties: {
+            id: { type: 'number', example: 1 },
+            module: {
+              type: 'object',
+              properties: {
+                id: { type: 'number', example: 1 },
+                moduleName: { type: 'string', example: 'Module 1' },
+              },
+            },
+            name: { type: 'string', example: 'Permission 1' },
+            slug: { type: 'string', example: 'permission-1' },
+            deletable: { type: 'boolean', example: true },
+            createdAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+            updatedAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+          },
+        },
+      },
+    },
+  })
+  @Patch(':id')
+  async updatePermission(
+    @Param('id', ParseIntPipe) id: number,
+    @Body(new ZodValidationPipe(PermissionItemSchema))
+    permissionDto: PermissionItemDto,
+  ) {
+    const permission = await this.permissionsService.updatePermission(
+      id,
+      permissionDto,
+    );
+    return {
+      success: true,
+      message: 'Permission updated successfully!',
+      data: permission,
+    };
+  }
+
+  /**
+   * Delete Permission by id
+   * @param id
+   * @returns Permission
+   */
+  @ApiOkResponse({
+    description: 'Permission fetched successfully!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: {
+          type: 'string',
+          example: 'Permission fetched successfully!',
+        },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            module: {
+              type: 'object',
+              properties: {
+                id: { type: 'number', example: 1 },
+                moduleName: { type: 'string', example: 'Module 1' },
+              },
+            },
+            name: { type: 'string', example: 'Permission 1' },
+            slug: { type: 'string', example: 'permission-1' },
+            deletable: { type: 'boolean', example: true },
+            createdAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+            updatedAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+          },
+        },
+      },
+    },
+  })
+  @Delete(':id')
+  async removePermission(@Param('id', ParseIntPipe) id: number) {
+    const permission = await this.permissionsService.deletePermission(id);
+    return {
+      success: true,
+      message: 'Permission deleted successfully!',
+      data: permission,
+    };
+  }
+}
