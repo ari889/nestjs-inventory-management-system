@@ -20,8 +20,8 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesService } from './roles.service';
 import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { RoleSchema } from './schemas/role.schema';
-import { RoleDto } from './dto/role.dto';
+import { RoleSchema, UpdateRoleSchema } from './schemas/role.schema';
+import { RoleDto, UpdateRoleDto } from './dto/role.dto';
 import { BlukDeleteRoleDto } from './schemas/role-bulk-delete.dto';
 
 @UseGuards(JwtAuthGuard)
@@ -160,6 +160,26 @@ export class RolesController {
             id: { type: 'number', example: 1 },
             roleName: { type: 'string', example: 'Role 1' },
             deletable: { type: 'boolean', example: true },
+            moduleRole: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'number', example: 1 },
+                  moduleName: { type: 'string', example: 'Module 1' },
+                },
+              },
+            },
+            permissionRole: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'number', example: 1 },
+                  name: { type: 'string', example: 'Module 1' },
+                },
+              },
+            },
             createdAt: {
               type: 'string',
               example: '2021-01-01T00:00:00.000Z',
@@ -265,7 +285,7 @@ export class RolesController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(RoleSchema)) roleDto: RoleDto,
+    @Body(new ZodValidationPipe(UpdateRoleSchema)) roleDto: UpdateRoleDto,
   ) {
     const role = await this.rolesService.update(id, roleDto);
     return {
@@ -339,24 +359,10 @@ export class RolesController {
         message: { type: 'string', example: 'Roles fetched successfully!' },
         data: {
           type: 'object',
-          items: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                roleName: { type: 'string', example: 'Permission 1' },
-                deletable: { type: 'boolean', example: true },
-                createdAt: {
-                  type: 'string',
-                  example: '2021-01-01T00:00:00.000Z',
-                },
-                updatedAt: {
-                  type: 'string',
-                  example: '2021-01-01T00:00:00.000Z',
-                },
-              },
-            },
+          properties: {
+            deletedRoleIds: { type: 'array', example: [1, 2, 3] },
+            skippedRoleIds: { type: 'array', example: [4, 5, 6] },
+            count: { type: 'number', example: 5 },
           },
         },
       },

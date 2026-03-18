@@ -105,6 +105,69 @@ export class ModulesController {
   }
 
   /**
+   * Get module by permissions
+   * @returns Module
+   */
+  @ApiOkResponse({
+    description: 'Module success fetched response!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: { type: 'string', example: 'Module fetched successfully!' },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              menuId: { type: 'number', example: 1 },
+              type: { type: 'boolean', example: true },
+              moduleName: { type: 'string', example: 'Menus' },
+              dividerTitle: { type: 'string', example: 'Menus' },
+              iconClass: { type: 'string', example: 'fa fa-home' },
+              url: { type: 'string', example: '/' },
+              order: { type: 'number', example: 1 },
+              parentId: { type: 'number', example: 1 },
+              target: { type: 'string', example: 'SELF' },
+              deletable: { type: 'boolean', example: true },
+              permissions: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number', example: 1 },
+                    name: { type: 'string', example: 'Create User' },
+                    slug: { type: 'string', example: 'create-user' },
+                    deletable: { type: 'boolean', example: true },
+                  },
+                },
+              },
+              createdAt: {
+                type: 'string',
+                example: '2021-01-01T00:00:00.000Z',
+              },
+              updatedAt: {
+                type: 'string',
+                example: '2021-01-01T00:00:00.000Z',
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  @Get('permissions')
+  async getModulePermissions() {
+    const modules = await this.modulesService.getModulePermissions();
+    return {
+      success: true,
+      message: 'Module fetched successfully!',
+      data: modules,
+    };
+  }
+
+  /**
    * Fetched module by role
    * @param req
    * @returns Modules

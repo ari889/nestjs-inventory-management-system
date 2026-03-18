@@ -17,3 +17,21 @@ export class RoleDto {
   })
   deletable: boolean;
 }
+
+export class UpdateRoleDto extends RoleDto {
+  @ApiProperty({
+    description: 'Select module first!',
+    minimum: 1,
+    default: [1, 2, 3],
+    type: Array,
+  })
+  moduleIds: number[];
+
+  @ApiProperty({
+    description: 'Select permission first!',
+    minimum: 1,
+    default: [4, 5, 6],
+    type: Array,
+  })
+  permissionIds: number[];
+}

@@ -41,6 +41,26 @@ export class ModulesService {
     return roots;
   }
 
+  async getModulePermissions(): Promise<Module[]> {
+    const modules = await this.prisma.module.findMany({
+      where: {
+        type: false,
+      },
+      orderBy: { order: 'asc' },
+      include: {
+        permissions: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            deletable: true,
+          },
+        },
+      },
+    });
+    return modules;
+  }
+
   /**
    * Get current logged in user modules
    * @param email
