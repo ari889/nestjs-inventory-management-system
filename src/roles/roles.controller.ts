@@ -14,32 +14,31 @@ import {
   Post,
   Query,
   UseGuards,
-  UsePipes,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { MenusService } from './menus.service';
+import { RolesService } from './roles.service';
 import { SortDirection } from 'src/@types/default.types';
-import { MenuSchema } from './schemas/menu.schema';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { CreateMenuDto } from './dto/create-menu.dto';
-import { UpdateMenuDto } from './dto/update-menu.dto';
-import { BlukDeleteMenuDto } from './dto/bulk-delete-menu.dto';
+import { RoleSchema } from './schemas/role.schema';
+import { RoleDto } from './dto/role.dto';
+import { BlukDeleteRoleDto } from './schemas/role-bulk-delete.dto';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
-@Controller('menus')
-export class MenusController {
-  constructor(private readonly menusService: MenusService) {}
+@Controller('roles')
+export class RolesController {
+  constructor(private readonly rolesService: RolesService) {}
 
   /**
-   * Get Menus
+   * Get all roles
    * @param page
    * @param limit
    * @param order
+   * @param name
+   * @param deletable
    * @param direction
-   * @param search
-   * @returns Menus
+   * @returns Role
    */
   @ApiQuery({
     name: 'order',
@@ -65,10 +64,10 @@ export class MenusController {
     example: 10,
   })
   @ApiQuery({
-    name: 'search',
+    name: 'name',
     required: false,
     type: String,
-    example: 'Menu 1',
+    example: 'Role 1',
   })
   @ApiQuery({
     name: 'deletable',
@@ -77,12 +76,12 @@ export class MenusController {
     example: true,
   })
   @ApiOkResponse({
-    description: 'Menus fetched successfully!',
+    description: 'Roles fetched successfully!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
-        message: { type: 'string', example: 'Menus fetched successfully!' },
+        message: { type: 'string', example: 'Roles fetched successfully!' },
         data: {
           type: 'object',
           properties: {
@@ -92,7 +91,7 @@ export class MenusController {
                 type: 'object',
                 properties: {
                   id: { type: 'number', example: 1 },
-                  menuName: { type: 'string', example: 'Menu 1' },
+                  roleName: { type: 'string', example: 'Permission 1' },
                   deletable: { type: 'boolean', example: true },
                   createdAt: {
                     type: 'string',
@@ -112,11 +111,11 @@ export class MenusController {
     },
   })
   @Get()
-  async getMenus(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe)
-    page: number,
+  async findAll(
+    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('order') order: string = 'id',
+    @Query('name') name?: string,
     @Query('deletable') deletable?: string,
     @Query(
       'direction',
@@ -124,65 +123,86 @@ export class MenusController {
       new ParseEnumPipe(SortDirection),
     )
     direction: string = 'desc',
-    @Query('search') search?: string,
   ) {
-    const data = await this.menusService.getMenus({
+    const roles = await this.rolesService.findAll({
       page,
       limit,
       order,
       direction,
-      search,
+      name,
       deletable: deletable === undefined ? undefined : deletable === 'true',
     });
     return {
       success: true,
-      message: 'Menus fetched successfully!',
-      data,
+      message: 'Roles fetched successfully!',
+      data: roles,
     };
   }
 
+  /**
+   * Find role by id
+   * @param id
+   * @returns Role
+   */
   @ApiOkResponse({
-    description: 'Menus fetched successfully!',
+    description: 'Role fetched successfully!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
-        message: { type: 'string', example: 'Menus fetched successfully!' },
+        message: {
+          type: 'string',
+          example: 'Role fetched successfully!',
+        },
         data: {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            menuName: { type: 'string', example: 'Menu 1' },
+            roleName: { type: 'string', example: 'Role 1' },
             deletable: { type: 'boolean', example: true },
+            createdAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
+            updatedAt: {
+              type: 'string',
+              example: '2021-01-01T00:00:00.000Z',
+            },
           },
         },
       },
     },
   })
   @Get(':id')
-  async find(@Param('id', ParseIntPipe) id: number) {
-    const menu = await this.menusService.findMenu(id);
-    if (!menu) throw new NotFoundException('Menu not found.');
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const role = await this.rolesService.findOne(id);
     return {
       success: true,
-      message: 'Menu fetched successfully!',
-      data: menu,
+      message: 'Role fetched successfully!',
+      data: role,
     };
   }
 
-  @UsePipes(new ZodValidationPipe(MenuSchema))
+  /**
+   * Create new role
+   * @param roleDto
+   * @returns Role
+   */
   @ApiOkResponse({
-    description: 'Menus created successfully!',
+    description: 'Role created successfully!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
-        message: { type: 'string', example: 'Menus created successfully!' },
+        message: {
+          type: 'string',
+          example: 'Role created successfully!',
+        },
         data: {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            menuName: { type: 'string', example: 'Menu 1' },
+            roleName: { type: 'string', example: 'Role 1' },
             deletable: { type: 'boolean', example: true },
             createdAt: {
               type: 'string',
@@ -198,33 +218,36 @@ export class MenusController {
     },
   })
   @Post()
-  async createMenu(@Body() createMenuDto: CreateMenuDto) {
-    const menu = await this.menusService.createMenu(createMenuDto);
+  async create(@Body(new ZodValidationPipe(RoleSchema)) roleDto: RoleDto) {
+    const role = await this.rolesService.create(roleDto);
     return {
       success: true,
-      message: 'Menu created successfully!',
-      data: menu,
+      message: 'Role created successfully!',
+      data: role,
     };
   }
 
   /**
-   * Update menu by it's id
+   * Update role by id
    * @param id
-   * @param updateMenuDto
-   * @returns Menu
+   * @param updateRoleDto
+   * @returns Role
    */
   @ApiOkResponse({
-    description: 'Menus updated successfully!',
+    description: 'Role updated successfully!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
-        message: { type: 'string', example: 'Menus updated successfully!' },
+        message: {
+          type: 'string',
+          example: 'Role updated successfully!',
+        },
         data: {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            menuName: { type: 'string', example: 'Menu 1' },
+            roleName: { type: 'string', example: 'Role 1' },
             deletable: { type: 'boolean', example: true },
             createdAt: {
               type: 'string',
@@ -240,35 +263,38 @@ export class MenusController {
     },
   })
   @Patch(':id')
-  async updateMenu(
+  async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(MenuSchema)) updateMenuDto: UpdateMenuDto,
+    @Body(new ZodValidationPipe(RoleSchema)) roleDto: RoleDto,
   ) {
-    const menu = await this.menusService.updateMenu(id, updateMenuDto);
+    const role = await this.rolesService.update(id, roleDto);
     return {
       success: true,
-      message: 'Menu updated successfully!',
-      data: menu,
+      message: 'Role updated successfully!',
+      data: role,
     };
   }
 
   /**
-   * Delete menu by it's id
+   * Delete role by id
    * @param id
-   * @returns Menu
+   * @returns Role
    */
   @ApiOkResponse({
-    description: 'Menus deleted successfully!',
+    description: 'Role deleted successfully!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
-        message: { type: 'string', example: 'Menus deleted successfully!' },
+        message: {
+          type: 'string',
+          example: 'Role deleted successfully!',
+        },
         data: {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            menuName: { type: 'string', example: 'Menu 1' },
+            roleName: { type: 'string', example: 'Role 1' },
             deletable: { type: 'boolean', example: true },
             createdAt: {
               type: 'string',
@@ -284,48 +310,51 @@ export class MenusController {
     },
   })
   @Delete(':id')
-  async deleteMenu(@Param('id', ParseIntPipe) id: number) {
-    const menu = await this.menusService.findMenu(id);
-    if (!menu) throw new NotFoundException('Menu not found.');
-    if (!menu.deletable)
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    const role = await this.rolesService.findOne(id);
+    if (!role) throw new NotFoundException('Role not found!');
+    if (role?.deletable === false)
       throw new ForbiddenException(
-        'You have no enough permissions to do this.',
+        'You have no enough permissions to do this!',
       );
-    await this.menusService.deleteMenu(id);
+    await this.rolesService.remove(id);
     return {
       success: true,
-      message: 'Menu deleted successfully!.',
-      data: menu,
+      message: 'Role deleted successfully!',
+      data: role,
     };
   }
 
   /**
-   * Bulk delete menus
+   * Bulk delete roles
    * @param body
-   * @returns Menus
+   * @returns Role
    */
   @ApiOkResponse({
-    description: 'Menus deleted successfully!',
+    description: 'Roles fetched successfully!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
-        message: { type: 'string', example: 'Menus deleted successfully!' },
+        message: { type: 'string', example: 'Roles fetched successfully!' },
         data: {
-          type: 'array',
+          type: 'object',
           items: {
-            type: 'object',
-            properties: {
-              id: { type: 'number', example: 1 },
-              menuName: { type: 'string', example: 'Menu 1' },
-              deletable: { type: 'boolean', example: true },
-              createdAt: {
-                type: 'string',
-                example: '2021-01-01T00:00:00.000Z',
-              },
-              updatedAt: {
-                type: 'string',
-                example: '2021-01-01T00:00:00.000Z',
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                id: { type: 'number', example: 1 },
+                roleName: { type: 'string', example: 'Permission 1' },
+                deletable: { type: 'boolean', example: true },
+                createdAt: {
+                  type: 'string',
+                  example: '2021-01-01T00:00:00.000Z',
+                },
+                updatedAt: {
+                  type: 'string',
+                  example: '2021-01-01T00:00:00.000Z',
+                },
               },
             },
           },
@@ -334,14 +363,14 @@ export class MenusController {
     },
   })
   @Delete('bulk')
-  async bulkDeleteMenu(@Body() body: BlukDeleteMenuDto) {
+  async bulkDelete(@Body() body: BlukDeleteRoleDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
-    const menus = await this.menusService.bulkDeleteMenu(body?.ids);
+    const roles = await this.rolesService.bulkDelete(body.ids);
     return {
       success: true,
-      message: 'Menus deleted successfully!.',
-      data: menus,
+      message: 'Roles deleted successfully!',
+      data: roles,
     };
   }
 }

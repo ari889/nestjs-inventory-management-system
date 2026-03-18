@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class BlukDeleteMenuDto {
+export class BlukDeleteRoleDto {
   @ApiProperty({
     type: [Number],
     description: 'Array of menu ids',

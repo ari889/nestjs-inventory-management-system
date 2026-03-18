@@ -116,6 +116,8 @@ export class MenusService {
    * @returns number
    */
   async bulkDeleteMenu(ids: number[]) {
-    return this.prisma.menu.deleteMany({ where: { id: { in: ids } } });
+    return this.prisma.menu.deleteMany({
+      where: { id: { in: ids }, deletable: true },
+    });
   }
 }

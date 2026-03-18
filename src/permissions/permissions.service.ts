@@ -169,6 +169,8 @@ export class PermissionsService {
   }
 
   async bulkDeletePermission(ids: number[]) {
-    return this.prisma.permission.deleteMany({ where: { id: { in: ids } } });
+    return this.prisma.permission.deleteMany({
+      where: { id: { in: ids }, deletable: true },
+    });
   }
 }

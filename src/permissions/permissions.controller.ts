@@ -4,7 +4,9 @@ import {
   Controller,
   DefaultValuePipe,
   Delete,
+  ForbiddenException,
   Get,
+  NotFoundException,
   Param,
   ParseEnumPipe,
   ParseIntPipe,
@@ -200,6 +202,7 @@ export class PermissionsController {
   @Get(':id')
   async findPermission(@Param('id', ParseIntPipe) id: number) {
     const permission = await this.permissionsService.findPermission(id);
+    if (!permission) throw new NotFoundException('Permission not found.');
     return {
       success: true,
       message: 'Permission fetched successfully!',
@@ -367,7 +370,13 @@ export class PermissionsController {
   })
   @Delete(':id')
   async removePermission(@Param('id', ParseIntPipe) id: number) {
-    const permission = await this.permissionsService.deletePermission(id);
+    const permission = await this.permissionsService.findPermission(id);
+    if (!permission) throw new NotFoundException('Permission not found.');
+    if (permission?.deletable === false)
+      throw new ForbiddenException(
+        'You have no enough permissions to do this.',
+      );
+    await this.permissionsService.deletePermission(id);
     return {
       success: true,
       message: 'Permission deleted successfully!',
