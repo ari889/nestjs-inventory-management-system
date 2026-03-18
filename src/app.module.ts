@@ -13,8 +13,6 @@ import { MenusModule } from './menus/menus.module';
 import { ModulesModule } from './modules/modules.module';
 import { PermissionsModule } from './permissions/permissions.module';
 
-console.log(`.${process.env.NODE_ENV || 'development'}.env`);
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -29,7 +27,12 @@ console.log(`.${process.env.NODE_ENV || 'development'}.env`);
 
         if (isDev) {
           return {
-            throttlers: [],
+            throttlers: [
+              {
+                ttl: 0,
+                limit: 0,
+              },
+            ],
           };
         }
 

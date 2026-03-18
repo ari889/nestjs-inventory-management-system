@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   DefaultValuePipe,
@@ -23,6 +24,7 @@ import {
 } from './schemas/create-permission.schema';
 import { PermissionItemDto } from './dto/permission-item.dto';
 import { CreatePermissionDto } from './dto/permission.dto';
+import { BlukDeletePermissionDto } from './dto/bulk-delete-permission.dto';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -60,6 +62,24 @@ export class PermissionsController {
     required: false,
     type: Number,
     example: 10,
+  })
+  @ApiQuery({
+    name: 'name',
+    required: false,
+    type: String,
+    example: 'Permission 1',
+  })
+  @ApiQuery({
+    name: 'slug',
+    required: false,
+    type: String,
+    example: 'permission-1',
+  })
+  @ApiQuery({
+    name: 'deletable',
+    required: false,
+    type: Boolean,
+    example: true,
   })
   @ApiOkResponse({
     description: 'Menus fetched successfully!',
@@ -109,6 +129,9 @@ export class PermissionsController {
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('order') order: string = 'id',
+    @Query('name') name?: string,
+    @Query('slug') slug?: string,
+    @Query('deletable') deletable?: string,
     @Query(
       'direction',
       new DefaultValuePipe(SortDirection.DESC),
@@ -121,6 +144,9 @@ export class PermissionsController {
       limit,
       order,
       direction,
+      name,
+      slug,
+      deletable: deletable === undefined ? undefined : deletable === 'true',
     });
     return {
       success: true,
@@ -346,6 +372,55 @@ export class PermissionsController {
       success: true,
       message: 'Permission deleted successfully!',
       data: permission,
+    };
+  }
+
+  /**
+   * Bulk Delete Permissions
+   * @param body
+   * @returns Permissions
+   */
+  @ApiOkResponse({
+    description: 'Permissions deleted successfully!',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 1 },
+          module: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              moduleName: { type: 'string', example: 'Module 1' },
+            },
+          },
+          name: { type: 'string', example: 'Permission 1' },
+          slug: { type: 'string', example: 'permission-1' },
+          deletable: { type: 'boolean', example: true },
+          createdAt: {
+            type: 'string',
+            example: '2021-01-01T00:00:00.000Z',
+          },
+          updatedAt: {
+            type: 'string',
+            example: '2021-01-01T00:00:00.000Z',
+          },
+        },
+      },
+    },
+  })
+  @Delete('bulk')
+  async bulkDeletePermission(@Body() body: BlukDeletePermissionDto) {
+    if (!Array.isArray(body?.ids))
+      throw new BadRequestException('ids must be an array');
+    const permissions = await this.permissionsService.bulkDeletePermission(
+      body.ids,
+    );
+    return {
+      success: true,
+      message: 'Permissions deleted successfully!',
+      data: permissions,
     };
   }
 }

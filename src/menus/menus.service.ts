@@ -22,27 +22,29 @@ export class MenusService {
     order,
     direction,
     search,
+    deletable,
   }: {
     page: number;
     limit: number;
     order: string;
     direction: string;
-    search: string;
+    search?: string;
+    deletable?: boolean;
   }): Promise<{ items: Menu[]; totalItems: number }> {
+    const where = {
+      ...(search ? { menuName: { contains: search } } : {}),
+      ...(deletable !== undefined ? { deletable } : {}),
+    };
     const [items, totalItems] = await Promise.all([
       this.prisma.menu.findMany({
-        where: {
-          menuName: {
-            contains: search,
-          },
-        },
+        where,
         skip: page * limit,
         take: limit,
         orderBy: {
           [order]: direction,
         },
       }),
-      this.prisma.menu.count(),
+      this.prisma.menu.count({ where }),
     ]);
     return {
       items,
@@ -106,5 +108,14 @@ export class MenusService {
       );
 
     return this.prisma.menu.delete({ where: { id } });
+  }
+
+  /**
+   * Bulk delete using ids
+   * @param ids
+   * @returns number
+   */
+  async bulkDeleteMenu(ids: number[]) {
+    return this.prisma.menu.deleteMany({ where: { id: { in: ids } } });
   }
 }

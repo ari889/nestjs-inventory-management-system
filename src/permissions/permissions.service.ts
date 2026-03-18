@@ -18,14 +18,26 @@ export class PermissionsService {
     limit,
     order,
     direction,
+    name,
+    slug,
+    deletable,
   }: {
     page: number;
     limit: number;
     order: string;
     direction: string;
+    name?: string;
+    slug?: string;
+    deletable?: boolean;
   }): Promise<{ items: Permission[]; totalItems: number }> {
+    const where = {
+      ...(name && { name: { contains: name } }),
+      ...(slug && { slug: { contains: slug } }),
+      ...(deletable !== undefined && { deletable }),
+    };
     const [items, totalItems] = await Promise.all([
       this.prisma.permission.findMany({
+        where,
         include: {
           module: {
             select: {
@@ -40,7 +52,7 @@ export class PermissionsService {
           [order]: direction,
         },
       }),
-      this.prisma.permission.count(),
+      this.prisma.permission.count({ where }),
     ]);
 
     return {
@@ -154,5 +166,9 @@ export class PermissionsService {
    */
   async deletePermission(id: number): Promise<Permission> {
     return this.prisma.permission.delete({ where: { id } });
+  }
+
+  async bulkDeletePermission(ids: number[]) {
+    return this.prisma.permission.deleteMany({ where: { id: { in: ids } } });
   }
 }
