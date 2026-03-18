@@ -17,18 +17,18 @@ export class RolesService {
     limit,
     order,
     direction,
-    name,
+    search,
     deletable,
   }: {
     page: number;
     limit: number;
     order: string;
     direction: string;
-    name?: string;
+    search?: string;
     deletable?: boolean;
   }): Promise<{ items: Role[]; totalItems: number }> {
     const where = {
-      ...(name && { name: { contains: name } }),
+      ...(search && { roleName: { contains: search } }),
       ...(deletable !== undefined && { deletable }),
     };
     const [items, totalItems] = await Promise.all([

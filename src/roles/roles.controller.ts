@@ -64,7 +64,7 @@ export class RolesController {
     example: 10,
   })
   @ApiQuery({
-    name: 'name',
+    name: 'search',
     required: false,
     type: String,
     example: 'Role 1',
@@ -115,7 +115,7 @@ export class RolesController {
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('order') order: string = 'id',
-    @Query('name') name?: string,
+    @Query('search') search?: string,
     @Query('deletable') deletable?: string,
     @Query(
       'direction',
@@ -129,7 +129,7 @@ export class RolesController {
       limit,
       order,
       direction,
-      name,
+      search,
       deletable: deletable === undefined ? undefined : deletable === 'true',
     });
     return {
