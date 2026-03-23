@@ -18,6 +18,7 @@ import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { createModuleSchema } from './schemas/create-module.schema';
+import { ModuleItemDto } from './dto/module-item.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -456,6 +457,86 @@ export class ModulesController {
       success: true,
       message: 'Module updated successfully!',
       data: module,
+    };
+  }
+
+  /**
+   * Module update recorder
+   * @param items
+   * @returns
+   */
+  @ApiOkResponse({
+    description: 'Module update recorder response!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: { type: 'string', example: 'Module updated successfully!' },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number', example: 1 },
+              menuId: { type: 'number', example: 1 },
+              type: { type: 'boolean', example: true },
+              moduleName: { type: 'string', example: 'Menus' },
+              dividerTitle: { type: 'string', example: 'Menus' },
+              iconClass: { type: 'string', example: 'fa fa-home' },
+              url: { type: 'string', example: '/' },
+              order: { type: 'number', example: 1 },
+              parentId: { type: 'number', example: 1 },
+              target: { type: 'string', example: 'SELF' },
+              deletable: { type: 'boolean', example: true },
+              createdAt: {
+                type: 'string',
+                example: '2021-01-01T00:00:00.000Z',
+              },
+              updatedAt: {
+                type: 'string',
+                example: '2021-01-01T00:00:00.000Z',
+              },
+              children: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number', example: 1 },
+                    menuId: { type: 'number', example: 1 },
+                    type: { type: 'boolean', example: true },
+                    moduleName: { type: 'string', example: 'Menus' },
+                    dividerTitle: { type: 'string', example: 'Menus' },
+                    iconClass: { type: 'string', example: 'fa fa-home' },
+                    url: { type: 'string', example: '/' },
+                    order: { type: 'number', example: 1 },
+                    parentId: { type: 'number', example: 1 },
+                    target: { type: 'string', example: 'SELF' },
+                    deletable: { type: 'boolean', example: true },
+                    createdAt: {
+                      type: 'string',
+                      example: '2021-01-01T00:00:00.000Z',
+                    },
+                    updatedAt: {
+                      type: 'string',
+                      example: '2021-01-01T00:00:00.000Z',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  @Patch('recorder')
+  async reorderMenuItems(@Body() items: ModuleItemDto[]) {
+    const reorderedItems = await this.modulesService.reorderMenuItems(items);
+
+    return {
+      success: true,
+      message: 'Module items reordered successfully!',
+      data: reorderedItems,
     };
   }
 }
