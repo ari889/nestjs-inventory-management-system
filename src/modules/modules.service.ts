@@ -204,12 +204,10 @@ export class ModulesService {
       data: {
         ...createModuleDto,
         target: createModuleDto?.target === '_self' ? 'SELF' : 'BLANK',
-        // ── divider → module (true → false): clear dividerTitle ──
         ...(!createModuleDto.type &&
           current?.type && {
             dividerTitle: null,
           }),
-        // ── module → divider (false → true): clear module fields ──
         ...(createModuleDto.type &&
           !current?.type && {
             moduleName: null,

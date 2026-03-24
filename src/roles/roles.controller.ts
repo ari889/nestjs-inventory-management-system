@@ -55,7 +55,7 @@ export class RolesController {
     name: 'page',
     required: false,
     type: Number,
-    example: 1,
+    example: 0,
   })
   @ApiQuery({
     name: 'limit',
@@ -351,12 +351,12 @@ export class RolesController {
    * @returns Role
    */
   @ApiOkResponse({
-    description: 'Roles fetched successfully!',
+    description: 'Roles bulk deleted generated response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
-        message: { type: 'string', example: 'Roles fetched successfully!' },
+        message: { type: 'string', example: 'Roles deleted successfully!' },
         data: {
           type: 'object',
           properties: {

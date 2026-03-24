@@ -57,7 +57,7 @@ export class PermissionsController {
     name: 'page',
     required: false,
     type: Number,
-    example: 1,
+    example: 0,
   })
   @ApiQuery({
     name: 'limit',
