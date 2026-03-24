@@ -6,6 +6,7 @@ import {
 import { User } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BlukDeleteUserDto } from './dto/bulk-delete-user.dto';
+import { UserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -99,6 +100,42 @@ export class UsersService {
             id: true,
             roleName: true,
             deletable: true,
+          },
+        },
+      },
+    });
+  }
+
+  /**
+   * Create new user
+   * @param userDto
+   * @param creatorEmail
+   * @returns User
+   */
+  async create(userDto: UserDto, creatorEmail: string): Promise<User> {
+    const creator = await this.prisma.user.findUnique({
+      where: { email: creatorEmail },
+      select: {
+        id: true,
+        email: true,
+      },
+    });
+
+    if (!creator) throw new NotFoundException('Creator user not found!');
+
+    return this.prisma.user.create({
+      data: { ...userDto, createdBy: creator?.id, updatedBy: creator?.id },
+      include: {
+        role: {
+          select: {
+            id: true,
+            roleName: true,
+          },
+        },
+        creator: {
+          select: {
+            id: true,
+            name: true,
           },
         },
       },

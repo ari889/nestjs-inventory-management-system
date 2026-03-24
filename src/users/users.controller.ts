@@ -9,7 +9,9 @@ import {
   Param,
   ParseEnumPipe,
   ParseIntPipe,
+  Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -22,6 +24,10 @@ import {
 } from '@nestjs/swagger';
 import { SortDirection } from 'src/@types/default.types';
 import { BlukDeleteUserDto } from './dto/bulk-delete-user.dto';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
+import { userSchema } from './schema/user.schema';
+import { UserDto } from './dto/user.dto';
+import type { FastifyRequest } from 'fastify';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -200,6 +206,55 @@ export class UsersController {
     return {
       success: true,
       message: 'User fetched successfully',
+      data: user,
+    };
+  }
+
+  @ApiOkResponse({
+    description: 'User fetched generated response!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: { type: 'string' },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            name: { type: 'string', example: 'John Doe' },
+            email: { type: 'string', example: 'john.doe@example.com' },
+            phoneNo: { type: 'string', example: '+1234567890' },
+            avatar: {
+              type: 'string',
+              example: 'https://example.com/avatar.jpg',
+            },
+            status: { type: 'boolean', example: true },
+            createdAt: {
+              type: 'string',
+              example: '2024-01-01T00:00:00.000Z',
+            },
+            updatedAt: {
+              type: 'string',
+              example: '2024-01-01T00:00:00.000Z',
+            },
+          },
+        },
+      },
+    },
+  })
+  @Post()
+  async create(
+    @Body(new ZodValidationPipe(userSchema)) userDto: UserDto,
+    @Req() req: FastifyRequest,
+  ) {
+    const creatorEmail = req.user?.email;
+    if (!creatorEmail) {
+      throw new BadRequestException('Invalid user data!');
+    }
+    const user = await this.usersService.create(userDto, creatorEmail);
+    return {
+      success: true,
+      message: 'User created successfully',
       data: user,
     };
   }
