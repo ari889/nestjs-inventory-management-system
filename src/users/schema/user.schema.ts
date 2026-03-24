@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const userSchema = z.object({
+export const createUserSchema = z.object({
   name: z.string().min(1, { message: 'Enter a valid name!' }),
   email: z.string().email({ message: 'Enter a valid email!' }),
   phoneNo: z.string().optional(),
@@ -11,4 +11,8 @@ export const userSchema = z.object({
   avatar: z.string().optional(),
   gender: z.boolean({ message: 'Select a valid gender!' }),
   status: z.boolean({ message: 'Select a valid status!' }),
+});
+
+export const updateUserSchema = createUserSchema.extend({
+  password: createUserSchema.shape.password.optional(),
 });

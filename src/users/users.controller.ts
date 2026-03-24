@@ -9,6 +9,7 @@ import {
   Param,
   ParseEnumPipe,
   ParseIntPipe,
+  Patch,
   Post,
   Query,
   Req,
@@ -25,9 +26,9 @@ import {
 import { SortDirection } from 'src/@types/default.types';
 import { BlukDeleteUserDto } from './dto/bulk-delete-user.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { userSchema } from './schema/user.schema';
-import { UserDto } from './dto/user.dto';
+import { createUserSchema, updateUserSchema } from './schema/user.schema';
 import type { FastifyRequest } from 'fastify';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -140,7 +141,7 @@ export class UsersController {
   }
 
   /**
-   * Get user by email
+   * Get user by id
    * @param email
    * @returns User
    */
@@ -197,9 +198,9 @@ export class UsersController {
       },
     },
   })
-  @Get(':email')
-  async getUser(@Param('email') email: string) {
-    const user = await this.usersService.findOne(email);
+  @Get(':id')
+  async getUser(@Param('id', ParseIntPipe) id: number) {
+    const user = await this.usersService.findById(id);
 
     if (!user) throw new NotFoundException('User not found!');
 
@@ -211,7 +212,7 @@ export class UsersController {
   }
 
   @ApiOkResponse({
-    description: 'User fetched generated response!',
+    description: 'User creation generated response!',
     schema: {
       type: 'object',
       properties: {
@@ -244,7 +245,7 @@ export class UsersController {
   })
   @Post()
   async create(
-    @Body(new ZodValidationPipe(userSchema)) userDto: UserDto,
+    @Body(new ZodValidationPipe(createUserSchema)) userDto: CreateUserDto,
     @Req() req: FastifyRequest,
   ) {
     const creatorEmail = req.user?.email;
@@ -255,6 +256,63 @@ export class UsersController {
     return {
       success: true,
       message: 'User created successfully',
+      data: user,
+    };
+  }
+
+  /**
+   * User update by id
+   * @param id
+   * @param userDto
+   * @param req
+   * @returns User
+   */
+  @ApiOkResponse({
+    description: 'User update generated response!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: { type: 'string' },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'number', example: 1 },
+            name: { type: 'string', example: 'John Doe' },
+            email: { type: 'string', example: 'john.doe@example.com' },
+            phoneNo: { type: 'string', example: '+1234567890' },
+            avatar: {
+              type: 'string',
+              example: 'https://example.com/avatar.jpg',
+            },
+            status: { type: 'boolean', example: true },
+            createdAt: {
+              type: 'string',
+              example: '2024-01-01T00:00:00.000Z',
+            },
+            updatedAt: {
+              type: 'string',
+              example: '2024-01-01T00:00:00.000Z',
+            },
+          },
+        },
+      },
+    },
+  })
+  @Patch(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body(new ZodValidationPipe(updateUserSchema)) userDto: UpdateUserDto,
+    @Req() req: FastifyRequest,
+  ) {
+    const updatorEmail = req.user?.email;
+    if (!updatorEmail) {
+      throw new BadRequestException('Invalid user data!');
+    }
+    const user = await this.usersService.update(id, updatorEmail, userDto);
+    return {
+      success: true,
+      message: 'User updated successfully',
       data: user,
     };
   }

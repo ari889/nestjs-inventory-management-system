@@ -15,8 +15,12 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(email, true);
+    const user = await this.usersService.findByEmail(email, true);
     if (!user) throw new UnauthorizedException('Invalid credentials provided!');
+    if (!user.status)
+      throw new UnauthorizedException(
+        'Your account is inactive, please contact admin!',
+      );
 
     const isValidPassword = await bcrypt.compare(pass, user.password);
     if (!isValidPassword) {
@@ -52,7 +56,7 @@ export class AuthService {
   }
 
   async refreshToken(email: string) {
-    const user = (await this.usersService.findOne(email)) as UserType;
+    const user = (await this.usersService.findByEmail(email)) as UserType;
     if (!user) throw new UnauthorizedException('Invalid credentials provided!');
     const payload = { email: user.email, id: user.id };
     const accessToken = this.jwtService.sign(payload);

@@ -129,7 +129,7 @@ export class ModulesService {
   async getModuleByRole(
     email: string,
   ): Promise<(Module & { children: (Module & { children: any[] })[] })[]> {
-    const user = await this.userService.findOne(email);
+    const user = await this.userService.findByEmail(email);
     if (!user) throw new NotFoundException('User not found!');
 
     const whereFilter =

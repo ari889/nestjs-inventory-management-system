@@ -6,7 +6,7 @@ import {
 import { User } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BlukDeleteUserDto } from './dto/bulk-delete-user.dto';
-import { UserDto } from './dto/user.dto';
+import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 
 @Injectable()
 export class UsersService {
@@ -59,18 +59,19 @@ export class UsersService {
   }
 
   /**
-   * Find user by emailm
+   * Find user by email
    * @param email
    * @param isPassword
    * @returns User
    */
-  async findOne(email: string, isPassword: boolean = false) {
+  async findByEmail(email: string, isPassword: boolean = false) {
     return this.prisma.user.findUnique({
       select: {
         id: true,
         name: true,
         email: true,
         password: isPassword,
+        status: true,
         role: {
           select: {
             id: true,
@@ -94,7 +95,11 @@ export class UsersService {
       where: {
         id,
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        status: true,
         role: {
           select: {
             id: true,
@@ -102,6 +107,8 @@ export class UsersService {
             deletable: true,
           },
         },
+        phoneNo: true,
+        gender: true,
       },
     });
   }
@@ -112,7 +119,7 @@ export class UsersService {
    * @param creatorEmail
    * @returns User
    */
-  async create(userDto: UserDto, creatorEmail: string): Promise<User> {
+  async create(userDto: CreateUserDto, creatorEmail: string): Promise<User> {
     const creator = await this.prisma.user.findUnique({
       where: { email: creatorEmail },
       select: {
@@ -123,8 +130,54 @@ export class UsersService {
 
     if (!creator) throw new NotFoundException('Creator user not found!');
 
+    const user = await this.findByEmail(userDto.email, true);
+
+    if (user) throw new UnauthorizedException('User already exists!');
+
     return this.prisma.user.create({
       data: { ...userDto, createdBy: creator?.id, updatedBy: creator?.id },
+      include: {
+        role: {
+          select: {
+            id: true,
+            roleName: true,
+          },
+        },
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+  }
+
+  /**
+   *
+   * @param id
+   * @param updatorEmail
+   * @param userDto
+   * @returns User
+   */
+  async update(
+    id: number,
+    updatorEmail: string,
+    userDto: UpdateUserDto,
+  ): Promise<User> {
+    const updator = await this.prisma.user.findUnique({
+      where: { email: updatorEmail },
+      select: {
+        id: true,
+        email: true,
+      },
+    });
+
+    if (!updator) throw new NotFoundException('Updator user not found!');
+
+    return this.prisma.user.update({
+      where: { id },
+      data: { ...userDto, updatedBy: updator.id },
       include: {
         role: {
           select: {
@@ -156,6 +209,8 @@ export class UsersService {
       throw new UnauthorizedException(
         'You have no enough permissions to do this!',
       );
+    if (!user.status)
+      throw new UnauthorizedException('User is already inactive!');
     return this.prisma.user.update({
       where: {
         id,
@@ -183,6 +238,7 @@ export class UsersService {
     const deletableUsers = await this.prisma.user.findMany({
       where: {
         id: { in: ids },
+        status: true,
         role: { deletable: true },
       },
       select: { id: true },
