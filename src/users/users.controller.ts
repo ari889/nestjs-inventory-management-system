@@ -29,6 +29,7 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { createUserSchema, updateUserSchema } from './schema/user.schema';
 import type { FastifyRequest } from 'fastify';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { Permission } from 'src/common/decorators/permission.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -115,6 +116,7 @@ export class UsersController {
       },
     },
   })
+  @Permission('user-access')
   @Get()
   async findAll(
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
@@ -198,6 +200,7 @@ export class UsersController {
       },
     },
   })
+  @Permission('user-view')
   @Get(':id')
   async getUser(@Param('id', ParseIntPipe) id: number) {
     const user = await this.usersService.findById(id);
@@ -211,6 +214,12 @@ export class UsersController {
     };
   }
 
+  /**
+   * Create new user
+   * @param userDto
+   * @param req
+   * @returns User
+   */
   @ApiOkResponse({
     description: 'User creation generated response!',
     schema: {
@@ -243,6 +252,7 @@ export class UsersController {
       },
     },
   })
+  @Permission('user-create')
   @Post()
   async create(
     @Body(new ZodValidationPipe(createUserSchema)) userDto: CreateUserDto,
@@ -299,6 +309,7 @@ export class UsersController {
       },
     },
   })
+  @Permission('user-edit')
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -346,6 +357,7 @@ export class UsersController {
       },
     },
   })
+  @Permission('user-delete')
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
     const user = await this.usersService.remove(id);
@@ -372,6 +384,7 @@ export class UsersController {
       },
     },
   })
+  @Permission('user-bulk-delete')
   @Delete('bulk')
   async bulkDelete(@Body() body: BlukDeleteUserDto) {
     if (!Array.isArray(body?.ids))

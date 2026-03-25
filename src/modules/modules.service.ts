@@ -68,33 +68,51 @@ export class ModulesService {
   }
 
   /**
+   * Build tree with permissions
+   * @param modules
+   * @param parentId
+   * @returns
+   */
+  private buildTreeWithPermissions(
+    modules: (Module & {
+      permissions: { id: number; name: string; slug: string }[];
+    })[],
+    parentId: number | null = null,
+  ): ModuleItemDto[] {
+    return modules
+      .filter((m) => m.parentId === parentId)
+      .map((m) => ({
+        id: m.id,
+        menuId: m.menuId,
+        type: m.type,
+        moduleName: m.moduleName ?? undefined,
+        dividerTitle: m.dividerTitle ?? undefined,
+        iconClass: m.iconClass ?? undefined,
+        url: m.url ?? undefined,
+        order: m.order,
+        parentId: m.parentId ?? undefined,
+        target: m.target as '_self' | '_blank',
+        deletable: m.deletable,
+        permissions: m.permissions ?? [],
+        children: this.buildTreeWithPermissions(
+          m.permissions ? modules : [],
+          m.id,
+        ),
+      }));
+  }
+
+  /**
    * Get modules by menu id
    * @param menuId
    * @returns Modules
    */
-  async getModules(
-    menuId: number,
-  ): Promise<(Module & { children: (Module & { children: any[] })[] })[]> {
+  async getModules(menuId: number): Promise<ModuleItemDto[]> {
     const modules = await this.prisma.module.findMany({
       where: { menuId },
       orderBy: { order: 'asc' },
     });
-    const map = new Map<number, Module & { children: any[] }>();
-    modules.forEach((m) => map.set(m.id, { ...m, children: [] }));
 
-    const roots: (Module & { children: any[] })[] = [];
-
-    modules.forEach((m) => {
-      const current = map.get(m.id)!;
-      if (m.parentId) {
-        const parent = map.get(m.parentId);
-        if (parent) parent.children.push(current);
-      } else {
-        roots.push(current);
-      }
-    });
-
-    return roots;
+    return this.buildTree(modules);
   }
 
   /**
@@ -126,36 +144,37 @@ export class ModulesService {
    * @param email
    * @returns Module
    */
-  async getModuleByRole(
-    email: string,
-  ): Promise<(Module & { children: (Module & { children: any[] })[] })[]> {
+  async getModuleByRole(email: string): Promise<ModuleItemDto[]> {
     const user = await this.userService.findByEmail(email);
     if (!user) throw new NotFoundException('User not found!');
 
-    const whereFilter =
-      user.id !== 1 ? { moduleRole: { some: { roleId: user.role.id } } } : {};
+    const isSuperAdmin = user.id === 1;
+
+    const whereFilter = !isSuperAdmin
+      ? { moduleRole: { some: { roleId: user.role.id } } }
+      : {};
 
     const modules = await this.prisma.module.findMany({
       where: whereFilter,
       orderBy: { order: 'asc' },
+      include: {
+        permissions: {
+          where: {
+            slug: { endsWith: '-access' }, // ← filter at query level
+            ...(!isSuperAdmin && {
+              permissionRole: { some: { roleId: user.role.id } },
+            }),
+          },
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+      },
     });
 
-    const map = new Map<number, Module & { children: any[] }>();
-    modules.forEach((m) => map.set(m.id, { ...m, children: [] }));
-
-    const roots: (Module & { children: any[] })[] = [];
-
-    modules.forEach((m) => {
-      const current = map.get(m.id)!;
-      if (m.parentId) {
-        const parent = map.get(m.parentId);
-        if (parent) parent.children.push(current);
-      } else {
-        roots.push(current);
-      }
-    });
-
-    return roots;
+    return this.buildTreeWithPermissions(modules);
   }
 
   /**

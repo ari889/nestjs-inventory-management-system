@@ -23,6 +23,7 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { RoleSchema, UpdateRoleSchema } from './schemas/role.schema';
 import { RoleDto, UpdateRoleDto } from './dto/role.dto';
 import { BlukDeleteRoleDto } from './schemas/role-bulk-delete.dto';
+import { Permission } from 'src/common/decorators/permission.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -110,6 +111,7 @@ export class RolesController {
       },
     },
   })
+  @Permission('role-access')
   @Get()
   async findAll(
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
@@ -193,6 +195,7 @@ export class RolesController {
       },
     },
   })
+  @Permission('role-view')
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const role = await this.rolesService.findOne(id);
@@ -237,6 +240,7 @@ export class RolesController {
       },
     },
   })
+  @Permission('role-create')
   @Post()
   async create(@Body(new ZodValidationPipe(RoleSchema)) roleDto: RoleDto) {
     const role = await this.rolesService.create(roleDto);
@@ -282,6 +286,7 @@ export class RolesController {
       },
     },
   })
+  @Permission('role-edit')
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -329,6 +334,7 @@ export class RolesController {
       },
     },
   })
+  @Permission('role-delete')
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
     const role = await this.rolesService.findOne(id);
@@ -368,6 +374,7 @@ export class RolesController {
       },
     },
   })
+  @Permission('role-bulk-delete')
   @Delete('bulk')
   async bulkDelete(@Body() body: BlukDeleteRoleDto) {
     if (!Array.isArray(body?.ids))

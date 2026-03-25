@@ -19,6 +19,7 @@ import { CreateModuleDto } from './dto/create-module.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { createModuleSchema } from './schemas/create-module.schema';
 import { ModuleItemDto } from './dto/module-item.dto';
+import { Permission } from 'src/common/decorators/permission.decorator';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -95,6 +96,7 @@ export class ModulesController {
       },
     },
   })
+  @Permission('module-access')
   @Get('/menu/:menuId')
   async getModules(@Param('menuId', ParseIntPipe) menuId: number) {
     const modules = await this.modulesService.getModules(menuId);
@@ -158,6 +160,7 @@ export class ModulesController {
       },
     },
   })
+  @Permission('module-access')
   @Get('permissions')
   async getModulePermissions() {
     const modules = await this.modulesService.getModulePermissions();
@@ -288,6 +291,7 @@ export class ModulesController {
       },
     },
   })
+  @Permission('module-create')
   @Post(':menuId')
   async createModule(
     @Param('menuId', ParseIntPipe) menuId: number,
@@ -344,6 +348,7 @@ export class ModulesController {
       },
     },
   })
+  @Permission('module-delete')
   @Delete(':id')
   async deleteModule(@Param('id', ParseIntPipe) id: number) {
     const module = await this.modulesService.deleteModule(id);
@@ -393,6 +398,7 @@ export class ModulesController {
       },
     },
   })
+  @Permission('module-view')
   @Get(':id')
   async findModule(@Param('id', ParseIntPipe) id: number) {
     const module = await this.modulesService.findModule(id);
@@ -446,6 +452,7 @@ export class ModulesController {
       },
     },
   })
+  @Permission('module-edit')
   @Patch(':id')
   async updateModule(
     @Body(new ZodValidationPipe(createModuleSchema))
@@ -529,6 +536,7 @@ export class ModulesController {
       },
     },
   })
+  @Permission('module-arrange')
   @Patch('recorder')
   async reorderMenuItems(@Body() items: ModuleItemDto[]) {
     const reorderedItems = await this.modulesService.reorderMenuItems(items);

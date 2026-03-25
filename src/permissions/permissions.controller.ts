@@ -13,6 +13,7 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
@@ -27,6 +28,8 @@ import {
 import { PermissionItemDto } from './dto/permission-item.dto';
 import { CreatePermissionDto } from './dto/permission.dto';
 import { BlukDeletePermissionDto } from './dto/bulk-delete-permission.dto';
+import { Permission } from 'src/common/decorators/permission.decorator';
+import type { FastifyRequest } from 'fastify';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -126,6 +129,7 @@ export class PermissionsController {
       },
     },
   })
+  @Permission('permission-access')
   @Get()
   async getPermissions(
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
@@ -199,6 +203,7 @@ export class PermissionsController {
       },
     },
   })
+  @Permission('permission-view')
   @Get(':id')
   async findPermission(@Param('id', ParseIntPipe) id: number) {
     const permission = await this.permissionsService.findPermission(id);
@@ -252,6 +257,7 @@ export class PermissionsController {
       },
     },
   })
+  @Permission('permission-create')
   @Post()
   async createPermission(
     @Body(new ZodValidationPipe(PermissionSchema))
@@ -309,6 +315,7 @@ export class PermissionsController {
       },
     },
   })
+  @Permission('permission-edit')
   @Patch(':id')
   async updatePermission(
     @Param('id', ParseIntPipe) id: number,
@@ -368,6 +375,7 @@ export class PermissionsController {
       },
     },
   })
+  @Permission('permission-delete')
   @Delete(':id')
   async removePermission(@Param('id', ParseIntPipe) id: number) {
     const permission = await this.permissionsService.findPermission(id);
@@ -419,6 +427,7 @@ export class PermissionsController {
       },
     },
   })
+  @Permission('permission-bulk-delete')
   @Delete('bulk')
   async bulkDeletePermission(@Body() body: BlukDeletePermissionDto) {
     if (!Array.isArray(body?.ids))
@@ -430,6 +439,40 @@ export class PermissionsController {
       success: true,
       message: 'Permissions deleted successfully!',
       data: permissions,
+    };
+  }
+
+  /**
+   * Check user permission by slug
+   * @param slug
+   * @param req
+   * @returns Boolean
+   */
+  @ApiOkResponse({
+    description: 'Slug check successfully!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        message: { type: 'string', example: 'You are allowed to do this!' },
+      },
+    },
+  })
+  @Get('check-slug/:slug')
+  async checkSlug(@Param('slug') slug: string, @Req() req: FastifyRequest) {
+    const { email } = req.user;
+    const checkPermission = await this.permissionsService.checkSlug(
+      slug,
+      email,
+    );
+
+    if (!checkPermission)
+      throw new ForbiddenException(
+        'You have no enough permissions to do this.',
+      );
+    return {
+      success: true,
+      message: 'You are allowed to do this!',
     };
   }
 }

@@ -7,6 +7,7 @@ import { User } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BlukDeleteUserDto } from './dto/bulk-delete-user.dto';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { hashPassword } from 'src/common/hash';
 
 @Injectable()
 export class UsersService {
@@ -134,8 +135,15 @@ export class UsersService {
 
     if (user) throw new UnauthorizedException('User already exists!');
 
+    const hashedPassword = await hashPassword(userDto.password);
+
     return this.prisma.user.create({
-      data: { ...userDto, createdBy: creator?.id, updatedBy: creator?.id },
+      data: {
+        ...userDto,
+        createdBy: creator?.id,
+        updatedBy: creator?.id,
+        password: hashedPassword,
+      },
       include: {
         role: {
           select: {
@@ -174,6 +182,10 @@ export class UsersService {
     });
 
     if (!updator) throw new NotFoundException('Updator user not found!');
+
+    if (userDto.password) {
+      userDto.password = await hashPassword(userDto.password);
+    }
 
     return this.prisma.user.update({
       where: { id },

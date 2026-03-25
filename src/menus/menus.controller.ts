@@ -25,6 +25,7 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { BlukDeleteMenuDto } from './dto/bulk-delete-menu.dto';
+import { Permission } from 'src/common/decorators/permission.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -111,6 +112,7 @@ export class MenusController {
       },
     },
   })
+  @Permission('menu-access')
   @Get()
   async getMenus(
     @Query('page', new DefaultValuePipe(0), ParseIntPipe)
@@ -159,6 +161,7 @@ export class MenusController {
       },
     },
   })
+  @Permission('menu-view')
   @Get(':id')
   async find(@Param('id', ParseIntPipe) id: number) {
     const menu = await this.menusService.findMenu(id);
@@ -197,6 +200,7 @@ export class MenusController {
       },
     },
   })
+  @Permission('menu-create')
   @Post()
   async createMenu(@Body() createMenuDto: CreateMenuDto) {
     const menu = await this.menusService.createMenu(createMenuDto);
@@ -239,6 +243,7 @@ export class MenusController {
       },
     },
   })
+  @Permission('menu-edit')
   @Patch(':id')
   async updateMenu(
     @Param('id', ParseIntPipe) id: number,
@@ -283,6 +288,7 @@ export class MenusController {
       },
     },
   })
+  @Permission('menu-delete')
   @Delete(':id')
   async deleteMenu(@Param('id', ParseIntPipe) id: number) {
     const menu = await this.menusService.findMenu(id);
@@ -333,6 +339,7 @@ export class MenusController {
       },
     },
   })
+  @Permission('menu-bulk-delete')
   @Delete('bulk')
   async bulkDeleteMenu(@Body() body: BlukDeleteMenuDto) {
     if (!Array.isArray(body?.ids))

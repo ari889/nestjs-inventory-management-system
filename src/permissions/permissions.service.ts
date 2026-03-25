@@ -168,9 +168,44 @@ export class PermissionsService {
     return this.prisma.permission.delete({ where: { id } });
   }
 
+  /**
+   * Bulk delete permissions by ids
+   * @param ids
+   * @returns Number
+   */
   async bulkDeletePermission(ids: number[]) {
     return this.prisma.permission.deleteMany({
       where: { id: { in: ids }, deletable: true },
     });
+  }
+
+  async checkSlug(slug: string, email: string): Promise<boolean> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
+
+    if (!user) return false;
+
+    if (user.id === 1) return true;
+
+    const permission = await this.prisma.permission.findFirst({
+      where: {
+        slug,
+        permissionRole: {
+          some: {
+            role: {
+              users: {
+                some: {
+                  email,
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return !!permission;
   }
 }
