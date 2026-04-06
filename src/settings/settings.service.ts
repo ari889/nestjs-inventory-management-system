@@ -6,18 +6,8 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { MemoryStorageFile } from '@blazity/nest-file-fastify';
 import { SettingsSchemaType } from './schemas/settings.schema';
-import { randomUUID } from 'crypto';
-import { mkdir, unlink, writeFile } from 'fs/promises';
-import { join } from 'path';
 import { Setting } from 'src/generated/prisma/client';
-
-const MIME_EXT_MAP: Record<string, string> = {
-  'image/jpeg': '.jpg',
-  'image/png': '.png',
-  'image/gif': '.gif',
-  'image/x-icon': '.ico',
-  'image/vnd.microsoft.icon': '.ico',
-};
+import { replaceFile } from 'src/common/fileUpload/fileHelper';
 
 @Injectable()
 export class SettingsService {
@@ -33,45 +23,14 @@ export class SettingsService {
     return settings;
   }
 
-  // ── Delete old file from disk if it exists ───────────────────────────────────
-  private async deleteOldFile(relativePath: string | null): Promise<void> {
-    if (!relativePath) return;
-
-    try {
-      const absolutePath = join(process.cwd(), relativePath);
-      await unlink(absolutePath);
-    } catch {
-      // File may have already been deleted or never existed — safe to ignore
-    }
-  }
-
-  // ── Save new file to disk ────────────────────────────────────────────────────
-  private async saveFile(
-    file: MemoryStorageFile,
-    folder: string,
-  ): Promise<string> {
-    const uploadDir = join(process.cwd(), 'uploads', folder);
-    await mkdir(uploadDir, { recursive: true });
-
-    const ext = MIME_EXT_MAP[file.mimetype] ?? '';
-    const filename = `${randomUUID()}${ext}`;
-    const filepath = join(uploadDir, filename);
-
-    await writeFile(filepath, file.buffer);
-    return `/uploads/${folder}/${filename}`;
-  }
-
-  // ── Replace file: delete old → save new → return new URL ────────────────────
-  private async replaceFile(
-    file: MemoryStorageFile,
-    folder: string,
-    oldRelativePath: string | null,
-  ): Promise<string> {
-    // Delete the old file first — don't await separately to keep it sequential
-    await this.deleteOldFile(oldRelativePath);
-    return this.saveFile(file, folder);
-  }
-
+  /**
+   * Create or update settings with optional logo and favicon uploads. The service handles saving the files and updating the settings in the database.
+   * It first checks for existing logo and favicon settings to determine if old files need to be deleted when replaced. Then it constructs a payload of all settings fields and performs upsert operations in a transaction to ensure atomicity.
+   * @param dto
+   * @param logo
+   * @param favicon
+   * @returns All settings
+   */
   async create(
     dto: SettingsSchemaType,
     logo?: MemoryStorageFile,
@@ -85,15 +44,11 @@ export class SettingsService {
 
       const [logoUrl, faviconUrl] = await Promise.all([
         logo
-          ? this.replaceFile(logo, 'logos', existingLogo?.value ?? null)
+          ? replaceFile(logo, 'logos', existingLogo?.value ?? null)
           : (existingLogo?.value ?? null),
 
         favicon
-          ? this.replaceFile(
-              favicon,
-              'favicons',
-              existingFavicon?.value ?? null,
-            )
+          ? replaceFile(favicon, 'favicons', existingFavicon?.value ?? null)
           : (existingFavicon?.value ?? null),
       ]);
 

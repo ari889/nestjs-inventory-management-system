@@ -23,8 +23,6 @@ import { SettingsService } from './settings.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
 @Controller('settings')
 export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}
@@ -59,7 +57,6 @@ export class SettingsController {
     },
   })
   @Get()
-  @Permission('settings-access')
   async findAll() {
     const settings = await this.settingsService.findAll();
     return {
@@ -69,6 +66,13 @@ export class SettingsController {
     };
   }
 
+  /**
+   * Update settings with optional logo and favicon uploads. The request should be multipart/form-data to allow file uploads.
+   * The body contains all the settings fields, and the files are validated and processed separately. The service handles saving the files and updating the settings in the database.
+   * @param body
+   * @param files
+   * @returns Settings updated successfully!
+   */
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -111,6 +115,8 @@ export class SettingsController {
       },
     },
   })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @Permission('settings-create')
   @Post()
   @UseInterceptors(
@@ -120,7 +126,6 @@ export class SettingsController {
     ]),
   )
   async create(
-    // ✅ No ZodValidationPipe on @Body — files are not here yet
     @Body() body: Record<string, unknown>,
     @UploadedFiles()
     files: {
@@ -128,7 +133,6 @@ export class SettingsController {
       favicon?: MemoryStorageFile[];
     },
   ) {
-    // ✅ Merge text fields + files then validate the whole object at once
     const validated = new ZodValidationPipe(SettingsSchema).transform({
       ...body,
       logo: files.logo?.[0],
