@@ -10,6 +10,9 @@ import { VersioningType } from '@nestjs/common';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyCsrfProtection from '@fastify/csrf-protection';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import multipart from '@fastify/multipart';
+import fastifyStatic from '@fastify/static';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -19,6 +22,25 @@ async function bootstrap() {
       trustProxy: true,
     }),
   );
+
+  /**
+   * register multipart plugin for file upload
+   */
+  await app.register(multipart, {
+    limits: {
+      fileSize: 5 * 1024 * 1024, // 5MB
+      files: 2,
+    },
+  });
+
+  /**
+   * serve static files from uploads folder at /uploads route. This allows uploaded logos and favicons to be accessed via URLs like /uploads/logos/filename.jpg.
+   */
+  await app.register(fastifyStatic, {
+    root: join(process.cwd(), 'uploads'),
+    prefix: '/uploads/',
+    decorateReply: false,
+  });
 
   /**
    * apply cors
@@ -35,7 +57,25 @@ async function bootstrap() {
   /**
    * apply helmet
    */
-  await app.register(fastifyHelmet);
+  await app.register(fastifyHelmet, {
+    crossOriginResourcePolicy: {
+      policy: 'cross-origin',
+    },
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        imgSrc: [
+          "'self'",
+          'data:',
+          'blob:',
+          process.env.FRONTEND_URL as string,
+        ],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+      },
+    },
+  });
 
   /**
    * csrf protection

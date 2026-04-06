@@ -14,6 +14,7 @@ import { ModulesModule } from './modules/modules.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { RolesModule } from './roles/roles.module';
 import { PermissionGuard } from './common/guards/permission.guard';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { PermissionGuard } from './common/guards/permission.guard';
     ModulesModule,
     PermissionsModule,
     RolesModule,
+    SettingsModule,
   ],
   providers: [
     {
