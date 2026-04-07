@@ -4,9 +4,7 @@ import {
   Controller,
   DefaultValuePipe,
   Delete,
-  ForbiddenException,
   Get,
-  NotFoundException,
   Param,
   ParseEnumPipe,
   ParseIntPipe,
@@ -143,6 +141,11 @@ export class MenusController {
     };
   }
 
+  /**
+   * Find menu by it's id
+   * @param id
+   * @returns Menu
+   */
   @ApiOkResponse({
     description: 'Menus fetched successfully!',
     schema: {
@@ -165,7 +168,6 @@ export class MenusController {
   @Get(':id')
   async find(@Param('id', ParseIntPipe) id: number) {
     const menu = await this.menusService.findMenu(id);
-    if (!menu) throw new NotFoundException('Menu not found.');
     return {
       success: true,
       message: 'Menu fetched successfully!',
@@ -291,13 +293,7 @@ export class MenusController {
   @Permission('menu-delete')
   @Delete(':id')
   async deleteMenu(@Param('id', ParseIntPipe) id: number) {
-    const menu = await this.menusService.findMenu(id);
-    if (!menu) throw new NotFoundException('Menu not found.');
-    if (!menu.deletable)
-      throw new ForbiddenException(
-        'You have no enough permissions to do this.',
-      );
-    await this.menusService.deleteMenu(id);
+    const menu = await this.menusService.deleteMenu(id);
     return {
       success: true,
       message: 'Menu deleted successfully!.',

@@ -7,5 +7,5 @@ export class BlukDeleteUserDto {
     default: [1, 2, 3, 4],
     required: true,
   })
-  ids: number[];
+  ids!: number[];
 }

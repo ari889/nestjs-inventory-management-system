@@ -162,7 +162,7 @@ export class UsersService {
   }
 
   /**
-   *
+   * Update user by id
    * @param id
    * @param updatorEmail
    * @param userDto
