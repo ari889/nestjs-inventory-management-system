@@ -1,48 +1,7 @@
 import z from 'zod';
-import { MemoryStorageFile } from '@blazity/nest-file-fastify';
-
-// ─── Reusable file validator factory ─────────────────────────────────────────
+import { fileSchema } from 'src/common/validators/global.validator';
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-const fileSchema = (allowedTypes: string[], fieldName: string) =>
-  z
-    .custom<MemoryStorageFile | undefined>(
-      (val) => {
-        // ✅ allow undefined (optional)
-        if (val === undefined) return true;
-
-        return (
-          typeof val === 'object' &&
-          val !== null &&
-          Buffer.isBuffer((val as MemoryStorageFile).buffer)
-        );
-      },
-      { message: `${fieldName} must be a valid file!` },
-    )
-    .refine(
-      (file) => {
-        if (!file) return true;
-        return file.buffer.length <= MAX_FILE_SIZE;
-      },
-      {
-        message: `${fieldName} must be less than 5MB!`,
-      },
-    )
-    .refine(
-      (file) => {
-        if (!file) return true;
-        return allowedTypes.includes(file.mimetype);
-      },
-      {
-        message: `${fieldName} must be one of: ${allowedTypes
-          .map((t) => t.split('/')[1])
-          .join(', ')}`,
-      },
-    )
-
-    .optional();
-
-// ─── Schema ───────────────────────────────────────────────────────────────────
 export const SettingsSchema = z.object({
   title: z
     .string()
@@ -128,7 +87,11 @@ export const SettingsSchema = z.object({
     .int({ message: 'Invoice number must be an integer!' })
     .min(1, { message: 'Invoice number must be greater than 0!' }),
 
-  logo: fileSchema(['image/jpeg', 'image/png', 'image/gif'], 'Logo'),
+  logo: fileSchema(
+    ['image/jpeg', 'image/png', 'image/gif'],
+    'Logo',
+    MAX_FILE_SIZE,
+  ),
 
   favicon: fileSchema(
     [
@@ -139,6 +102,7 @@ export const SettingsSchema = z.object({
       'image/vnd.microsoft.icon',
     ],
     'Favicon',
+    MAX_FILE_SIZE,
   ),
 });
 

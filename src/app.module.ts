@@ -17,6 +17,7 @@ import { PermissionGuard } from './common/guards/permission.guard';
 import { SettingsModule } from './settings/settings.module';
 import { WarehousesModule } from './warehouses/warehouses.module';
 import { CustomerGroupsModule } from './customer-groups/customer-groups.module';
+import { BrandsModule } from './brands/brands.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { CustomerGroupsModule } from './customer-groups/customer-groups.module';
     SettingsModule,
     WarehousesModule,
     CustomerGroupsModule,
+    BrandsModule,
   ],
   providers: [
     {
