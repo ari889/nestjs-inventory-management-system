@@ -87,7 +87,6 @@ export class TaxesService {
    * @return CustomerGroup
    */
   async create(taxDto: TaxDto, creatorEmail: string): Promise<Tax> {
-    console.log({ taxDto, creatorEmail });
     const creator = await this.prisma.user.findUnique({
       where: { email: creatorEmail },
       select: {

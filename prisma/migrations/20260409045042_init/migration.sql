@@ -322,9 +322,9 @@ CREATE TABLE `Unit` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `unitCode` VARCHAR(191) NOT NULL,
     `unitName` VARCHAR(191) NOT NULL,
-    `baseUnit` INTEGER NULL,
+    `baseUnitId` INTEGER NULL,
     `operator` VARCHAR(191) NOT NULL DEFAULT '*',
-    `operationValue` DECIMAL(65, 30) NOT NULL DEFAULT 1,
+    `operationValue` DECIMAL(10, 2) NOT NULL DEFAULT 1,
     `status` BOOLEAN NOT NULL DEFAULT true,
     `createdBy` INTEGER NOT NULL,
     `updatedBy` INTEGER NULL,
@@ -645,6 +645,9 @@ ALTER TABLE `Tax` ADD CONSTRAINT `Tax_createdBy_fkey` FOREIGN KEY (`createdBy`) 
 
 -- AddForeignKey
 ALTER TABLE `Tax` ADD CONSTRAINT `Tax_updatedBy_fkey` FOREIGN KEY (`updatedBy`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Unit` ADD CONSTRAINT `Unit_baseUnitId_fkey` FOREIGN KEY (`baseUnitId`) REFERENCES `Unit`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Unit` ADD CONSTRAINT `Unit_createdBy_fkey` FOREIGN KEY (`createdBy`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

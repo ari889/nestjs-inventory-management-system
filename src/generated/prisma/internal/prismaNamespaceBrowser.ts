@@ -418,7 +418,7 @@ export const UnitScalarFieldEnum = {
   id: 'id',
   unitCode: 'unitCode',
   unitName: 'unitName',
-  baseUnit: 'baseUnit',
+  baseUnitId: 'baseUnitId',
   operator: 'operator',
   operationValue: 'operationValue',
   status: 'status',

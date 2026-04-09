@@ -28,7 +28,7 @@ export type AggregateUnit = {
 
 export type UnitAvgAggregateOutputType = {
   id: number | null
-  baseUnit: number | null
+  baseUnitId: number | null
   operationValue: runtime.Decimal | null
   createdBy: number | null
   updatedBy: number | null
@@ -36,7 +36,7 @@ export type UnitAvgAggregateOutputType = {
 
 export type UnitSumAggregateOutputType = {
   id: number | null
-  baseUnit: number | null
+  baseUnitId: number | null
   operationValue: runtime.Decimal | null
   createdBy: number | null
   updatedBy: number | null
@@ -46,7 +46,7 @@ export type UnitMinAggregateOutputType = {
   id: number | null
   unitCode: string | null
   unitName: string | null
-  baseUnit: number | null
+  baseUnitId: number | null
   operator: string | null
   operationValue: runtime.Decimal | null
   status: boolean | null
@@ -60,7 +60,7 @@ export type UnitMaxAggregateOutputType = {
   id: number | null
   unitCode: string | null
   unitName: string | null
-  baseUnit: number | null
+  baseUnitId: number | null
   operator: string | null
   operationValue: runtime.Decimal | null
   status: boolean | null
@@ -74,7 +74,7 @@ export type UnitCountAggregateOutputType = {
   id: number
   unitCode: number
   unitName: number
-  baseUnit: number
+  baseUnitId: number
   operator: number
   operationValue: number
   status: number
@@ -88,7 +88,7 @@ export type UnitCountAggregateOutputType = {
 
 export type UnitAvgAggregateInputType = {
   id?: true
-  baseUnit?: true
+  baseUnitId?: true
   operationValue?: true
   createdBy?: true
   updatedBy?: true
@@ -96,7 +96,7 @@ export type UnitAvgAggregateInputType = {
 
 export type UnitSumAggregateInputType = {
   id?: true
-  baseUnit?: true
+  baseUnitId?: true
   operationValue?: true
   createdBy?: true
   updatedBy?: true
@@ -106,7 +106,7 @@ export type UnitMinAggregateInputType = {
   id?: true
   unitCode?: true
   unitName?: true
-  baseUnit?: true
+  baseUnitId?: true
   operator?: true
   operationValue?: true
   status?: true
@@ -120,7 +120,7 @@ export type UnitMaxAggregateInputType = {
   id?: true
   unitCode?: true
   unitName?: true
-  baseUnit?: true
+  baseUnitId?: true
   operator?: true
   operationValue?: true
   status?: true
@@ -134,7 +134,7 @@ export type UnitCountAggregateInputType = {
   id?: true
   unitCode?: true
   unitName?: true
-  baseUnit?: true
+  baseUnitId?: true
   operator?: true
   operationValue?: true
   status?: true
@@ -235,7 +235,7 @@ export type UnitGroupByOutputType = {
   id: number
   unitCode: string
   unitName: string
-  baseUnit: number | null
+  baseUnitId: number | null
   operator: string
   operationValue: runtime.Decimal
   status: boolean
@@ -272,7 +272,7 @@ export type UnitWhereInput = {
   id?: Prisma.IntFilter<"Unit"> | number
   unitCode?: Prisma.StringFilter<"Unit"> | string
   unitName?: Prisma.StringFilter<"Unit"> | string
-  baseUnit?: Prisma.IntNullableFilter<"Unit"> | number | null
+  baseUnitId?: Prisma.IntNullableFilter<"Unit"> | number | null
   operator?: Prisma.StringFilter<"Unit"> | string
   operationValue?: Prisma.DecimalFilter<"Unit"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFilter<"Unit"> | boolean
@@ -280,6 +280,8 @@ export type UnitWhereInput = {
   updatedBy?: Prisma.IntNullableFilter<"Unit"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Unit"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Unit"> | Date | string
+  baseUnit?: Prisma.XOR<Prisma.UnitNullableScalarRelationFilter, Prisma.UnitWhereInput> | null
+  baseUnits?: Prisma.UnitListRelationFilter
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updater?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   baseProducts?: Prisma.ProductListRelationFilter
@@ -293,7 +295,7 @@ export type UnitOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   unitCode?: Prisma.SortOrder
   unitName?: Prisma.SortOrder
-  baseUnit?: Prisma.SortOrderInput | Prisma.SortOrder
+  baseUnitId?: Prisma.SortOrderInput | Prisma.SortOrder
   operator?: Prisma.SortOrder
   operationValue?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -301,6 +303,8 @@ export type UnitOrderByWithRelationInput = {
   updatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  baseUnit?: Prisma.UnitOrderByWithRelationInput
+  baseUnits?: Prisma.UnitOrderByRelationAggregateInput
   creator?: Prisma.UserOrderByWithRelationInput
   updater?: Prisma.UserOrderByWithRelationInput
   baseProducts?: Prisma.ProductOrderByRelationAggregateInput
@@ -318,7 +322,7 @@ export type UnitWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UnitWhereInput | Prisma.UnitWhereInput[]
   unitCode?: Prisma.StringFilter<"Unit"> | string
   unitName?: Prisma.StringFilter<"Unit"> | string
-  baseUnit?: Prisma.IntNullableFilter<"Unit"> | number | null
+  baseUnitId?: Prisma.IntNullableFilter<"Unit"> | number | null
   operator?: Prisma.StringFilter<"Unit"> | string
   operationValue?: Prisma.DecimalFilter<"Unit"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFilter<"Unit"> | boolean
@@ -326,6 +330,8 @@ export type UnitWhereUniqueInput = Prisma.AtLeast<{
   updatedBy?: Prisma.IntNullableFilter<"Unit"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Unit"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Unit"> | Date | string
+  baseUnit?: Prisma.XOR<Prisma.UnitNullableScalarRelationFilter, Prisma.UnitWhereInput> | null
+  baseUnits?: Prisma.UnitListRelationFilter
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updater?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   baseProducts?: Prisma.ProductListRelationFilter
@@ -339,7 +345,7 @@ export type UnitOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   unitCode?: Prisma.SortOrder
   unitName?: Prisma.SortOrder
-  baseUnit?: Prisma.SortOrderInput | Prisma.SortOrder
+  baseUnitId?: Prisma.SortOrderInput | Prisma.SortOrder
   operator?: Prisma.SortOrder
   operationValue?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -361,7 +367,7 @@ export type UnitScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"Unit"> | number
   unitCode?: Prisma.StringWithAggregatesFilter<"Unit"> | string
   unitName?: Prisma.StringWithAggregatesFilter<"Unit"> | string
-  baseUnit?: Prisma.IntNullableWithAggregatesFilter<"Unit"> | number | null
+  baseUnitId?: Prisma.IntNullableWithAggregatesFilter<"Unit"> | number | null
   operator?: Prisma.StringWithAggregatesFilter<"Unit"> | string
   operationValue?: Prisma.DecimalWithAggregatesFilter<"Unit"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolWithAggregatesFilter<"Unit"> | boolean
@@ -374,12 +380,13 @@ export type UnitScalarWhereWithAggregatesInput = {
 export type UnitCreateInput = {
   unitCode: string
   unitName: string
-  baseUnit?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnit?: Prisma.UnitCreateNestedOneWithoutBaseUnitsInput
+  baseUnits?: Prisma.UnitCreateNestedManyWithoutBaseUnitInput
   creator: Prisma.UserCreateNestedOneWithoutUnitCreatorInput
   updater?: Prisma.UserCreateNestedOneWithoutUnitUpdaterInput
   baseProducts?: Prisma.ProductCreateNestedManyWithoutUnitInput
@@ -393,7 +400,7 @@ export type UnitUncheckedCreateInput = {
   id?: number
   unitCode: string
   unitName: string
-  baseUnit?: number | null
+  baseUnitId?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
@@ -401,6 +408,7 @@ export type UnitUncheckedCreateInput = {
   updatedBy?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnits?: Prisma.UnitUncheckedCreateNestedManyWithoutBaseUnitInput
   baseProducts?: Prisma.ProductUncheckedCreateNestedManyWithoutUnitInput
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
@@ -411,12 +419,13 @@ export type UnitUncheckedCreateInput = {
 export type UnitUpdateInput = {
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnit?: Prisma.UnitUpdateOneWithoutBaseUnitsNestedInput
+  baseUnits?: Prisma.UnitUpdateManyWithoutBaseUnitNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutUnitCreatorNestedInput
   updater?: Prisma.UserUpdateOneWithoutUnitUpdaterNestedInput
   baseProducts?: Prisma.ProductUpdateManyWithoutUnitNestedInput
@@ -430,7 +439,7 @@ export type UnitUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baseUnitId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -438,6 +447,7 @@ export type UnitUncheckedUpdateInput = {
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnits?: Prisma.UnitUncheckedUpdateManyWithoutBaseUnitNestedInput
   baseProducts?: Prisma.ProductUncheckedUpdateManyWithoutUnitNestedInput
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
@@ -449,7 +459,7 @@ export type UnitCreateManyInput = {
   id?: number
   unitCode: string
   unitName: string
-  baseUnit?: number | null
+  baseUnitId?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
@@ -462,7 +472,6 @@ export type UnitCreateManyInput = {
 export type UnitUpdateManyMutationInput = {
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -474,7 +483,7 @@ export type UnitUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baseUnitId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -494,6 +503,11 @@ export type UnitOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type UnitNullableScalarRelationFilter = {
+  is?: Prisma.UnitWhereInput | null
+  isNot?: Prisma.UnitWhereInput | null
+}
+
 export type UnitOrderByRelevanceInput = {
   fields: Prisma.UnitOrderByRelevanceFieldEnum | Prisma.UnitOrderByRelevanceFieldEnum[]
   sort: Prisma.SortOrder
@@ -504,7 +518,7 @@ export type UnitCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   unitCode?: Prisma.SortOrder
   unitName?: Prisma.SortOrder
-  baseUnit?: Prisma.SortOrder
+  baseUnitId?: Prisma.SortOrder
   operator?: Prisma.SortOrder
   operationValue?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -516,7 +530,7 @@ export type UnitCountOrderByAggregateInput = {
 
 export type UnitAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  baseUnit?: Prisma.SortOrder
+  baseUnitId?: Prisma.SortOrder
   operationValue?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
@@ -526,7 +540,7 @@ export type UnitMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   unitCode?: Prisma.SortOrder
   unitName?: Prisma.SortOrder
-  baseUnit?: Prisma.SortOrder
+  baseUnitId?: Prisma.SortOrder
   operator?: Prisma.SortOrder
   operationValue?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -540,7 +554,7 @@ export type UnitMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   unitCode?: Prisma.SortOrder
   unitName?: Prisma.SortOrder
-  baseUnit?: Prisma.SortOrder
+  baseUnitId?: Prisma.SortOrder
   operator?: Prisma.SortOrder
   operationValue?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -552,7 +566,7 @@ export type UnitMinOrderByAggregateInput = {
 
 export type UnitSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  baseUnit?: Prisma.SortOrder
+  baseUnitId?: Prisma.SortOrder
   operationValue?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
@@ -647,6 +661,64 @@ export type UnitUncheckedUpdateManyWithoutUpdaterNestedInput = {
   deleteMany?: Prisma.UnitScalarWhereInput | Prisma.UnitScalarWhereInput[]
 }
 
+export type UnitCreateNestedOneWithoutBaseUnitsInput = {
+  create?: Prisma.XOR<Prisma.UnitCreateWithoutBaseUnitsInput, Prisma.UnitUncheckedCreateWithoutBaseUnitsInput>
+  connectOrCreate?: Prisma.UnitCreateOrConnectWithoutBaseUnitsInput
+  connect?: Prisma.UnitWhereUniqueInput
+}
+
+export type UnitCreateNestedManyWithoutBaseUnitInput = {
+  create?: Prisma.XOR<Prisma.UnitCreateWithoutBaseUnitInput, Prisma.UnitUncheckedCreateWithoutBaseUnitInput> | Prisma.UnitCreateWithoutBaseUnitInput[] | Prisma.UnitUncheckedCreateWithoutBaseUnitInput[]
+  connectOrCreate?: Prisma.UnitCreateOrConnectWithoutBaseUnitInput | Prisma.UnitCreateOrConnectWithoutBaseUnitInput[]
+  createMany?: Prisma.UnitCreateManyBaseUnitInputEnvelope
+  connect?: Prisma.UnitWhereUniqueInput | Prisma.UnitWhereUniqueInput[]
+}
+
+export type UnitUncheckedCreateNestedManyWithoutBaseUnitInput = {
+  create?: Prisma.XOR<Prisma.UnitCreateWithoutBaseUnitInput, Prisma.UnitUncheckedCreateWithoutBaseUnitInput> | Prisma.UnitCreateWithoutBaseUnitInput[] | Prisma.UnitUncheckedCreateWithoutBaseUnitInput[]
+  connectOrCreate?: Prisma.UnitCreateOrConnectWithoutBaseUnitInput | Prisma.UnitCreateOrConnectWithoutBaseUnitInput[]
+  createMany?: Prisma.UnitCreateManyBaseUnitInputEnvelope
+  connect?: Prisma.UnitWhereUniqueInput | Prisma.UnitWhereUniqueInput[]
+}
+
+export type UnitUpdateOneWithoutBaseUnitsNestedInput = {
+  create?: Prisma.XOR<Prisma.UnitCreateWithoutBaseUnitsInput, Prisma.UnitUncheckedCreateWithoutBaseUnitsInput>
+  connectOrCreate?: Prisma.UnitCreateOrConnectWithoutBaseUnitsInput
+  upsert?: Prisma.UnitUpsertWithoutBaseUnitsInput
+  disconnect?: Prisma.UnitWhereInput | boolean
+  delete?: Prisma.UnitWhereInput | boolean
+  connect?: Prisma.UnitWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UnitUpdateToOneWithWhereWithoutBaseUnitsInput, Prisma.UnitUpdateWithoutBaseUnitsInput>, Prisma.UnitUncheckedUpdateWithoutBaseUnitsInput>
+}
+
+export type UnitUpdateManyWithoutBaseUnitNestedInput = {
+  create?: Prisma.XOR<Prisma.UnitCreateWithoutBaseUnitInput, Prisma.UnitUncheckedCreateWithoutBaseUnitInput> | Prisma.UnitCreateWithoutBaseUnitInput[] | Prisma.UnitUncheckedCreateWithoutBaseUnitInput[]
+  connectOrCreate?: Prisma.UnitCreateOrConnectWithoutBaseUnitInput | Prisma.UnitCreateOrConnectWithoutBaseUnitInput[]
+  upsert?: Prisma.UnitUpsertWithWhereUniqueWithoutBaseUnitInput | Prisma.UnitUpsertWithWhereUniqueWithoutBaseUnitInput[]
+  createMany?: Prisma.UnitCreateManyBaseUnitInputEnvelope
+  set?: Prisma.UnitWhereUniqueInput | Prisma.UnitWhereUniqueInput[]
+  disconnect?: Prisma.UnitWhereUniqueInput | Prisma.UnitWhereUniqueInput[]
+  delete?: Prisma.UnitWhereUniqueInput | Prisma.UnitWhereUniqueInput[]
+  connect?: Prisma.UnitWhereUniqueInput | Prisma.UnitWhereUniqueInput[]
+  update?: Prisma.UnitUpdateWithWhereUniqueWithoutBaseUnitInput | Prisma.UnitUpdateWithWhereUniqueWithoutBaseUnitInput[]
+  updateMany?: Prisma.UnitUpdateManyWithWhereWithoutBaseUnitInput | Prisma.UnitUpdateManyWithWhereWithoutBaseUnitInput[]
+  deleteMany?: Prisma.UnitScalarWhereInput | Prisma.UnitScalarWhereInput[]
+}
+
+export type UnitUncheckedUpdateManyWithoutBaseUnitNestedInput = {
+  create?: Prisma.XOR<Prisma.UnitCreateWithoutBaseUnitInput, Prisma.UnitUncheckedCreateWithoutBaseUnitInput> | Prisma.UnitCreateWithoutBaseUnitInput[] | Prisma.UnitUncheckedCreateWithoutBaseUnitInput[]
+  connectOrCreate?: Prisma.UnitCreateOrConnectWithoutBaseUnitInput | Prisma.UnitCreateOrConnectWithoutBaseUnitInput[]
+  upsert?: Prisma.UnitUpsertWithWhereUniqueWithoutBaseUnitInput | Prisma.UnitUpsertWithWhereUniqueWithoutBaseUnitInput[]
+  createMany?: Prisma.UnitCreateManyBaseUnitInputEnvelope
+  set?: Prisma.UnitWhereUniqueInput | Prisma.UnitWhereUniqueInput[]
+  disconnect?: Prisma.UnitWhereUniqueInput | Prisma.UnitWhereUniqueInput[]
+  delete?: Prisma.UnitWhereUniqueInput | Prisma.UnitWhereUniqueInput[]
+  connect?: Prisma.UnitWhereUniqueInput | Prisma.UnitWhereUniqueInput[]
+  update?: Prisma.UnitUpdateWithWhereUniqueWithoutBaseUnitInput | Prisma.UnitUpdateWithWhereUniqueWithoutBaseUnitInput[]
+  updateMany?: Prisma.UnitUpdateManyWithWhereWithoutBaseUnitInput | Prisma.UnitUpdateManyWithWhereWithoutBaseUnitInput[]
+  deleteMany?: Prisma.UnitScalarWhereInput | Prisma.UnitScalarWhereInput[]
+}
+
 export type UnitCreateNestedOneWithoutBaseProductsInput = {
   create?: Prisma.XOR<Prisma.UnitCreateWithoutBaseProductsInput, Prisma.UnitUncheckedCreateWithoutBaseProductsInput>
   connectOrCreate?: Prisma.UnitCreateOrConnectWithoutBaseProductsInput
@@ -720,12 +792,13 @@ export type UnitUpdateOneRequiredWithoutSaleProductsNestedInput = {
 export type UnitCreateWithoutCreatorInput = {
   unitCode: string
   unitName: string
-  baseUnit?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnit?: Prisma.UnitCreateNestedOneWithoutBaseUnitsInput
+  baseUnits?: Prisma.UnitCreateNestedManyWithoutBaseUnitInput
   updater?: Prisma.UserCreateNestedOneWithoutUnitUpdaterInput
   baseProducts?: Prisma.ProductCreateNestedManyWithoutUnitInput
   purchaseProductsUnit?: Prisma.ProductCreateNestedManyWithoutPurchaseUnitInput
@@ -738,13 +811,14 @@ export type UnitUncheckedCreateWithoutCreatorInput = {
   id?: number
   unitCode: string
   unitName: string
-  baseUnit?: number | null
+  baseUnitId?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
   updatedBy?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnits?: Prisma.UnitUncheckedCreateNestedManyWithoutBaseUnitInput
   baseProducts?: Prisma.ProductUncheckedCreateNestedManyWithoutUnitInput
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
@@ -765,12 +839,13 @@ export type UnitCreateManyCreatorInputEnvelope = {
 export type UnitCreateWithoutUpdaterInput = {
   unitCode: string
   unitName: string
-  baseUnit?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnit?: Prisma.UnitCreateNestedOneWithoutBaseUnitsInput
+  baseUnits?: Prisma.UnitCreateNestedManyWithoutBaseUnitInput
   creator: Prisma.UserCreateNestedOneWithoutUnitCreatorInput
   baseProducts?: Prisma.ProductCreateNestedManyWithoutUnitInput
   purchaseProductsUnit?: Prisma.ProductCreateNestedManyWithoutPurchaseUnitInput
@@ -783,13 +858,14 @@ export type UnitUncheckedCreateWithoutUpdaterInput = {
   id?: number
   unitCode: string
   unitName: string
-  baseUnit?: number | null
+  baseUnitId?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
   createdBy: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnits?: Prisma.UnitUncheckedCreateNestedManyWithoutBaseUnitInput
   baseProducts?: Prisma.ProductUncheckedCreateNestedManyWithoutUnitInput
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
@@ -830,7 +906,7 @@ export type UnitScalarWhereInput = {
   id?: Prisma.IntFilter<"Unit"> | number
   unitCode?: Prisma.StringFilter<"Unit"> | string
   unitName?: Prisma.StringFilter<"Unit"> | string
-  baseUnit?: Prisma.IntNullableFilter<"Unit"> | number | null
+  baseUnitId?: Prisma.IntNullableFilter<"Unit"> | number | null
   operator?: Prisma.StringFilter<"Unit"> | string
   operationValue?: Prisma.DecimalFilter<"Unit"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFilter<"Unit"> | boolean
@@ -856,15 +932,169 @@ export type UnitUpdateManyWithWhereWithoutUpdaterInput = {
   data: Prisma.XOR<Prisma.UnitUpdateManyMutationInput, Prisma.UnitUncheckedUpdateManyWithoutUpdaterInput>
 }
 
-export type UnitCreateWithoutBaseProductsInput = {
+export type UnitCreateWithoutBaseUnitsInput = {
   unitCode: string
   unitName: string
-  baseUnit?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnit?: Prisma.UnitCreateNestedOneWithoutBaseUnitsInput
+  creator: Prisma.UserCreateNestedOneWithoutUnitCreatorInput
+  updater?: Prisma.UserCreateNestedOneWithoutUnitUpdaterInput
+  baseProducts?: Prisma.ProductCreateNestedManyWithoutUnitInput
+  purchaseProductsUnit?: Prisma.ProductCreateNestedManyWithoutPurchaseUnitInput
+  saleProductsUnit?: Prisma.ProductCreateNestedManyWithoutSaleUnitInput
+  purchaseProducts?: Prisma.PurchaseProductCreateNestedManyWithoutUnitInput
+  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutSaleUnitInput
+}
+
+export type UnitUncheckedCreateWithoutBaseUnitsInput = {
+  id?: number
+  unitCode: string
+  unitName: string
+  baseUnitId?: number | null
+  operator?: string
+  operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: boolean
+  createdBy: number
+  updatedBy?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  baseProducts?: Prisma.ProductUncheckedCreateNestedManyWithoutUnitInput
+  purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
+  saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
+  purchaseProducts?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutUnitInput
+  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutSaleUnitInput
+}
+
+export type UnitCreateOrConnectWithoutBaseUnitsInput = {
+  where: Prisma.UnitWhereUniqueInput
+  create: Prisma.XOR<Prisma.UnitCreateWithoutBaseUnitsInput, Prisma.UnitUncheckedCreateWithoutBaseUnitsInput>
+}
+
+export type UnitCreateWithoutBaseUnitInput = {
+  unitCode: string
+  unitName: string
+  operator?: string
+  operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  baseUnits?: Prisma.UnitCreateNestedManyWithoutBaseUnitInput
+  creator: Prisma.UserCreateNestedOneWithoutUnitCreatorInput
+  updater?: Prisma.UserCreateNestedOneWithoutUnitUpdaterInput
+  baseProducts?: Prisma.ProductCreateNestedManyWithoutUnitInput
+  purchaseProductsUnit?: Prisma.ProductCreateNestedManyWithoutPurchaseUnitInput
+  saleProductsUnit?: Prisma.ProductCreateNestedManyWithoutSaleUnitInput
+  purchaseProducts?: Prisma.PurchaseProductCreateNestedManyWithoutUnitInput
+  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutSaleUnitInput
+}
+
+export type UnitUncheckedCreateWithoutBaseUnitInput = {
+  id?: number
+  unitCode: string
+  unitName: string
+  operator?: string
+  operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: boolean
+  createdBy: number
+  updatedBy?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  baseUnits?: Prisma.UnitUncheckedCreateNestedManyWithoutBaseUnitInput
+  baseProducts?: Prisma.ProductUncheckedCreateNestedManyWithoutUnitInput
+  purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
+  saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
+  purchaseProducts?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutUnitInput
+  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutSaleUnitInput
+}
+
+export type UnitCreateOrConnectWithoutBaseUnitInput = {
+  where: Prisma.UnitWhereUniqueInput
+  create: Prisma.XOR<Prisma.UnitCreateWithoutBaseUnitInput, Prisma.UnitUncheckedCreateWithoutBaseUnitInput>
+}
+
+export type UnitCreateManyBaseUnitInputEnvelope = {
+  data: Prisma.UnitCreateManyBaseUnitInput | Prisma.UnitCreateManyBaseUnitInput[]
+  skipDuplicates?: boolean
+}
+
+export type UnitUpsertWithoutBaseUnitsInput = {
+  update: Prisma.XOR<Prisma.UnitUpdateWithoutBaseUnitsInput, Prisma.UnitUncheckedUpdateWithoutBaseUnitsInput>
+  create: Prisma.XOR<Prisma.UnitCreateWithoutBaseUnitsInput, Prisma.UnitUncheckedCreateWithoutBaseUnitsInput>
+  where?: Prisma.UnitWhereInput
+}
+
+export type UnitUpdateToOneWithWhereWithoutBaseUnitsInput = {
+  where?: Prisma.UnitWhereInput
+  data: Prisma.XOR<Prisma.UnitUpdateWithoutBaseUnitsInput, Prisma.UnitUncheckedUpdateWithoutBaseUnitsInput>
+}
+
+export type UnitUpdateWithoutBaseUnitsInput = {
+  unitCode?: Prisma.StringFieldUpdateOperationsInput | string
+  unitName?: Prisma.StringFieldUpdateOperationsInput | string
+  operator?: Prisma.StringFieldUpdateOperationsInput | string
+  operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnit?: Prisma.UnitUpdateOneWithoutBaseUnitsNestedInput
+  creator?: Prisma.UserUpdateOneRequiredWithoutUnitCreatorNestedInput
+  updater?: Prisma.UserUpdateOneWithoutUnitUpdaterNestedInput
+  baseProducts?: Prisma.ProductUpdateManyWithoutUnitNestedInput
+  purchaseProductsUnit?: Prisma.ProductUpdateManyWithoutPurchaseUnitNestedInput
+  saleProductsUnit?: Prisma.ProductUpdateManyWithoutSaleUnitNestedInput
+  purchaseProducts?: Prisma.PurchaseProductUpdateManyWithoutUnitNestedInput
+  saleProducts?: Prisma.SaleProductUpdateManyWithoutSaleUnitNestedInput
+}
+
+export type UnitUncheckedUpdateWithoutBaseUnitsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  unitCode?: Prisma.StringFieldUpdateOperationsInput | string
+  unitName?: Prisma.StringFieldUpdateOperationsInput | string
+  baseUnitId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  operator?: Prisma.StringFieldUpdateOperationsInput | string
+  operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdBy?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseProducts?: Prisma.ProductUncheckedUpdateManyWithoutUnitNestedInput
+  purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
+  saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
+  purchaseProducts?: Prisma.PurchaseProductUncheckedUpdateManyWithoutUnitNestedInput
+  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutSaleUnitNestedInput
+}
+
+export type UnitUpsertWithWhereUniqueWithoutBaseUnitInput = {
+  where: Prisma.UnitWhereUniqueInput
+  update: Prisma.XOR<Prisma.UnitUpdateWithoutBaseUnitInput, Prisma.UnitUncheckedUpdateWithoutBaseUnitInput>
+  create: Prisma.XOR<Prisma.UnitCreateWithoutBaseUnitInput, Prisma.UnitUncheckedCreateWithoutBaseUnitInput>
+}
+
+export type UnitUpdateWithWhereUniqueWithoutBaseUnitInput = {
+  where: Prisma.UnitWhereUniqueInput
+  data: Prisma.XOR<Prisma.UnitUpdateWithoutBaseUnitInput, Prisma.UnitUncheckedUpdateWithoutBaseUnitInput>
+}
+
+export type UnitUpdateManyWithWhereWithoutBaseUnitInput = {
+  where: Prisma.UnitScalarWhereInput
+  data: Prisma.XOR<Prisma.UnitUpdateManyMutationInput, Prisma.UnitUncheckedUpdateManyWithoutBaseUnitInput>
+}
+
+export type UnitCreateWithoutBaseProductsInput = {
+  unitCode: string
+  unitName: string
+  operator?: string
+  operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  baseUnit?: Prisma.UnitCreateNestedOneWithoutBaseUnitsInput
+  baseUnits?: Prisma.UnitCreateNestedManyWithoutBaseUnitInput
   creator: Prisma.UserCreateNestedOneWithoutUnitCreatorInput
   updater?: Prisma.UserCreateNestedOneWithoutUnitUpdaterInput
   purchaseProductsUnit?: Prisma.ProductCreateNestedManyWithoutPurchaseUnitInput
@@ -877,7 +1107,7 @@ export type UnitUncheckedCreateWithoutBaseProductsInput = {
   id?: number
   unitCode: string
   unitName: string
-  baseUnit?: number | null
+  baseUnitId?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
@@ -885,6 +1115,7 @@ export type UnitUncheckedCreateWithoutBaseProductsInput = {
   updatedBy?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnits?: Prisma.UnitUncheckedCreateNestedManyWithoutBaseUnitInput
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutUnitInput
@@ -899,12 +1130,13 @@ export type UnitCreateOrConnectWithoutBaseProductsInput = {
 export type UnitCreateWithoutPurchaseProductsUnitInput = {
   unitCode: string
   unitName: string
-  baseUnit?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnit?: Prisma.UnitCreateNestedOneWithoutBaseUnitsInput
+  baseUnits?: Prisma.UnitCreateNestedManyWithoutBaseUnitInput
   creator: Prisma.UserCreateNestedOneWithoutUnitCreatorInput
   updater?: Prisma.UserCreateNestedOneWithoutUnitUpdaterInput
   baseProducts?: Prisma.ProductCreateNestedManyWithoutUnitInput
@@ -917,7 +1149,7 @@ export type UnitUncheckedCreateWithoutPurchaseProductsUnitInput = {
   id?: number
   unitCode: string
   unitName: string
-  baseUnit?: number | null
+  baseUnitId?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
@@ -925,6 +1157,7 @@ export type UnitUncheckedCreateWithoutPurchaseProductsUnitInput = {
   updatedBy?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnits?: Prisma.UnitUncheckedCreateNestedManyWithoutBaseUnitInput
   baseProducts?: Prisma.ProductUncheckedCreateNestedManyWithoutUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutUnitInput
@@ -939,12 +1172,13 @@ export type UnitCreateOrConnectWithoutPurchaseProductsUnitInput = {
 export type UnitCreateWithoutSaleProductsUnitInput = {
   unitCode: string
   unitName: string
-  baseUnit?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnit?: Prisma.UnitCreateNestedOneWithoutBaseUnitsInput
+  baseUnits?: Prisma.UnitCreateNestedManyWithoutBaseUnitInput
   creator: Prisma.UserCreateNestedOneWithoutUnitCreatorInput
   updater?: Prisma.UserCreateNestedOneWithoutUnitUpdaterInput
   baseProducts?: Prisma.ProductCreateNestedManyWithoutUnitInput
@@ -957,7 +1191,7 @@ export type UnitUncheckedCreateWithoutSaleProductsUnitInput = {
   id?: number
   unitCode: string
   unitName: string
-  baseUnit?: number | null
+  baseUnitId?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
@@ -965,6 +1199,7 @@ export type UnitUncheckedCreateWithoutSaleProductsUnitInput = {
   updatedBy?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnits?: Prisma.UnitUncheckedCreateNestedManyWithoutBaseUnitInput
   baseProducts?: Prisma.ProductUncheckedCreateNestedManyWithoutUnitInput
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutUnitInput
@@ -990,12 +1225,13 @@ export type UnitUpdateToOneWithWhereWithoutBaseProductsInput = {
 export type UnitUpdateWithoutBaseProductsInput = {
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnit?: Prisma.UnitUpdateOneWithoutBaseUnitsNestedInput
+  baseUnits?: Prisma.UnitUpdateManyWithoutBaseUnitNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutUnitCreatorNestedInput
   updater?: Prisma.UserUpdateOneWithoutUnitUpdaterNestedInput
   purchaseProductsUnit?: Prisma.ProductUpdateManyWithoutPurchaseUnitNestedInput
@@ -1008,7 +1244,7 @@ export type UnitUncheckedUpdateWithoutBaseProductsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baseUnitId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1016,6 +1252,7 @@ export type UnitUncheckedUpdateWithoutBaseProductsInput = {
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnits?: Prisma.UnitUncheckedUpdateManyWithoutBaseUnitNestedInput
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedUpdateManyWithoutUnitNestedInput
@@ -1036,12 +1273,13 @@ export type UnitUpdateToOneWithWhereWithoutPurchaseProductsUnitInput = {
 export type UnitUpdateWithoutPurchaseProductsUnitInput = {
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnit?: Prisma.UnitUpdateOneWithoutBaseUnitsNestedInput
+  baseUnits?: Prisma.UnitUpdateManyWithoutBaseUnitNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutUnitCreatorNestedInput
   updater?: Prisma.UserUpdateOneWithoutUnitUpdaterNestedInput
   baseProducts?: Prisma.ProductUpdateManyWithoutUnitNestedInput
@@ -1054,7 +1292,7 @@ export type UnitUncheckedUpdateWithoutPurchaseProductsUnitInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baseUnitId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1062,6 +1300,7 @@ export type UnitUncheckedUpdateWithoutPurchaseProductsUnitInput = {
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnits?: Prisma.UnitUncheckedUpdateManyWithoutBaseUnitNestedInput
   baseProducts?: Prisma.ProductUncheckedUpdateManyWithoutUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedUpdateManyWithoutUnitNestedInput
@@ -1082,12 +1321,13 @@ export type UnitUpdateToOneWithWhereWithoutSaleProductsUnitInput = {
 export type UnitUpdateWithoutSaleProductsUnitInput = {
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnit?: Prisma.UnitUpdateOneWithoutBaseUnitsNestedInput
+  baseUnits?: Prisma.UnitUpdateManyWithoutBaseUnitNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutUnitCreatorNestedInput
   updater?: Prisma.UserUpdateOneWithoutUnitUpdaterNestedInput
   baseProducts?: Prisma.ProductUpdateManyWithoutUnitNestedInput
@@ -1100,7 +1340,7 @@ export type UnitUncheckedUpdateWithoutSaleProductsUnitInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baseUnitId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1108,6 +1348,7 @@ export type UnitUncheckedUpdateWithoutSaleProductsUnitInput = {
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnits?: Prisma.UnitUncheckedUpdateManyWithoutBaseUnitNestedInput
   baseProducts?: Prisma.ProductUncheckedUpdateManyWithoutUnitNestedInput
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedUpdateManyWithoutUnitNestedInput
@@ -1117,12 +1358,13 @@ export type UnitUncheckedUpdateWithoutSaleProductsUnitInput = {
 export type UnitCreateWithoutPurchaseProductsInput = {
   unitCode: string
   unitName: string
-  baseUnit?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnit?: Prisma.UnitCreateNestedOneWithoutBaseUnitsInput
+  baseUnits?: Prisma.UnitCreateNestedManyWithoutBaseUnitInput
   creator: Prisma.UserCreateNestedOneWithoutUnitCreatorInput
   updater?: Prisma.UserCreateNestedOneWithoutUnitUpdaterInput
   baseProducts?: Prisma.ProductCreateNestedManyWithoutUnitInput
@@ -1135,7 +1377,7 @@ export type UnitUncheckedCreateWithoutPurchaseProductsInput = {
   id?: number
   unitCode: string
   unitName: string
-  baseUnit?: number | null
+  baseUnitId?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
@@ -1143,6 +1385,7 @@ export type UnitUncheckedCreateWithoutPurchaseProductsInput = {
   updatedBy?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnits?: Prisma.UnitUncheckedCreateNestedManyWithoutBaseUnitInput
   baseProducts?: Prisma.ProductUncheckedCreateNestedManyWithoutUnitInput
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
@@ -1168,12 +1411,13 @@ export type UnitUpdateToOneWithWhereWithoutPurchaseProductsInput = {
 export type UnitUpdateWithoutPurchaseProductsInput = {
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnit?: Prisma.UnitUpdateOneWithoutBaseUnitsNestedInput
+  baseUnits?: Prisma.UnitUpdateManyWithoutBaseUnitNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutUnitCreatorNestedInput
   updater?: Prisma.UserUpdateOneWithoutUnitUpdaterNestedInput
   baseProducts?: Prisma.ProductUpdateManyWithoutUnitNestedInput
@@ -1186,7 +1430,7 @@ export type UnitUncheckedUpdateWithoutPurchaseProductsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baseUnitId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1194,6 +1438,7 @@ export type UnitUncheckedUpdateWithoutPurchaseProductsInput = {
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnits?: Prisma.UnitUncheckedUpdateManyWithoutBaseUnitNestedInput
   baseProducts?: Prisma.ProductUncheckedUpdateManyWithoutUnitNestedInput
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
@@ -1203,12 +1448,13 @@ export type UnitUncheckedUpdateWithoutPurchaseProductsInput = {
 export type UnitCreateWithoutSaleProductsInput = {
   unitCode: string
   unitName: string
-  baseUnit?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnit?: Prisma.UnitCreateNestedOneWithoutBaseUnitsInput
+  baseUnits?: Prisma.UnitCreateNestedManyWithoutBaseUnitInput
   creator: Prisma.UserCreateNestedOneWithoutUnitCreatorInput
   updater?: Prisma.UserCreateNestedOneWithoutUnitUpdaterInput
   baseProducts?: Prisma.ProductCreateNestedManyWithoutUnitInput
@@ -1221,7 +1467,7 @@ export type UnitUncheckedCreateWithoutSaleProductsInput = {
   id?: number
   unitCode: string
   unitName: string
-  baseUnit?: number | null
+  baseUnitId?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
@@ -1229,6 +1475,7 @@ export type UnitUncheckedCreateWithoutSaleProductsInput = {
   updatedBy?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  baseUnits?: Prisma.UnitUncheckedCreateNestedManyWithoutBaseUnitInput
   baseProducts?: Prisma.ProductUncheckedCreateNestedManyWithoutUnitInput
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
@@ -1254,12 +1501,13 @@ export type UnitUpdateToOneWithWhereWithoutSaleProductsInput = {
 export type UnitUpdateWithoutSaleProductsInput = {
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnit?: Prisma.UnitUpdateOneWithoutBaseUnitsNestedInput
+  baseUnits?: Prisma.UnitUpdateManyWithoutBaseUnitNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutUnitCreatorNestedInput
   updater?: Prisma.UserUpdateOneWithoutUnitUpdaterNestedInput
   baseProducts?: Prisma.ProductUpdateManyWithoutUnitNestedInput
@@ -1272,7 +1520,7 @@ export type UnitUncheckedUpdateWithoutSaleProductsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baseUnitId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1280,6 +1528,7 @@ export type UnitUncheckedUpdateWithoutSaleProductsInput = {
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnits?: Prisma.UnitUncheckedUpdateManyWithoutBaseUnitNestedInput
   baseProducts?: Prisma.ProductUncheckedUpdateManyWithoutUnitNestedInput
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
@@ -1290,7 +1539,7 @@ export type UnitCreateManyCreatorInput = {
   id?: number
   unitCode: string
   unitName: string
-  baseUnit?: number | null
+  baseUnitId?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
@@ -1303,7 +1552,7 @@ export type UnitCreateManyUpdaterInput = {
   id?: number
   unitCode: string
   unitName: string
-  baseUnit?: number | null
+  baseUnitId?: number | null
   operator?: string
   operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: boolean
@@ -1315,12 +1564,13 @@ export type UnitCreateManyUpdaterInput = {
 export type UnitUpdateWithoutCreatorInput = {
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnit?: Prisma.UnitUpdateOneWithoutBaseUnitsNestedInput
+  baseUnits?: Prisma.UnitUpdateManyWithoutBaseUnitNestedInput
   updater?: Prisma.UserUpdateOneWithoutUnitUpdaterNestedInput
   baseProducts?: Prisma.ProductUpdateManyWithoutUnitNestedInput
   purchaseProductsUnit?: Prisma.ProductUpdateManyWithoutPurchaseUnitNestedInput
@@ -1333,13 +1583,14 @@ export type UnitUncheckedUpdateWithoutCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baseUnitId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnits?: Prisma.UnitUncheckedUpdateManyWithoutBaseUnitNestedInput
   baseProducts?: Prisma.ProductUncheckedUpdateManyWithoutUnitNestedInput
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
@@ -1351,7 +1602,7 @@ export type UnitUncheckedUpdateManyWithoutCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baseUnitId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1363,12 +1614,13 @@ export type UnitUncheckedUpdateManyWithoutCreatorInput = {
 export type UnitUpdateWithoutUpdaterInput = {
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnit?: Prisma.UnitUpdateOneWithoutBaseUnitsNestedInput
+  baseUnits?: Prisma.UnitUpdateManyWithoutBaseUnitNestedInput
   creator?: Prisma.UserUpdateOneRequiredWithoutUnitCreatorNestedInput
   baseProducts?: Prisma.ProductUpdateManyWithoutUnitNestedInput
   purchaseProductsUnit?: Prisma.ProductUpdateManyWithoutPurchaseUnitNestedInput
@@ -1381,13 +1633,14 @@ export type UnitUncheckedUpdateWithoutUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baseUnitId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnits?: Prisma.UnitUncheckedUpdateManyWithoutBaseUnitNestedInput
   baseProducts?: Prisma.ProductUncheckedUpdateManyWithoutUnitNestedInput
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
@@ -1399,11 +1652,74 @@ export type UnitUncheckedUpdateManyWithoutUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   unitCode?: Prisma.StringFieldUpdateOperationsInput | string
   unitName?: Prisma.StringFieldUpdateOperationsInput | string
-  baseUnit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baseUnitId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   operator?: Prisma.StringFieldUpdateOperationsInput | string
   operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   status?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdBy?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type UnitCreateManyBaseUnitInput = {
+  id?: number
+  unitCode: string
+  unitName: string
+  operator?: string
+  operationValue?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: boolean
+  createdBy: number
+  updatedBy?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type UnitUpdateWithoutBaseUnitInput = {
+  unitCode?: Prisma.StringFieldUpdateOperationsInput | string
+  unitName?: Prisma.StringFieldUpdateOperationsInput | string
+  operator?: Prisma.StringFieldUpdateOperationsInput | string
+  operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnits?: Prisma.UnitUpdateManyWithoutBaseUnitNestedInput
+  creator?: Prisma.UserUpdateOneRequiredWithoutUnitCreatorNestedInput
+  updater?: Prisma.UserUpdateOneWithoutUnitUpdaterNestedInput
+  baseProducts?: Prisma.ProductUpdateManyWithoutUnitNestedInput
+  purchaseProductsUnit?: Prisma.ProductUpdateManyWithoutPurchaseUnitNestedInput
+  saleProductsUnit?: Prisma.ProductUpdateManyWithoutSaleUnitNestedInput
+  purchaseProducts?: Prisma.PurchaseProductUpdateManyWithoutUnitNestedInput
+  saleProducts?: Prisma.SaleProductUpdateManyWithoutSaleUnitNestedInput
+}
+
+export type UnitUncheckedUpdateWithoutBaseUnitInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  unitCode?: Prisma.StringFieldUpdateOperationsInput | string
+  unitName?: Prisma.StringFieldUpdateOperationsInput | string
+  operator?: Prisma.StringFieldUpdateOperationsInput | string
+  operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdBy?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  baseUnits?: Prisma.UnitUncheckedUpdateManyWithoutBaseUnitNestedInput
+  baseProducts?: Prisma.ProductUncheckedUpdateManyWithoutUnitNestedInput
+  purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
+  saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
+  purchaseProducts?: Prisma.PurchaseProductUncheckedUpdateManyWithoutUnitNestedInput
+  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutSaleUnitNestedInput
+}
+
+export type UnitUncheckedUpdateManyWithoutBaseUnitInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  unitCode?: Prisma.StringFieldUpdateOperationsInput | string
+  unitName?: Prisma.StringFieldUpdateOperationsInput | string
+  operator?: Prisma.StringFieldUpdateOperationsInput | string
+  operationValue?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdBy?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1414,6 +1730,7 @@ export type UnitUncheckedUpdateManyWithoutUpdaterInput = {
  */
 
 export type UnitCountOutputType = {
+  baseUnits: number
   baseProducts: number
   purchaseProductsUnit: number
   saleProductsUnit: number
@@ -1422,6 +1739,7 @@ export type UnitCountOutputType = {
 }
 
 export type UnitCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  baseUnits?: boolean | UnitCountOutputTypeCountBaseUnitsArgs
   baseProducts?: boolean | UnitCountOutputTypeCountBaseProductsArgs
   purchaseProductsUnit?: boolean | UnitCountOutputTypeCountPurchaseProductsUnitArgs
   saleProductsUnit?: boolean | UnitCountOutputTypeCountSaleProductsUnitArgs
@@ -1437,6 +1755,13 @@ export type UnitCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
    * Select specific fields to fetch from the UnitCountOutputType
    */
   select?: Prisma.UnitCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UnitCountOutputType without action
+ */
+export type UnitCountOutputTypeCountBaseUnitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UnitWhereInput
 }
 
 /**
@@ -1479,7 +1804,7 @@ export type UnitSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   unitCode?: boolean
   unitName?: boolean
-  baseUnit?: boolean
+  baseUnitId?: boolean
   operator?: boolean
   operationValue?: boolean
   status?: boolean
@@ -1487,6 +1812,8 @@ export type UnitSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedBy?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  baseUnit?: boolean | Prisma.Unit$baseUnitArgs<ExtArgs>
+  baseUnits?: boolean | Prisma.Unit$baseUnitsArgs<ExtArgs>
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updater?: boolean | Prisma.Unit$updaterArgs<ExtArgs>
   baseProducts?: boolean | Prisma.Unit$baseProductsArgs<ExtArgs>
@@ -1503,7 +1830,7 @@ export type UnitSelectScalar = {
   id?: boolean
   unitCode?: boolean
   unitName?: boolean
-  baseUnit?: boolean
+  baseUnitId?: boolean
   operator?: boolean
   operationValue?: boolean
   status?: boolean
@@ -1513,8 +1840,10 @@ export type UnitSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UnitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "unitCode" | "unitName" | "baseUnit" | "operator" | "operationValue" | "status" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["unit"]>
+export type UnitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "unitCode" | "unitName" | "baseUnitId" | "operator" | "operationValue" | "status" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["unit"]>
 export type UnitInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  baseUnit?: boolean | Prisma.Unit$baseUnitArgs<ExtArgs>
+  baseUnits?: boolean | Prisma.Unit$baseUnitsArgs<ExtArgs>
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updater?: boolean | Prisma.Unit$updaterArgs<ExtArgs>
   baseProducts?: boolean | Prisma.Unit$baseProductsArgs<ExtArgs>
@@ -1528,6 +1857,8 @@ export type UnitInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 export type $UnitPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Unit"
   objects: {
+    baseUnit: Prisma.$UnitPayload<ExtArgs> | null
+    baseUnits: Prisma.$UnitPayload<ExtArgs>[]
     creator: Prisma.$UserPayload<ExtArgs>
     updater: Prisma.$UserPayload<ExtArgs> | null
     baseProducts: Prisma.$ProductPayload<ExtArgs>[]
@@ -1540,7 +1871,7 @@ export type $UnitPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     id: number
     unitCode: string
     unitName: string
-    baseUnit: number | null
+    baseUnitId: number | null
     operator: string
     operationValue: runtime.Decimal
     status: boolean
@@ -1888,6 +2219,8 @@ readonly fields: UnitFieldRefs;
  */
 export interface Prisma__UnitClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  baseUnit<T extends Prisma.Unit$baseUnitArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Unit$baseUnitArgs<ExtArgs>>): Prisma.Prisma__UnitClient<runtime.Types.Result.GetResult<Prisma.$UnitPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  baseUnits<T extends Prisma.Unit$baseUnitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Unit$baseUnitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UnitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   creator<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   updater<T extends Prisma.Unit$updaterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Unit$updaterArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   baseProducts<T extends Prisma.Unit$baseProductsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Unit$baseProductsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1927,7 +2260,7 @@ export interface UnitFieldRefs {
   readonly id: Prisma.FieldRef<"Unit", 'Int'>
   readonly unitCode: Prisma.FieldRef<"Unit", 'String'>
   readonly unitName: Prisma.FieldRef<"Unit", 'String'>
-  readonly baseUnit: Prisma.FieldRef<"Unit", 'Int'>
+  readonly baseUnitId: Prisma.FieldRef<"Unit", 'Int'>
   readonly operator: Prisma.FieldRef<"Unit", 'String'>
   readonly operationValue: Prisma.FieldRef<"Unit", 'Decimal'>
   readonly status: Prisma.FieldRef<"Unit", 'Boolean'>
@@ -2275,6 +2608,49 @@ export type UnitDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Units to delete.
    */
   limit?: number
+}
+
+/**
+ * Unit.baseUnit
+ */
+export type Unit$baseUnitArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Unit
+   */
+  select?: Prisma.UnitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Unit
+   */
+  omit?: Prisma.UnitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UnitInclude<ExtArgs> | null
+  where?: Prisma.UnitWhereInput
+}
+
+/**
+ * Unit.baseUnits
+ */
+export type Unit$baseUnitsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Unit
+   */
+  select?: Prisma.UnitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Unit
+   */
+  omit?: Prisma.UnitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UnitInclude<ExtArgs> | null
+  where?: Prisma.UnitWhereInput
+  orderBy?: Prisma.UnitOrderByWithRelationInput | Prisma.UnitOrderByWithRelationInput[]
+  cursor?: Prisma.UnitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UnitScalarFieldEnum | Prisma.UnitScalarFieldEnum[]
 }
 
 /**

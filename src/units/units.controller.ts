@@ -14,7 +14,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { TaxesService } from './taxes.service';
+import { UnitsService } from './units.service';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -24,24 +24,24 @@ import {
 } from '@nestjs/swagger';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import { SortDirection } from 'src/@types/default.types';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { TaxSchema } from './schemas/taxes.schema';
-import { BlukDeleteTaxDto, TaxDto } from './dto/taxes.dto';
+import { BlukDeleteUnitDto, UnitDto } from './dto/unit.dto';
 import type { FastifyRequest } from 'fastify';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
+import { UnitSchema } from './schemas/units.schemas';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
-@Controller('taxes')
-export class TaxesController {
-  constructor(private readonly taxesService: TaxesService) {}
+@Controller('units')
+export class UnitsController {
+  constructor(private readonly unitsService: UnitsService) {}
   /**
-   * Find All Taxes with pagination and sorting
+   * Find All Units with pagination and sorting
    * @param page
    * @param limit
    * @param order
    * @param direction
-   * @returns Tax[]
+   * @returns Unit[]
    */
   @ApiQuery({
     name: 'order',
@@ -66,15 +66,21 @@ export class TaxesController {
     type: Number,
     example: 10,
   })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    example: 'test',
+  })
   @ApiOkResponse({
-    description: 'Customer groups fetched success response!',
+    description: 'Units fetched success response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Customer groups fetched successfully!',
+          example: 'Units fetched successfully!',
         },
         data: {
           type: 'object',
@@ -85,8 +91,11 @@ export class TaxesController {
                 type: 'object',
                 properties: {
                   id: { type: 'number', example: 1 },
-                  name: { type: 'string', example: 'Tax 1' },
-                  rate: { type: 'number', example: 10 },
+                  unitCode: { type: 'string', example: 'tax1' },
+                  unitName: { type: 'string', example: 'Tax 1' },
+                  baseUnitId: { type: 'number', example: 1 },
+                  operator: { type: 'string', example: '*' },
+                  operationValue: { type: 'number', example: 1 },
                   status: { type: 'boolean', example: true },
                   createdAt: {
                     type: 'string',
@@ -105,7 +114,7 @@ export class TaxesController {
       },
     },
   })
-  @Permission('tax-access')
+  @Permission('unit-access')
   @Get()
   async findAll(
     @Query('page', new DefaultValuePipe(0), ParseIntPipe)
@@ -118,12 +127,14 @@ export class TaxesController {
       new ParseEnumPipe(SortDirection),
     )
     direction: string = 'desc',
+    @Query('search') search?: string,
   ) {
-    const data = await this.taxesService.findAll({
+    const data = await this.unitsService.findAll({
       page,
       limit,
       order,
       direction,
+      search,
     });
     return {
       success: true,
@@ -133,26 +144,29 @@ export class TaxesController {
   }
 
   /**
-   * Tax Details by Id
+   * Unit Details by Id
    * @param id
-   * @returns Tax
+   * @returns Unit
    */
   @ApiOkResponse({
-    description: 'Tax fetched successful response!',
+    description: 'Unit fetched successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Tax fetched successfully!',
+          example: 'Unit fetched successfully!',
         },
         data: {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Tax 1' },
-            rate: { type: 'number', example: 10 },
+            unitCode: { type: 'string', example: 'Tax 1' },
+            unitName: { type: 'string', example: 'Tax 1' },
+            baseUnitId: { type: 'number', example: 1 },
+            operator: { type: 'string', example: '*' },
+            operationValue: { type: 'number', example: 1 },
             status: { type: 'boolean', example: true },
             creator: {
               type: 'object',
@@ -181,39 +195,42 @@ export class TaxesController {
       },
     },
   })
-  @Permission('tax-view')
+  @Permission('unit-view')
   @Get(':id')
   async find(@Param('id', ParseIntPipe) id: number) {
-    const tax = await this.taxesService.findOne(id);
+    const unit = await this.unitsService.findOne(id);
     return {
       success: true,
-      message: 'Tax fetched successfully!',
-      data: tax,
+      message: 'Unit fetched successfully!',
+      data: unit,
     };
   }
 
   /**
-   * Create a Tax
-   * @param createTaxDto
+   * Create a Unit
+   * @param createUnitDto
    * @param req
-   * @returns Tax
+   * @returns Unit
    */
   @ApiOkResponse({
-    description: 'Tax created successful response!',
+    description: 'Unit created successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Tax created successfully!',
+          example: 'Unit created successfully!',
         },
         data: {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Tax 1' },
-            rate: { type: 'number', example: 10 },
+            unitCode: { type: 'string', example: 'UNIT-001' },
+            unitName: { type: 'string', example: 'Unit 1' },
+            baseUnitId: { type: 'number', example: 1 },
+            operator: { type: 'string', example: '*' },
+            operationValue: { type: 'number', example: 10 },
             status: { type: 'boolean', example: true },
             createdAt: {
               type: 'string',
@@ -232,38 +249,48 @@ export class TaxesController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['name', 'rate', 'status'],
+      required: [
+        'unitCode',
+        'unitName',
+        'baseUnitId',
+        'operator',
+        'operationValue',
+        'status',
+      ],
       properties: {
-        name: { type: 'string', example: 'Tax 1' },
-        rate: { type: 'number', example: 10 },
+        unitCode: { type: 'string', example: 'UNIT-001' },
+        unitName: { type: 'string', example: 'Unit 1' },
+        baseUnitId: { type: 'number', example: 1 },
+        operator: { type: 'string', example: '*' },
+        operationValue: { type: 'number', example: 10 },
         status: { type: 'boolean', example: true },
       },
     },
   })
-  @Permission('tax-create')
+  @Permission('unit-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(TaxSchema))
-    taxDto: TaxDto,
+    @Body(new ZodValidationPipe(UnitSchema))
+    unitDto: UnitDto,
     @Req() req: FastifyRequest,
   ) {
-    const tax = await this.taxesService.create(taxDto, req?.user?.email);
+    const unit = await this.unitsService.create(unitDto, req?.user?.email);
     return {
       success: true,
-      message: 'Tax created successfully!',
-      data: tax,
+      message: 'Unit created successfully!',
+      data: unit,
     };
   }
 
   /**
-   * Tax update by id
+   * Unit update by id
    * @param id
-   * @param taxDto
+   * @param unitDto
    * @param req
-   * @returns Tax
+   * @returns Unit
    */
   @ApiOkResponse({
-    description: 'Tax update generated response!',
+    description: 'Unit update generated response!',
     schema: {
       type: 'object',
       properties: {
@@ -273,8 +300,11 @@ export class TaxesController {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Tax 1' },
-            rate: { type: 'number', example: 10 },
+            unitName: { type: 'string', example: 'Unit 1' },
+            unitCode: { type: 'string', example: 'UNIT-001' },
+            baseUnitId: { type: 'number', example: 1 },
+            operator: { type: 'string', example: '*' },
+            operationValue: { type: 'number', example: 10 },
             status: { type: 'boolean', example: true },
             creator: {
               type: 'object',
@@ -300,55 +330,68 @@ export class TaxesController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['groupName', 'percentage', 'status'],
+      required: [
+        'unitCode',
+        'unitName',
+        'baseUnitId',
+        'operator',
+        'operationValue',
+        'status',
+      ],
       properties: {
-        groupName: { type: 'string', example: 'Customer Group 1' },
-        percentage: { type: 'number', example: 10 },
+        unitCode: { type: 'string', example: 'UNIT-001' },
+        unitName: { type: 'string', example: 'Unit 1' },
+        baseUnitId: { type: 'number', example: 1 },
+        operator: { type: 'string', example: '*' },
+        operationValue: { type: 'number', example: 10 },
         status: { type: 'boolean', example: true },
       },
     },
   })
-  @Permission('tax-edit')
+  @Permission('unit-edit')
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(TaxSchema))
-    taxDto: TaxDto,
+    @Body(new ZodValidationPipe(UnitSchema))
+    unitDto: UnitDto,
     @Req() req: FastifyRequest,
   ) {
     const updatorEmail = req.user?.email;
     if (!updatorEmail) {
       throw new BadRequestException('Invalid user data!');
     }
-    const tax = await this.taxesService.update(id, updatorEmail, taxDto);
+    const unit = await this.unitsService.update(id, updatorEmail, unitDto);
     return {
       success: true,
-      message: 'Tax updated successfully',
-      data: tax,
+      message: 'Unit updated successfully',
+      data: unit,
     };
   }
 
   /**
-   * Delete Tax by Id
+   * Delete Unit by Id
    * @param id
-   * @returns Tax
+   * @returns Unit
    */
   @ApiOkResponse({
-    description: 'Tax deleted successfull response!',
+    description: 'Unit deleted successfull response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Taxes deleted successfully!',
+          example: 'Units deleted successfully!',
         },
         data: {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Tax 1' },
-            rate: { type: 'number', example: 10 },
+            unitName: { type: 'string', example: 'Unit 1' },
+            unitCode: { type: 'string', example: 'UNIT-001' },
+            baseUnitId: { type: 'number', example: 1 },
+            operator: { type: 'string', example: '*' },
+            operationValue: { type: 'number', example: 10 },
             status: { type: 'boolean', example: true },
             createdAt: {
               type: 'string',
@@ -363,44 +406,44 @@ export class TaxesController {
       },
     },
   })
-  @Permission('tax-delete')
+  @Permission('unit-delete')
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const tax = await this.taxesService.findOne(id);
-    await this.taxesService.remove(id);
+    const unit = await this.unitsService.findOne(id);
+    await this.unitsService.remove(id);
     return {
       success: true,
-      message: 'Tax deleted successfully!.',
-      data: tax,
+      message: 'Unit deleted successfully!.',
+      data: unit,
     };
   }
 
   /**
-   * Bulk delete taxes
+   * Bulk delete units
    * @param body
-   * @returns Taxes
+   * @returns Units
    */
   @ApiOkResponse({
-    description: 'Taxes bulk deleted generated response!',
+    description: 'Units bulk deleted generated response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
-        message: { type: 'string', example: 'Taxes deleted successfully!' },
+        message: { type: 'string', example: 'Units deleted successfully!' },
         data: { type: 'number', example: 4 },
       },
     },
   })
-  @Permission('tax-bulk-delete')
+  @Permission('unit-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@Body() body: BlukDeleteTaxDto) {
+  async bulkDelete(@Body() body: BlukDeleteUnitDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
-    const taxes = await this.taxesService.bulkDelete(body.ids);
+    const units = await this.unitsService.bulkDelete(body.ids);
     return {
       success: true,
-      message: 'Taxes deleted successfully!',
-      data: taxes,
+      message: 'Units deleted successfully!',
+      data: units,
     };
   }
 }
