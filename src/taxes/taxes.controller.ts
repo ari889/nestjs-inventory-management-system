@@ -14,8 +14,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { CustomerGroupsService } from './customer-groups.service';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { TaxesService } from './taxes.service';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -26,26 +25,23 @@ import {
 import { Permission } from 'src/common/decorators/permission.decorator';
 import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { CustomerGroupSchema } from './schemas/customer-group.schema';
-import {
-  BlukDeleteCustomerGroupDto,
-  CustomerGroupDto,
-} from './dto/customer-group.dto';
+import { TaxSchema } from './schemas/taxes.schema';
+import { BlukDeleteTaxDto, TaxDto } from './dto/taxes.dto';
 import type { FastifyRequest } from 'fastify';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
-@Controller('customer-groups')
-export class CustomerGroupsController {
-  constructor(private readonly customerGroupService: CustomerGroupsService) {}
-
+@Controller('taxes')
+export class TaxesController {
+  constructor(private readonly taxesService: TaxesService) {}
   /**
-   * Find All Customer Groups with pagination and sorting
+   * Find All Taxes with pagination and sorting
    * @param page
    * @param limit
    * @param order
    * @param direction
-   * @returns CustomerGroup[]
+   * @returns Tax[]
    */
   @ApiQuery({
     name: 'order',
@@ -89,8 +85,8 @@ export class CustomerGroupsController {
                 type: 'object',
                 properties: {
                   id: { type: 'number', example: 1 },
-                  groupName: { type: 'string', example: 'Customer Group 1' },
-                  percentage: { type: 'number', example: 10 },
+                  name: { type: 'string', example: 'Tax 1' },
+                  rate: { type: 'number', example: 10 },
                   status: { type: 'boolean', example: true },
                   createdAt: {
                     type: 'string',
@@ -109,7 +105,7 @@ export class CustomerGroupsController {
       },
     },
   })
-  @Permission('customer-group-access')
+  @Permission('tax-access')
   @Get()
   async findAll(
     @Query('page', new DefaultValuePipe(0), ParseIntPipe)
@@ -123,7 +119,7 @@ export class CustomerGroupsController {
     )
     direction: string = 'desc',
   ) {
-    const data = await this.customerGroupService.findAll({
+    const data = await this.taxesService.findAll({
       page,
       limit,
       order,
@@ -131,32 +127,32 @@ export class CustomerGroupsController {
     });
     return {
       success: true,
-      message: 'Customer groups fetched successfully!',
+      message: 'Taxes fetched successfully!',
       data,
     };
   }
 
   /**
-   * Customer Group Details by Id
+   * Tax Details by Id
    * @param id
-   * @returns CustomerGroup
+   * @returns Tax
    */
   @ApiOkResponse({
-    description: 'Customer group fetched successful response!',
+    description: 'Tax fetched successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Customer group fetched successfully!',
+          example: 'Tax fetched successfully!',
         },
         data: {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            groupName: { type: 'string', example: 'Customer Group 1' },
-            percentage: { type: 'number', example: 10 },
+            name: { type: 'string', example: 'Tax 1' },
+            rate: { type: 'number', example: 10 },
             status: { type: 'boolean', example: true },
             creator: {
               type: 'object',
@@ -185,39 +181,39 @@ export class CustomerGroupsController {
       },
     },
   })
-  @Permission('customer-group-view')
+  @Permission('tax-view')
   @Get(':id')
   async find(@Param('id', ParseIntPipe) id: number) {
-    const customerGroup = await this.customerGroupService.findOne(id);
+    const tax = await this.taxesService.findOne(id);
     return {
       success: true,
-      message: 'Customer group fetched successfully!',
-      data: customerGroup,
+      message: 'Tax fetched successfully!',
+      data: tax,
     };
   }
 
   /**
-   * Create a Customer Group
-   * @param createCustomerGroupDto
+   * Create a Tax
+   * @param createTaxDto
    * @param req
-   * @returns CustomerGroup
+   * @returns Tax
    */
   @ApiOkResponse({
-    description: 'Customer group created successful response!',
+    description: 'Tax created successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Customer group created successfully!',
+          example: 'Tax created successfully!',
         },
         data: {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            groupName: { type: 'string', example: 'Customer Group 1' },
-            percentage: { type: 'number', example: 10 },
+            name: { type: 'string', example: 'Tax 1' },
+            rate: { type: 'number', example: 10 },
             status: { type: 'boolean', example: true },
             createdAt: {
               type: 'string',
@@ -236,41 +232,38 @@ export class CustomerGroupsController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['groupName', 'percentage', 'status'],
+      required: ['name', 'rate', 'status'],
       properties: {
-        groupName: { type: 'string', example: 'Customer Group 1' },
-        percentage: { type: 'number', example: 10 },
+        name: { type: 'string', example: 'Tax 1' },
+        rate: { type: 'number', example: 10 },
         status: { type: 'boolean', example: true },
       },
     },
   })
-  @Permission('customer-group-create')
+  @Permission('tax-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(CustomerGroupSchema))
-    customerGroupDto: CustomerGroupDto,
+    @Body(new ZodValidationPipe(TaxSchema))
+    taxDto: TaxDto,
     @Req() req: FastifyRequest,
   ) {
-    const customerGroup = await this.customerGroupService.create(
-      customerGroupDto,
-      req?.user?.email,
-    );
+    const tax = await this.taxesService.create(taxDto, req?.user?.email);
     return {
       success: true,
-      message: 'Customer group created successfully!',
-      data: customerGroup,
+      message: 'Tax created successfully!',
+      data: tax,
     };
   }
 
   /**
-   * Customer Group update by id
+   * Tax update by id
    * @param id
-   * @param customerGroupDto
+   * @param taxDto
    * @param req
-   * @returns CustomerGroup
+   * @returns Tax
    */
   @ApiOkResponse({
-    description: 'Customer group update generated response!',
+    description: 'Tax update generated response!',
     schema: {
       type: 'object',
       properties: {
@@ -280,8 +273,8 @@ export class CustomerGroupsController {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            groupName: { type: 'string', example: 'Customer Group 1' },
-            percentage: { type: 'number', example: 10 },
+            name: { type: 'string', example: 'Tax 1' },
+            rate: { type: 'number', example: 10 },
             status: { type: 'boolean', example: true },
             creator: {
               type: 'object',
@@ -315,51 +308,47 @@ export class CustomerGroupsController {
       },
     },
   })
-  @Permission('customer-group-edit')
+  @Permission('tax-edit')
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(CustomerGroupSchema))
-    customerGroupDto: CustomerGroupDto,
+    @Body(new ZodValidationPipe(TaxSchema))
+    taxDto: TaxDto,
     @Req() req: FastifyRequest,
   ) {
     const updatorEmail = req.user?.email;
     if (!updatorEmail) {
       throw new BadRequestException('Invalid user data!');
     }
-    const customerGroup = await this.customerGroupService.update(
-      id,
-      updatorEmail,
-      customerGroupDto,
-    );
+    const tax = await this.taxesService.update(id, updatorEmail, taxDto);
     return {
       success: true,
-      message: 'Customer group updated successfully',
-      data: customerGroup,
+      message: 'Tax updated successfully',
+      data: tax,
     };
   }
 
   /**
-   * Delete Customer Group by Id
+   * Delete Tax by Id
    * @param id
-   * @returns CustomerGroup
+   * @returns Tax
    */
   @ApiOkResponse({
-    description: 'Customer group deleted successfull response!',
+    description: 'Tax deleted successfull response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Customer groups deleted successfully!',
+          example: 'Taxes deleted successfully!',
         },
         data: {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            groupName: { type: 'string', example: 'Customer Group 1' },
-            percentage: { type: 'number', example: 10 },
+            name: { type: 'string', example: 'Tax 1' },
+            rate: { type: 'number', example: 10 },
             status: { type: 'boolean', example: true },
             createdAt: {
               type: 'string',
@@ -374,44 +363,45 @@ export class CustomerGroupsController {
       },
     },
   })
-  @Permission('customer-group-delete')
+  @Permission('tax-delete')
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const customerGroup = await this.customerGroupService.findOne(id);
-    await this.customerGroupService.remove(id);
+    const tax = await this.taxesService.findOne(id);
+    await this.taxesService.remove(id);
     return {
       success: true,
-      message: 'Customer group deleted successfully!.',
-      data: customerGroup,
+      message: 'Tax deleted successfully!.',
+      data: tax,
     };
   }
 
   /**
-   * Bulk delete customer groups
+   * Bulk delete taxes
    * @param body
-   * @returns CustomerGroups
+   * @returns Taxes
    */
   @ApiOkResponse({
-    description: 'Customer groups bulk deleted generated response!',
+    description: 'Taxes bulk deleted generated response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
-        message: { type: 'string', example: 'Users deleted successfully!' },
+        message: { type: 'string', example: 'Taxes deleted successfully!' },
         data: { type: 'number', example: 4 },
       },
     },
   })
-  @Permission('customer-group-bulk-delete')
+  @Permission('tax-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@Body() body: BlukDeleteCustomerGroupDto) {
+  async bulkDelete(@Body() body: BlukDeleteTaxDto) {
+    console.log({ body });
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
-    const customerGroups = await this.customerGroupService.bulkDelete(body.ids);
+    const taxes = await this.taxesService.bulkDelete(body.ids);
     return {
       success: true,
-      message: 'Customer groups deleted successfully!',
-      data: customerGroups,
+      message: 'Taxes deleted successfully!',
+      data: taxes,
     };
   }
 }

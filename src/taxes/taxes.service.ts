@@ -1,19 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CustomerGroup } from 'src/generated/prisma/client';
+import { Tax } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import {
-  BlukDeleteCustomerGroupDto,
-  CustomerGroupDto,
-} from './dto/customer-group.dto';
+import { BlukDeleteTaxDto, TaxDto } from './dto/taxes.dto';
 
 @Injectable()
-export class CustomerGroupsService {
+export class TaxesService {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Find All Customer Groups
+   * Find All taxes with pagination and sorting
    * @param param0
-   * @returns CustomerGroup
+   * @returns Tax[]
    */
   async findAll({
     page,
@@ -25,9 +22,9 @@ export class CustomerGroupsService {
     limit: number;
     order: string;
     direction: string;
-  }): Promise<{ items: CustomerGroup[]; totalItems: number }> {
+  }): Promise<{ items: Tax[]; totalItems: number }> {
     const [items, totalItems] = await Promise.all([
-      this.prisma.customerGroup.findMany({
+      this.prisma.tax.findMany({
         skip: page * limit,
         take: limit,
         orderBy: {
@@ -42,7 +39,7 @@ export class CustomerGroupsService {
           },
         },
       }),
-      this.prisma.customerGroup.count(),
+      this.prisma.tax.count(),
     ]);
     return {
       items,
@@ -51,19 +48,17 @@ export class CustomerGroupsService {
   }
 
   /**
-   * Customer Group find by id
+   * Tax find by id
    * @param id
-   * @returns CustomerGroup
+   * @returns Tax
    */
-  async findOne(
-    id: number,
-  ): Promise<Omit<CustomerGroup, 'createdBy' | 'updatedBy'>> {
-    const customerGroup = await this.prisma.customerGroup.findUnique({
+  async findOne(id: number): Promise<Omit<Tax, 'createdBy' | 'updatedBy'>> {
+    const tax = await this.prisma.tax.findUnique({
       where: { id },
       select: {
         id: true,
-        groupName: true,
-        percentage: true,
+        name: true,
+        rate: true,
         status: true,
         creator: {
           select: {
@@ -81,21 +76,18 @@ export class CustomerGroupsService {
         updatedAt: true,
       },
     });
-    if (!customerGroup)
-      throw new NotFoundException('Customer Group not found.');
-    return customerGroup;
+    if (!tax) throw new NotFoundException('Tax not found.');
+    return tax;
   }
 
   /**
    * Create new Customer Group
-   * @param customerGroupDto
+   * @param taxDto
    * @param creatorEmail
    * @return CustomerGroup
    */
-  async create(
-    customerGroupDto: CustomerGroupDto,
-    creatorEmail: string,
-  ): Promise<CustomerGroup> {
+  async create(taxDto: TaxDto, creatorEmail: string): Promise<Tax> {
+    console.log({ taxDto, creatorEmail });
     const creator = await this.prisma.user.findUnique({
       where: { email: creatorEmail },
       select: {
@@ -106,9 +98,9 @@ export class CustomerGroupsService {
 
     if (!creator) throw new NotFoundException('Creator user not found!');
 
-    return this.prisma.customerGroup.create({
+    return this.prisma.tax.create({
       data: {
-        ...customerGroupDto,
+        ...taxDto,
         createdBy: creator?.id,
         updatedBy: creator?.id,
       },
@@ -124,17 +116,13 @@ export class CustomerGroupsService {
   }
 
   /**
-   * Update Customer Group by id
+   * Update Tax by id
    * @param id
    * @param updatorEmail
-   * @param customerGroupDto
-   * @returns CustomerGroup
+   * @param taxDto
+   * @returns Tax
    */
-  async update(
-    id: number,
-    updatorEmail: string,
-    customerGroupDto: CustomerGroupDto,
-  ): Promise<CustomerGroup> {
+  async update(id: number, updatorEmail: string, taxDto: TaxDto): Promise<Tax> {
     const updator = await this.prisma.user.findUnique({
       where: { email: updatorEmail },
       select: {
@@ -143,12 +131,11 @@ export class CustomerGroupsService {
       },
     });
 
-    if (!updator)
-      throw new NotFoundException('Updator customer group not found!');
+    if (!updator) throw new NotFoundException('Updator tax not found!');
 
-    return this.prisma.customerGroup.update({
+    return this.prisma.tax.update({
       where: { id },
-      data: { ...customerGroupDto, updatedBy: updator.id },
+      data: { ...taxDto, updatedBy: updator.id },
       include: {
         creator: {
           select: {
@@ -161,20 +148,19 @@ export class CustomerGroupsService {
   }
 
   /**
-   * Delete customer group by Id
+   * Delete tax by Id
    * @param id
-   * @returns CustomerGroup
+   * @returns Tax
    */
-  async remove(id: number): Promise<CustomerGroup> {
-    const customerGroup = await this.prisma.customerGroup.findUnique({
+  async remove(id: number): Promise<Tax> {
+    const tax = await this.prisma.tax.findUnique({
       where: { id },
       select: { id: true },
     });
 
-    if (!customerGroup)
-      throw new NotFoundException('Customer Group not found.');
+    if (!tax) throw new NotFoundException('Customer Group not found.');
 
-    return this.prisma.customerGroup.delete({ where: { id } });
+    return this.prisma.tax.delete({ where: { id } });
   }
 
   /**
@@ -182,10 +168,8 @@ export class CustomerGroupsService {
    * @param ids
    * @returns CustomerGroup
    */
-  async bulkDelete(
-    ids: BlukDeleteCustomerGroupDto['ids'],
-  ): Promise<{ count: number }> {
-    return this.prisma.customerGroup.deleteMany({
+  async bulkDelete(ids: BlukDeleteTaxDto['ids']): Promise<{ count: number }> {
+    return this.prisma.tax.deleteMany({
       where: { id: { in: ids } },
     });
   }

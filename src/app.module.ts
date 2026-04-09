@@ -18,6 +18,7 @@ import { SettingsModule } from './settings/settings.module';
 import { WarehousesModule } from './warehouses/warehouses.module';
 import { CustomerGroupsModule } from './customer-groups/customer-groups.module';
 import { BrandsModule } from './brands/brands.module';
+import { TaxesModule } from './taxes/taxes.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { BrandsModule } from './brands/brands.module';
     WarehousesModule,
     CustomerGroupsModule,
     BrandsModule,
+    TaxesModule,
   ],
   providers: [
     {
