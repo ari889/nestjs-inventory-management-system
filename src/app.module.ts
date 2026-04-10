@@ -20,6 +20,7 @@ import { CustomerGroupsModule } from './customer-groups/customer-groups.module';
 import { BrandsModule } from './brands/brands.module';
 import { TaxesModule } from './taxes/taxes.module';
 import { UnitsModule } from './units/units.module';
+import { SuppliersModule } from './suppliers/suppliers.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { UnitsModule } from './units/units.module';
     BrandsModule,
     TaxesModule,
     UnitsModule,
+    SuppliersModule,
   ],
   providers: [
     {

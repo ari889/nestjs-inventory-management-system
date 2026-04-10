@@ -7,7 +7,7 @@ export class RoleDto {
     default: 'Role 1',
     type: String,
   })
-  roleName: string;
+  roleName!: string;
 
   @ApiProperty({
     description: 'Select a role to be deleted!',
@@ -15,7 +15,7 @@ export class RoleDto {
     default: true,
     type: Boolean,
   })
-  deletable: boolean;
+  deletable!: boolean;
 }
 
 export class UpdateRoleDto extends RoleDto {
@@ -25,7 +25,7 @@ export class UpdateRoleDto extends RoleDto {
     default: [1, 2, 3],
     type: Array,
   })
-  moduleIds: number[];
+  moduleIds!: number[];
 
   @ApiProperty({
     description: 'Select permission first!',
@@ -33,5 +33,5 @@ export class UpdateRoleDto extends RoleDto {
     default: [4, 5, 6],
     type: Array,
   })
-  permissionIds: number[];
+  permissionIds!: number[];
 }
