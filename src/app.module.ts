@@ -22,6 +22,7 @@ import { TaxesModule } from './taxes/taxes.module';
 import { UnitsModule } from './units/units.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
 import { CustomersModule } from './customers/customers.module';
+import { AccountsModule } from './accounts/accounts.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { CustomersModule } from './customers/customers.module';
     UnitsModule,
     SuppliersModule,
     CustomersModule,
+    AccountsModule,
   ],
   providers: [
     {
