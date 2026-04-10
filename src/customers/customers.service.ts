@@ -1,21 +1,17 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { Supplier } from 'src/generated/prisma/client';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Customer } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { SupplierDto } from './schemas/supplier.schema';
+import { CustomerDto } from './schemas/customer.schema';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
 
 @Injectable()
-export class SuppliersService {
+export class CustomersService {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Find all suppliers
+   * Find all customer
    * @param param0
-   * @returns Supplier
+   * @returns Customer
    */
   async findAll({
     page,
@@ -29,7 +25,7 @@ export class SuppliersService {
     order: string;
     direction: string;
     search?: string;
-  }): Promise<{ items: Supplier[]; totalItems: number }> {
+  }): Promise<{ items: Customer[]; totalItems: number }> {
     const where = search
       ? {
           name: {
@@ -38,15 +34,23 @@ export class SuppliersService {
         }
       : {};
     const [items, totalItems] = await Promise.all([
-      this.prisma.supplier.findMany({
+      this.prisma.customer.findMany({
         where,
         skip: page * limit,
         take: limit,
         orderBy: {
           [order]: direction,
         },
+        include: {
+          customerGroup: {
+            select: {
+              id: true,
+              groupName: true,
+            },
+          },
+        },
       }),
-      this.prisma.supplier.count({ where }),
+      this.prisma.customer.count({ where }),
     ]);
 
     return {
@@ -56,14 +60,20 @@ export class SuppliersService {
   }
 
   /**
-   * Find supplier by id
+   * Find customer by id
    * @param id
-   * @returns Supplier
+   * @returns Customer
    */
-  async findOne(id: number): Promise<Supplier | null> {
-    return await this.prisma.supplier.findUnique({
+  async findOne(id: number): Promise<Customer | null> {
+    return await this.prisma.customer.findUnique({
       where: { id },
       include: {
+        customerGroup: {
+          select: {
+            id: true,
+            groupName: true,
+          },
+        },
         creator: {
           select: {
             id: true,
@@ -81,14 +91,14 @@ export class SuppliersService {
   }
 
   /**
-   * Create new supplier
-   * @param supplierDto
-   * @returns Supplier
+   * Create new customer
+   * @param customerDto
+   * @returns Customer
    */
   async create(
-    supplierDto: SupplierDto,
+    customerDto: CustomerDto,
     creatorEmail: string,
-  ): Promise<Supplier> {
+  ): Promise<Customer> {
     const creator = await this.prisma.user.findUnique({
       where: { email: creatorEmail },
       select: {
@@ -98,17 +108,8 @@ export class SuppliersService {
     });
 
     if (!creator) throw new NotFoundException('Creator user not found!');
-
-    if (supplierDto.email) {
-      const isEmailExists = await this.prisma.supplier.findUnique({
-        where: { email: supplierDto.email },
-      });
-      if (isEmailExists)
-        throw new BadRequestException('Supplier email already exists!');
-    }
-
-    return this.prisma.supplier.create({
-      data: { ...supplierDto, createdBy: creator?.id },
+    return this.prisma.customer.create({
+      data: { ...customerDto, createdBy: creator?.id },
       include: {
         creator: {
           select: {
@@ -116,21 +117,27 @@ export class SuppliersService {
             name: true,
           },
         },
+        customerGroup: {
+          select: {
+            id: true,
+            groupName: true,
+          },
+        },
       },
     });
   }
 
   /**
-   * Update supplier by id
+   * Update customer by id
    * @param id
-   * @param supplierDto
-   * @returns Supplier
+   * @param customerDto
+   * @returns Customer
    */
   async update(
     id: number,
-    supplierDto: SupplierDto,
+    customerDto: CustomerDto,
     updatorEmail: string,
-  ): Promise<Supplier> {
+  ): Promise<Customer> {
     const updator = await this.prisma.user.findUnique({
       where: { email: updatorEmail },
       select: {
@@ -141,17 +148,9 @@ export class SuppliersService {
 
     if (!updator) throw new NotFoundException('Updator user not found!');
 
-    if (supplierDto.email) {
-      const isEmailExists = await this.prisma.supplier.findUnique({
-        where: { email: supplierDto.email, NOT: { id } },
-      });
-      if (isEmailExists)
-        throw new BadRequestException('Supplier email already exists!');
-    }
-
-    return this.prisma.supplier.update({
+    return this.prisma.customer.update({
       where: { id },
-      data: { ...supplierDto, updatedBy: updator?.id },
+      data: { ...customerDto, updatedBy: updator?.id },
       include: {
         creator: {
           select: {
@@ -159,33 +158,39 @@ export class SuppliersService {
             name: true,
           },
         },
+        customerGroup: {
+          select: {
+            id: true,
+            groupName: true,
+          },
+        },
       },
     });
   }
 
   /**
-   * Delete supplier by ID
-   * @param id Supplier ID
-   * @returns Supplier
+   * Delete customer by ID
+   * @param id Customer ID
+   * @returns Customer
    */
-  async remove(id: number): Promise<Supplier> {
-    const supplier = await this.prisma.supplier.findUnique({
+  async remove(id: number): Promise<Customer> {
+    const customer = await this.prisma.customer.findUnique({
       where: { id },
       select: { id: true },
     });
 
-    if (!supplier) throw new NotFoundException('Customer Group not found.');
+    if (!customer) throw new NotFoundException('Customer not found.');
 
-    return this.prisma.supplier.delete({ where: { id } });
+    return this.prisma.customer.delete({ where: { id } });
   }
 
   /**
-   * Bulk delete suppliers
-   * @param ids Supplier IDs
+   * Bulk delete customers
+   * @param ids Customer IDs
    * @returns Number
    */
   async bulkDelete(ids: BlukDeleteIdsDto['ids']): Promise<{ count: number }> {
-    return this.prisma.supplier.deleteMany({
+    return this.prisma.customer.deleteMany({
       where: { id: { in: ids } },
     });
   }

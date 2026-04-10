@@ -21,6 +21,7 @@ import { BrandsModule } from './brands/brands.module';
 import { TaxesModule } from './taxes/taxes.module';
 import { UnitsModule } from './units/units.module';
 import { SuppliersModule } from './suppliers/suppliers.module';
+import { CustomersModule } from './customers/customers.module';
 
 @Module({
   imports: [
@@ -69,6 +70,7 @@ import { SuppliersModule } from './suppliers/suppliers.module';
     TaxesModule,
     UnitsModule,
     SuppliersModule,
+    CustomersModule,
   ],
   providers: [
     {

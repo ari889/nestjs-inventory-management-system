@@ -22,27 +22,27 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { SuppliersService } from './suppliers.service';
+import { CustomersService } from './customers.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import { SortDirection } from 'src/@types/default.types';
+import { type CustomerDto, CustomerSchema } from './schemas/customer.schema';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { type SupplierDto, SupplierSchema } from './schemas/supplier.schema';
 import type { FastifyRequest } from 'fastify';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
-@Controller('suppliers')
-export class SuppliersController {
-  constructor(private readonly suppliersService: SuppliersService) {}
+@Controller('customers')
+export class CustomersController {
+  constructor(private readonly customersService: CustomersService) {}
 
   /**
-   * Get all suppliers
+   * Get all customers
    * @param page
    * @param limit
    * @param order
    * @param direction
-   * @returns Supplier
+   * @returns Customer
    */
   @ApiQuery({
     name: 'order',
@@ -74,12 +74,12 @@ export class SuppliersController {
     example: 'search',
   })
   @ApiOkResponse({
-    description: 'Supplier fetched successful response!',
+    description: 'Customer fetched successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
-        message: { type: 'string', example: 'Suppliers fetched successfully!' },
+        message: { type: 'string', example: 'Customers fetched successfully!' },
         data: {
           type: 'object',
           properties: {
@@ -89,7 +89,8 @@ export class SuppliersController {
                 type: 'object',
                 properties: {
                   id: { type: 'number', example: 1 },
-                  name: { type: 'string', example: 'Supplier 1' },
+                  customerGroupId: { type: 'number', example: 1 },
+                  name: { type: 'string', example: 'Customer 1' },
                   companyName: { type: 'string', example: 'Company 1' },
                   vatNumber: { type: 'string', example: '1234567890' },
                   email: { type: 'string', example: 'supplier1@example.com' },
@@ -117,7 +118,7 @@ export class SuppliersController {
       },
     },
   })
-  @Permission('supplier-access')
+  @Permission('customer-access')
   @Get()
   async findAll(
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
@@ -131,7 +132,7 @@ export class SuppliersController {
     )
     direction: string = 'desc',
   ) {
-    const suppliers = await this.suppliersService.findAll({
+    const customers = await this.customersService.findAll({
       page,
       limit,
       order,
@@ -140,31 +141,32 @@ export class SuppliersController {
     });
     return {
       success: true,
-      message: 'Suppliers fetched successfully!',
-      data: suppliers,
+      message: 'Customers fetched successfully!',
+      data: customers,
     };
   }
 
   /**
-   * Get supplier by id
+   * Get customer by id
    * @param id
-   * @returns Supplier
+   * @returns Customer
    */
   @ApiOkResponse({
-    description: 'Get single supplier successful response!',
+    description: 'Get single customer successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Supplier fetched successfully!',
+          example: 'Customer fetched successfully!',
         },
         data: {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Supplier 1' },
+            customerGroupId: { type: 'number', example: 1 },
+            name: { type: 'string', example: 'Customer 1' },
             companyName: { type: 'string', example: 'Company 1' },
             vatNumber: { type: 'string', example: '1234567890' },
             email: { type: 'string', example: 'supplier1@example.com' },
@@ -188,42 +190,43 @@ export class SuppliersController {
       },
     },
   })
-  @Permission('supplier-view')
+  @Permission('customer-view')
   @Get(':id')
   async find(@Param('id', ParseIntPipe) id: number) {
-    const supplier = await this.suppliersService.findOne(id);
-    if (!supplier) throw new NotFoundException('Supplier not found.');
+    const customer = await this.customersService.findOne(id);
+    if (!customer) throw new NotFoundException('Customer not found.');
     return {
       success: true,
-      message: 'Supplier fetched successfully!',
-      data: supplier,
+      message: 'Customer fetched successfully!',
+      data: customer,
     };
   }
 
   /**
-   * Create Supplier
-   * @param SupplierDto
-   * @returns Supplier
+   * Create customer
+   * @param CustomerDto
+   * @returns Customer
    */
 
   @ApiOkResponse({
-    description: 'Supplier created successful response!',
+    description: 'Customer created successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Supplier created successfully!',
+          example: 'Customer created successfully!',
         },
         data: {
           type: 'array',
           properties: {
             id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Supplier 1' },
+            customerGroupId: { type: 'number', example: 1 },
+            name: { type: 'string', example: 'Customer 1' },
             companyName: { type: 'string', example: 'Company 1' },
             vatNumber: { type: 'string', example: '1234567890' },
-            email: { type: 'string', example: 'supplier1@example.com' },
+            email: { type: 'string', example: 'customer1@example.com' },
             phone: { type: 'string', example: '1234567890' },
             address: { type: 'string', example: '123 Main St' },
             city: { type: 'string', example: 'New York' },
@@ -248,8 +251,9 @@ export class SuppliersController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['name', 'status'],
+      required: ['customerGroupId', 'name', 'status'],
       properties: {
+        customerGroupId: { type: 'number', example: 1 },
         name: { type: 'string', example: 'Supplier 1' },
         companyName: { type: 'string', example: 'Company 1' },
         vatNumber: { type: 'string', example: '1234567890' },
@@ -264,48 +268,49 @@ export class SuppliersController {
       },
     },
   })
-  @Permission('supplier-create')
+  @Permission('customer-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(SupplierSchema))
-    supplierDto: SupplierDto,
+    @Body(new ZodValidationPipe(CustomerSchema))
+    customerDto: CustomerDto,
     @Req() req: FastifyRequest,
   ) {
-    const supplier = await this.suppliersService.create(
-      supplierDto,
+    const customer = await this.customersService.create(
+      customerDto,
       req?.user?.email,
     );
     return {
       success: true,
-      message: 'Supplier created successfully!',
-      data: supplier,
+      message: 'Customer created successfully!',
+      data: customer,
     };
   }
 
   /**
-   * Update permission by id
+   * Update customer by id
    * @param id
-   * @param permissionDto
-   * @returns Permission
+   * @param customerDto
+   * @returns Customer
    */
   @ApiOkResponse({
-    description: 'Permission updated successfully!',
+    description: 'Customer updated successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Permission updated successfully!',
+          example: 'Customer updated successfully!',
         },
         data: {
           type: 'object ',
           properties: {
             id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Supplier 1' },
+            customerGroupId: { type: 'number', example: 1 },
+            name: { type: 'string', example: 'Customer 1' },
             companyName: { type: 'string', example: 'Company 1' },
             vatNumber: { type: 'string', example: '1234567890' },
-            email: { type: 'string', example: 'supplier1@example.com' },
+            email: { type: 'string', example: 'customer1@example.com' },
             phone: { type: 'string', example: '1234567890' },
             address: { type: 'string', example: '123 Main St' },
             city: { type: 'string', example: 'New York' },
@@ -330,12 +335,13 @@ export class SuppliersController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['name', 'status'],
+      required: ['customerGroupId', 'name', 'status'],
       properties: {
-        name: { type: 'string', example: 'Supplier 1' },
+        customerGroupId: { type: 'number', example: 1 },
+        name: { type: 'string', example: 'Customer 1' },
         companyName: { type: 'string', example: 'Company 1' },
         vatNumber: { type: 'string', example: '1234567890' },
-        email: { type: 'string', example: 'supplier1@example.com' },
+        email: { type: 'string', example: 'customer1@example.com' },
         phone: { type: 'string', example: '1234567890' },
         address: { type: 'string', example: '123 Main St' },
         city: { type: 'string', example: 'New York' },
@@ -346,49 +352,49 @@ export class SuppliersController {
       },
     },
   })
-  @Permission('supplier-edit')
+  @Permission('customer-edit')
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(SupplierSchema))
-    supplierDto: SupplierDto,
+    @Body(new ZodValidationPipe(CustomerSchema))
+    customerDto: CustomerDto,
     @Req() req: FastifyRequest,
   ) {
-    const supplier = await this.suppliersService.update(
+    const customer = await this.customersService.update(
       id,
-      supplierDto,
+      customerDto,
       req?.user?.email,
     );
     return {
       success: true,
-      message: 'Supplier updated successfully!',
-      data: supplier,
+      message: 'Customer updated successfully!',
+      data: customer,
     };
   }
 
   /**
-   * Delete supplier by id
+   * Delete customer by id
    * @param id
-   * @returns Supplier
+   * @returns Customer
    */
   @ApiOkResponse({
-    description: 'Supplier deleted successful response!',
+    description: 'Customer deleted successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Supplier fetched successfully!',
+          example: 'Customer fetched successfully!',
         },
         data: {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Supplier 1' },
+            name: { type: 'string', example: 'Customer 1' },
             companyName: { type: 'string', example: 'Company 1' },
             vatNumber: { type: 'string', example: '1234567890' },
-            email: { type: 'string', example: 'supplier1@example.com' },
+            email: { type: 'string', example: 'customer1@example.com' },
             phone: { type: 'string', example: '1234567890' },
             address: { type: 'string', example: '123 Main St' },
             city: { type: 'string', example: 'New York' },
@@ -409,40 +415,40 @@ export class SuppliersController {
       },
     },
   })
-  @Permission('supplier-delete')
+  @Permission('customer-delete')
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const supplier = await this.suppliersService.remove(id);
+    const customer = await this.customersService.remove(id);
     return {
       success: true,
-      message: 'Supplier deleted successfully!',
-      data: supplier,
+      message: 'Customer deleted successfully!',
+      data: customer,
     };
   }
 
   /**
-   * Bulk Delete suppliers
+   * Bulk Delete customers
    * @param body
-   * @returns Supplier
+   * @returns Customer
    */
   @ApiOkResponse({
-    description: 'Suppliers bulk deleted generated response!',
+    description: 'Customers bulk deleted generated response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
-        message: { type: 'string', example: 'Suppliers deleted successfully!' },
+        message: { type: 'string', example: 'Customers deleted successfully!' },
         data: { type: 'number', example: 4 },
       },
     },
   })
-  @Permission('supplier-bulk-delete')
+  @Permission('customer-bulk-delete')
   @Delete('bulk')
   async bulkDeletePermission(@Body() body: BlukDeleteIdsDto) {
-    const data = await this.suppliersService.bulkDelete(body?.ids);
+    const data = await this.customersService.bulkDelete(body?.ids);
     return {
       success: true,
-      message: 'Suppliers deleted successfully!',
+      message: 'Customers deleted successfully!',
       data: data,
     };
   }

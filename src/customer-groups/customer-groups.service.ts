@@ -20,14 +20,24 @@ export class CustomerGroupsService {
     limit,
     order,
     direction,
+    search = '',
   }: {
     page: number;
     limit: number;
     order: string;
     direction: string;
+    search?: string;
   }): Promise<{ items: CustomerGroup[]; totalItems: number }> {
+    const where = search
+      ? {
+          groupName: {
+            contains: search,
+          },
+        }
+      : {};
     const [items, totalItems] = await Promise.all([
       this.prisma.customerGroup.findMany({
+        where,
         skip: page * limit,
         take: limit,
         orderBy: {
@@ -42,7 +52,7 @@ export class CustomerGroupsService {
           },
         },
       }),
-      this.prisma.customerGroup.count(),
+      this.prisma.customerGroup.count({ where }),
     ]);
     return {
       items,

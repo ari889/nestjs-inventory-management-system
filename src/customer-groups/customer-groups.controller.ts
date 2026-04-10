@@ -45,6 +45,7 @@ export class CustomerGroupsController {
    * @param limit
    * @param order
    * @param direction
+   * @param search
    * @returns CustomerGroup[]
    */
   @ApiQuery({
@@ -69,6 +70,12 @@ export class CustomerGroupsController {
     required: false,
     type: Number,
     example: 10,
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    example: 'Customer Group 1',
   })
   @ApiOkResponse({
     description: 'Customer groups fetched success response!',
@@ -122,12 +129,14 @@ export class CustomerGroupsController {
       new ParseEnumPipe(SortDirection),
     )
     direction: string = 'desc',
+    @Query('search') search?: string,
   ) {
     const data = await this.customerGroupService.findAll({
       page,
       limit,
       order,
       direction,
+      search,
     });
     return {
       success: true,
