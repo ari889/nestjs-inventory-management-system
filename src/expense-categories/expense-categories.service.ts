@@ -1,30 +1,31 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Warehouse } from 'src/generated/prisma/client';
+import { ExpenseCategory } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { BlukDeleteWarehouseDto, WarehouseDto } from './dto/warehouse.dto';
+import { ExpenseCategoryDto } from './schemas/expenase-category.schema';
+import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
 
 @Injectable()
-export class WarehousesService {
+export class ExpenseCategoriesService {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Find All Warehouses
+   * Find all expense categories
    * @param param0
-   * @returns Warehouses
+   * @returns ExpenseCategory
    */
   async findAll({
     page,
     limit,
     order,
     direction,
-    search = '',
+    search,
   }: {
     page: number;
     limit: number;
     order: string;
     direction: string;
     search?: string;
-  }): Promise<{ items: Warehouse[]; totalItems: number }> {
+  }): Promise<{ items: ExpenseCategory[]; totalItems: number }> {
     const where = search
       ? {
           name: {
@@ -33,7 +34,7 @@ export class WarehousesService {
         }
       : {};
     const [items, totalItems] = await Promise.all([
-      this.prisma.warehouse.findMany({
+      this.prisma.expenseCategory.findMany({
         where,
         skip: page * limit,
         take: limit,
@@ -49,8 +50,9 @@ export class WarehousesService {
           },
         },
       }),
-      this.prisma.warehouse.count({ where }),
+      this.prisma.expenseCategory.count({ where }),
     ]);
+
     return {
       items,
       totalItems,
@@ -58,22 +60,14 @@ export class WarehousesService {
   }
 
   /**
-   * Warehouse find by id
+   * Find expnese category by id
    * @param id
-   * @returns Warehouse
+   * @returns ExpenseCategory
    */
-  async findOne(
-    id: number,
-  ): Promise<Omit<Warehouse, 'createdBy' | 'updatedBy'>> {
-    const warehouse = await this.prisma.warehouse.findUnique({
+  async findOne(id: number): Promise<ExpenseCategory | null> {
+    return await this.prisma.expenseCategory.findUnique({
       where: { id },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone: true,
-        address: true,
-        status: true,
+      include: {
         creator: {
           select: {
             id: true,
@@ -86,24 +80,19 @@ export class WarehousesService {
             name: true,
           },
         },
-        createdAt: true,
-        updatedAt: true,
       },
     });
-    if (!warehouse) throw new NotFoundException('Warehouse not found.');
-    return warehouse;
   }
 
   /**
-   * Create new Warehouse
-   * @param warehouseDto
-   * @param creatorEmail
-   * @returns Warehouse
+   * Create new expense category
+   * @param expenseCategoryDto
+   * @returns ExpenseCategory
    */
   async create(
-    warehouseDto: WarehouseDto,
+    expenseCategoryDto: ExpenseCategoryDto,
     creatorEmail: string,
-  ): Promise<Warehouse> {
+  ): Promise<ExpenseCategory> {
     const creator = await this.prisma.user.findUnique({
       where: { email: creatorEmail },
       select: {
@@ -114,12 +103,8 @@ export class WarehousesService {
 
     if (!creator) throw new NotFoundException('Creator user not found!');
 
-    return this.prisma.warehouse.create({
-      data: {
-        ...warehouseDto,
-        createdBy: creator?.id,
-        updatedBy: creator?.id,
-      },
+    return this.prisma.expenseCategory.create({
+      data: { ...expenseCategoryDto, createdBy: creator?.id },
       include: {
         creator: {
           select: {
@@ -132,17 +117,16 @@ export class WarehousesService {
   }
 
   /**
-   * Update Warehouse by id
+   * Update expense category by id
    * @param id
-   * @param updatorEmail
-   * @param userDto
-   * @returns User
+   * @param expenseCategoryDto
+   * @returns ExpenseCategory
    */
   async update(
     id: number,
+    expenseCategoryDto: ExpenseCategoryDto,
     updatorEmail: string,
-    warehouseDto: WarehouseDto,
-  ): Promise<Warehouse> {
+  ): Promise<ExpenseCategory> {
     const updator = await this.prisma.user.findUnique({
       where: { email: updatorEmail },
       select: {
@@ -151,11 +135,11 @@ export class WarehousesService {
       },
     });
 
-    if (!updator) throw new NotFoundException('Updator warehouse not found!');
+    if (!updator) throw new NotFoundException('Updator user not found!');
 
-    return this.prisma.warehouse.update({
+    return this.prisma.expenseCategory.update({
       where: { id },
-      data: { ...warehouseDto, updatedBy: updator.id },
+      data: { ...expenseCategoryDto, updatedBy: updator?.id },
       include: {
         creator: {
           select: {
@@ -168,30 +152,29 @@ export class WarehousesService {
   }
 
   /**
-   * Delete Warehouse by Id
-   * @param id
-   * @returns Warehouse
+   * Delete expense category by ID
+   * @param id ExpenseCategory ID
+   * @returns ExpenseCategory
    */
-  async remove(id: number): Promise<Warehouse> {
-    const warehouse = await this.prisma.warehouse.findUnique({
+  async remove(id: number): Promise<ExpenseCategory> {
+    const expenseCategory = await this.prisma.expenseCategory.findUnique({
       where: { id },
       select: { id: true },
     });
 
-    if (!warehouse) throw new NotFoundException('Warehouse not found.');
+    if (!expenseCategory)
+      throw new NotFoundException('Expense category not found.');
 
-    return this.prisma.warehouse.delete({ where: { id } });
+    return this.prisma.expenseCategory.delete({ where: { id } });
   }
 
   /**
-   * Bulk delete warehouses by ids
-   * @param ids
-   * @returns Warehouse
+   * Bulk delete expense categories
+   * @param ids ExpenseCategory IDs
+   * @returns { count: number }
    */
-  async bulkDelete(
-    ids: BlukDeleteWarehouseDto['ids'],
-  ): Promise<{ count: number }> {
-    return this.prisma.warehouse.deleteMany({
+  async bulkDelete(ids: BlukDeleteIdsDto['ids']): Promise<{ count: number }> {
+    return this.prisma.expenseCategory.deleteMany({
       where: { id: { in: ids } },
     });
   }

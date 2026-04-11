@@ -289,7 +289,7 @@ const modulesData = [
     moduleName: 'Expense Category',
     dividerTitle: null,
     iconClass: 'List',
-    url: '/admin/expense-categories',
+    url: '/admin/expenses/categories',
     order: 16,
     parentId: 15,
   },
