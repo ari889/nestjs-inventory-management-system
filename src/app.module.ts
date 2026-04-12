@@ -26,6 +26,7 @@ import { AccountsModule } from './accounts/accounts.module';
 import { ExpensesModule } from './expenses/expenses.module';
 import { ExpenseCategoriesModule } from './expense-categories/expense-categories.module';
 import { DepartmentsModule } from './departments/departments.module';
+import { EmployeesModule } from './employees/employees.module';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { DepartmentsModule } from './departments/departments.module';
     ExpensesModule,
     ExpenseCategoriesModule,
     DepartmentsModule,
+    EmployeesModule,
   ],
   providers: [
     {

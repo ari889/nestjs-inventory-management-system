@@ -161,7 +161,6 @@ export class UnitsService {
     updatorEmail: string,
     unitDto: UnitDto,
   ): Promise<Unit> {
-    console.log({ unitDto });
     const updator = await this.prisma.user.findUnique({
       where: { email: updatorEmail },
       select: {
