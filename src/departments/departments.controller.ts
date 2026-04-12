@@ -14,7 +14,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ExpenseCategoriesService } from './expense-categories.service';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -22,33 +21,32 @@ import {
   ApiOkResponse,
   ApiQuery,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { DepartmentsService } from './departments.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import { SortDirection } from 'src/@types/default.types';
-import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import {
-  type ExpenseCategoryDto,
-  ExpenseCategorySchema,
-} from './schemas/expenase-category.schema';
+  type DepartmentDto,
+  DepartmentSchema,
+} from './schemas/department.schema';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import type { FastifyRequest } from 'fastify';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
-@Controller('expense-categories')
-export class ExpenseCategoriesController {
-  constructor(
-    private readonly expenseCategoriesService: ExpenseCategoriesService,
-  ) {}
+@Controller('departments')
+export class DepartmentsController {
+  constructor(private readonly departmentsService: DepartmentsService) {}
 
   /**
-   * Get all expense categories
+   * Get all department
    * @param page
    * @param limit
    * @param order
    * @param direction
    * @param search
-   * @returns ExpenseCategory
+   * @returns Department[]
    */
   @ApiQuery({
     name: 'order',
@@ -80,14 +78,14 @@ export class ExpenseCategoriesController {
     example: 'search',
   })
   @ApiOkResponse({
-    description: 'Expense categories fetched successful response!',
+    description: 'Department fetched successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Expense categories fetched successfully!',
+          example: 'Department fetched successfully!',
         },
         data: {
           type: 'object',
@@ -117,7 +115,7 @@ export class ExpenseCategoriesController {
       },
     },
   })
-  @Permission('expense-category-access')
+  @Permission('department-access')
   @Get()
   async findAll(
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
@@ -131,7 +129,7 @@ export class ExpenseCategoriesController {
     )
     direction: string = 'desc',
   ) {
-    const expenseCategories = await this.expenseCategoriesService.findAll({
+    const departments = await this.departmentsService.findAll({
       page,
       limit,
       order,
@@ -140,25 +138,25 @@ export class ExpenseCategoriesController {
     });
     return {
       success: true,
-      message: 'Expense categories fetched successfully!',
-      data: expenseCategories,
+      message: 'Departments fetched successfully!',
+      data: departments,
     };
   }
 
   /**
-   * Get expense category by id
+   * Get department by id
    * @param id
-   * @returns ExpenseCategory
+   * @returns Department
    */
   @ApiOkResponse({
-    description: 'Get single expense category successful response!',
+    description: 'Get single department successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Expense category fetched successfully!',
+          example: 'Department fetched successfully!',
         },
         data: {
           type: 'object',
@@ -179,34 +177,33 @@ export class ExpenseCategoriesController {
       },
     },
   })
-  @Permission('expense-category-view')
+  @Permission('department-view')
   @Get(':id')
   async find(@Param('id', ParseIntPipe) id: number) {
-    const expenseCategory = await this.expenseCategoriesService.findOne(id);
-    if (!expenseCategory)
-      throw new NotFoundException('Expense category not found.');
+    const department = await this.departmentsService.findOne(id);
+    if (!department) throw new NotFoundException('Department not found.');
     return {
       success: true,
-      message: 'Expense category fetched successfully!',
-      data: expenseCategory,
+      message: 'Department fetched successfully!',
+      data: department,
     };
   }
 
   /**
-   * Create expense category
-   * @param expenseCategoryDto
-   * @returns ExpenseCategory
+   * Create department
+   * @param departmentDto
+   * @returns Department
    */
 
   @ApiOkResponse({
-    description: 'Expense category created successful response!',
+    description: 'Department created successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Expense category created successfully!',
+          example: 'Department created successfully!',
         },
         data: {
           type: 'array',
@@ -244,39 +241,39 @@ export class ExpenseCategoriesController {
       },
     },
   })
-  @Permission('expense-category-create')
+  @Permission('department-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(ExpenseCategorySchema))
-    expenseCategoryDto: ExpenseCategoryDto,
+    @Body(new ZodValidationPipe(DepartmentSchema))
+    departmentDto: DepartmentDto,
     @Req() req: FastifyRequest,
   ) {
-    const expenseCategory = await this.expenseCategoriesService.create(
-      expenseCategoryDto,
+    const department = await this.departmentsService.create(
+      departmentDto,
       req?.user?.email,
     );
     return {
       success: true,
-      message: 'Expense category created successfully!',
-      data: expenseCategory,
+      message: 'Department created successfully!',
+      data: department,
     };
   }
 
   /**
-   * Update expense category by id
+   * Update department by id
    * @param id
-   * @param expenseCategoryDto
-   * @returns ExpenseCategory
+   * @param departmedentDto
+   * @returns Deepartment
    */
   @ApiOkResponse({
-    description: 'Expense category updated successful response!',
+    description: 'Department updated successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Expense category updated successfully!',
+          example: 'Department updated successfully!',
         },
         data: {
           type: 'object ',
@@ -314,40 +311,40 @@ export class ExpenseCategoriesController {
       },
     },
   })
-  @Permission('expense-category-edit')
+  @Permission('department-edit')
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(ExpenseCategorySchema))
-    expenaseCategoryDto: ExpenseCategoryDto,
+    @Body(new ZodValidationPipe(DepartmentSchema))
+    departmentDto: DepartmentDto,
     @Req() req: FastifyRequest,
   ) {
-    const expenseCategory = await this.expenseCategoriesService.update(
+    const department = await this.departmentsService.update(
       id,
-      expenaseCategoryDto,
+      departmentDto,
       req?.user?.email,
     );
     return {
       success: true,
-      message: 'Expense category updated successfully!',
-      data: expenseCategory,
+      message: 'Department updated successfully!',
+      data: department,
     };
   }
 
   /**
-   * Delete expense category by id
+   * Delete department by id
    * @param id
-   * @returns ExpenseCategory
+   * @returns Department
    */
   @ApiOkResponse({
-    description: 'Expense category deleted successful response!',
+    description: 'Department deleted successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Expense category fetched successfully!',
+          example: 'Department fetched successfully!',
         },
         data: {
           type: 'object',
@@ -368,43 +365,43 @@ export class ExpenseCategoriesController {
       },
     },
   })
-  @Permission('expense-category-delete')
+  @Permission('department-delete')
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const expenseCategory = await this.expenseCategoriesService.remove(id);
+    const department = await this.departmentsService.remove(id);
     return {
       success: true,
-      message: 'Expense category deleted successfully!',
-      data: expenseCategory,
+      message: 'Department deleted successfully!',
+      data: department,
     };
   }
 
   /**
-   * Bulk Delete expense categories
+   * Bulk department categories
    * @param body
    * @returns { count: number }
    */
   @ApiOkResponse({
-    description: 'Expense category bulk deleted generated response!',
+    description: 'Departments bulk deleted generated response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Expense Categories deleted successfully!',
+          example: 'Departments deleted successfully!',
         },
         data: { type: 'number', example: 4 },
       },
     },
   })
-  @Permission('expense-category-bulk-delete')
+  @Permission('department-bulk-delete')
   @Delete('bulk')
   async bulkDeletePermission(@Body() body: BlukDeleteIdsDto) {
-    const data = await this.expenseCategoriesService.bulkDelete(body?.ids);
+    const data = await this.departmentsService.bulkDelete(body?.ids);
     return {
       success: true,
-      message: 'Expense categories deleted successfully!',
+      message: 'Departments deleted successfully!',
       data: data,
     };
   }
