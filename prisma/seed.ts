@@ -705,22 +705,12 @@ const permissionsData = [
   { moduleId: 8, name: 'Purchase Delete', slug: 'purchase-delete' },
   { moduleId: 8, name: 'Purchase Bulk Delete', slug: 'purchase-bulk-delete' },
 
-  { moduleId: 9, name: 'Add Purchase Access', slug: 'add-purchase-access' },
-  {
-    moduleId: 10,
-    name: 'Manage Purchase Access',
-    slug: 'manage-purchase-access',
-  },
-
   // Sale
   { moduleId: 11, name: 'Sale Access', slug: 'sale-access' },
   { moduleId: 11, name: 'Sale Add', slug: 'sale-add' },
   { moduleId: 11, name: 'Sale Edit', slug: 'sale-edit' },
   { moduleId: 11, name: 'Sale Delete', slug: 'sale-delete' },
   { moduleId: 11, name: 'Sale Bulk Delete', slug: 'sale-bulk-delete' },
-
-  { moduleId: 12, name: 'Add Sale Access', slug: 'add-sale-access' },
-  { moduleId: 13, name: 'Manage Sale Access', slug: 'manage-sale-access' },
 
   // Customer
   { moduleId: 14, name: 'Customer Access', slug: 'customer-access' },
@@ -772,33 +762,43 @@ const permissionsData = [
   { moduleId: 18, name: 'Supplier Bulk Delete', slug: 'supplier-bulk-delete' },
 
   // Accounting
-  { moduleId: 19, name: 'Accounting Access', slug: 'accounting-access' },
-  { moduleId: 19, name: 'Accounting Add', slug: 'accounting-add' },
-  { moduleId: 19, name: 'Accounting Edit', slug: 'accounting-edit' },
-  { moduleId: 19, name: 'Accounting Delete', slug: 'accounting-delete' },
-  {
-    moduleId: 19,
-    name: 'Accounting Bulk Delete',
-    slug: 'accounting-bulk-delete',
-  },
-
+  { moduleId: 20, name: 'Account Access', slug: 'account-access' },
+  { moduleId: 20, name: 'Account Add', slug: 'account-add' },
+  { moduleId: 20, name: 'Account Edit', slug: 'account-edit' },
+  { moduleId: 20, name: 'Account Delete', slug: 'account-delete' },
   {
     moduleId: 20,
-    name: 'Manage Account Access',
-    slug: 'manage-account-access',
+    name: 'Account Bulk Delete',
+    slug: 'account-bulk-delete',
   },
   { moduleId: 21, name: 'Balance Sheet Access', slug: 'balance-sheet-access' },
 
-  // HRM
-  { moduleId: 22, name: 'HRM Access', slug: 'hrm-access' },
-  { moduleId: 22, name: 'HRM Add', slug: 'hrm-add' },
-  { moduleId: 22, name: 'HRM Edit', slug: 'hrm-edit' },
-  { moduleId: 22, name: 'HRM Delete', slug: 'hrm-delete' },
-  { moduleId: 22, name: 'HRM Bulk Delete', slug: 'hrm-bulk-delete' },
-
   { moduleId: 23, name: 'Department Access', slug: 'department-access' },
+  { moduleId: 23, name: 'Department View', slug: 'department-view' },
+  { moduleId: 23, name: 'Department Add', slug: 'department-add' },
+  { moduleId: 23, name: 'Department Edit', slug: 'department-edit' },
+  { moduleId: 23, name: 'Department Delete', slug: 'department-delete' },
+  {
+    moduleId: 23,
+    name: 'Department Bulk Delete',
+    slug: 'department-bulk-delete',
+  },
   { moduleId: 24, name: 'Attendance Access', slug: 'attendance-access' },
+  { moduleId: 24, name: 'Attendance view', slug: 'attendance-view' },
+  { moduleId: 24, name: 'Attendance Add', slug: 'attendance-add' },
+  { moduleId: 24, name: 'Attendance Edit', slug: 'attendance-edit' },
+  { moduleId: 24, name: 'Attendance Delete', slug: 'attendance-delete' },
+  {
+    moduleId: 24,
+    name: 'Attendance bulk Delete',
+    slug: 'attendance-bulk-delete',
+  },
   { moduleId: 25, name: 'Payroll Access', slug: 'payroll-access' },
+  { moduleId: 25, name: 'Payroll View', slug: 'payroll-view' },
+  { moduleId: 25, name: 'Payroll Add', slug: 'payroll-add' },
+  { moduleId: 25, name: 'Payroll Edit', slug: 'payroll-edit' },
+  { moduleId: 25, name: 'Payroll Delete', slug: 'payroll-delete' },
+  { moduleId: 25, name: 'Payroll Bulk Delete', slug: 'payroll-bulk-delete' },
 
   // ✅ Employee (NEW)
   { moduleId: 26, name: 'Employee Access', slug: 'employee-access' },
@@ -806,13 +806,6 @@ const permissionsData = [
   { moduleId: 26, name: 'Employee Edit', slug: 'employee-edit' },
   { moduleId: 26, name: 'Employee Delete', slug: 'employee-delete' },
   { moduleId: 26, name: 'Employee Bulk Delete', slug: 'employee-bulk-delete' },
-
-  // Report (shifted)
-  { moduleId: 27, name: 'Report Access', slug: 'report-access' },
-  { moduleId: 27, name: 'Report Add', slug: 'report-add' },
-  { moduleId: 27, name: 'Report Edit', slug: 'report-edit' },
-  { moduleId: 27, name: 'Report Delete', slug: 'report-delete' },
-  { moduleId: 27, name: 'Report Bulk Delete', slug: 'report-bulk-delete' },
 
   {
     moduleId: 28,
