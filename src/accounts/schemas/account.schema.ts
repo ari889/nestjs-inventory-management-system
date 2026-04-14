@@ -16,13 +16,16 @@ export const AccountSchema = z.object({
     .regex(/^[A-Za-z0-9\s]+$/, {
       message: 'Name can contain only letters, numbers, and spaces',
     }),
-
   initialBalance: z
-    .union([z.string(), z.number()])
-    .refine((val) => !isNaN(Number(val)), {
-      message: 'Initial balance must be a valid number',
+    .string({
+      message: 'Current balance is required!',
     })
-    .transform((val) => Number(val)),
+    .refine((val) => !isNaN(Number(val)), {
+      message: 'Current balance must be a valid number',
+    })
+    .refine((val) => /^\d+(\.\d{1,2})?$/.test(val), {
+      message: 'Only 2 decimal places allowed',
+    }),
 
   note: z
     .string()

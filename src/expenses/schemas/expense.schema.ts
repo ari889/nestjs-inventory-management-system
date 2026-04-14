@@ -7,11 +7,15 @@ export const ExpenseSchema = z.object({
   warehouseId: z.number({ message: 'Warehouse is required!' }),
   accountId: z.number({ message: 'Account is required!' }),
   amount: z
-    .number({ message: 'Amount is required!' })
+    .string({
+      message: 'Amount is required!',
+    })
     .refine((val) => !isNaN(Number(val)), {
       message: 'Amount must be a valid number',
     })
-    .transform((val) => Number(val)),
+    .refine((val) => /^\d+(\.\d{1,2})?$/.test(val), {
+      message: 'Only 2 decimal places allowed',
+    }),
   note: z.string().max(255, { message: 'Max 255 characters!' }).nullable(),
   status: z.boolean({ message: 'Status is required!' }),
 });
