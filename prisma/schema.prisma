@@ -187,6 +187,8 @@ model HrmSetting {
   creator   User @relation("HrmSettingCreatedBy", fields: [createdBy], references: [id])
   updatedBy Int?
   updater   User? @relation("HrmSettingUpdatedBy", fields: [updatedBy], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Department {
