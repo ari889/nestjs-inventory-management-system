@@ -28,6 +28,7 @@ import { ExpenseCategoriesModule } from './expense-categories/expense-categories
 import { DepartmentsModule } from './departments/departments.module';
 import { EmployeesModule } from './employees/employees.module';
 import { PayrollsModule } from './payrolls/payrolls.module';
+import { AttendancesModule } from './attendances/attendances.module';
 
 @Module({
   imports: [
@@ -83,6 +84,7 @@ import { PayrollsModule } from './payrolls/payrolls.module';
     DepartmentsModule,
     EmployeesModule,
     PayrollsModule,
+    AttendancesModule,
   ],
   providers: [
     {
