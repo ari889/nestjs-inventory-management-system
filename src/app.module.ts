@@ -30,6 +30,7 @@ import { EmployeesModule } from './employees/employees.module';
 import { PayrollsModule } from './payrolls/payrolls.module';
 import { AttendancesModule } from './attendances/attendances.module';
 import { HrmSettingsModule } from './hrm-settings/hrm-settings.module';
+import { ProductCategoriesModule } from './product-categories/product-categories.module';
 
 @Module({
   imports: [
@@ -87,6 +88,7 @@ import { HrmSettingsModule } from './hrm-settings/hrm-settings.module';
     PayrollsModule,
     AttendancesModule,
     HrmSettingsModule,
+    ProductCategoriesModule,
   ],
   providers: [
     {

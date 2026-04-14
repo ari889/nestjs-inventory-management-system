@@ -108,10 +108,10 @@ export type CustomerGroup = Prisma.CustomerGroupModel
  */
 export type Customer = Prisma.CustomerModel
 /**
- * Model Category
+ * Model ProductCategory
  * 
  */
-export type Category = Prisma.CategoryModel
+export type ProductCategory = Prisma.ProductCategoryModel
 /**
  * Model Brand
  * 

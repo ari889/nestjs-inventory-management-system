@@ -44,6 +44,8 @@ export type HrmSettingMinAggregateOutputType = {
   checkOut: string | null
   createdBy: number | null
   updatedBy: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type HrmSettingMaxAggregateOutputType = {
@@ -52,6 +54,8 @@ export type HrmSettingMaxAggregateOutputType = {
   checkOut: string | null
   createdBy: number | null
   updatedBy: number | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type HrmSettingCountAggregateOutputType = {
@@ -60,6 +64,8 @@ export type HrmSettingCountAggregateOutputType = {
   checkOut: number
   createdBy: number
   updatedBy: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -82,6 +88,8 @@ export type HrmSettingMinAggregateInputType = {
   checkOut?: true
   createdBy?: true
   updatedBy?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type HrmSettingMaxAggregateInputType = {
@@ -90,6 +98,8 @@ export type HrmSettingMaxAggregateInputType = {
   checkOut?: true
   createdBy?: true
   updatedBy?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type HrmSettingCountAggregateInputType = {
@@ -98,6 +108,8 @@ export type HrmSettingCountAggregateInputType = {
   checkOut?: true
   createdBy?: true
   updatedBy?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -193,6 +205,8 @@ export type HrmSettingGroupByOutputType = {
   checkOut: string
   createdBy: number
   updatedBy: number | null
+  createdAt: Date
+  updatedAt: Date
   _count: HrmSettingCountAggregateOutputType | null
   _avg: HrmSettingAvgAggregateOutputType | null
   _sum: HrmSettingSumAggregateOutputType | null
@@ -224,6 +238,8 @@ export type HrmSettingWhereInput = {
   checkOut?: Prisma.StringFilter<"HrmSetting"> | string
   createdBy?: Prisma.IntFilter<"HrmSetting"> | number
   updatedBy?: Prisma.IntNullableFilter<"HrmSetting"> | number | null
+  createdAt?: Prisma.DateTimeFilter<"HrmSetting"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"HrmSetting"> | Date | string
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updater?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
@@ -234,6 +250,8 @@ export type HrmSettingOrderByWithRelationInput = {
   checkOut?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   creator?: Prisma.UserOrderByWithRelationInput
   updater?: Prisma.UserOrderByWithRelationInput
   _relevance?: Prisma.HrmSettingOrderByRelevanceInput
@@ -248,6 +266,8 @@ export type HrmSettingWhereUniqueInput = Prisma.AtLeast<{
   checkOut?: Prisma.StringFilter<"HrmSetting"> | string
   createdBy?: Prisma.IntFilter<"HrmSetting"> | number
   updatedBy?: Prisma.IntNullableFilter<"HrmSetting"> | number | null
+  createdAt?: Prisma.DateTimeFilter<"HrmSetting"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"HrmSetting"> | Date | string
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updater?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id">
@@ -258,6 +278,8 @@ export type HrmSettingOrderByWithAggregationInput = {
   checkOut?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.HrmSettingCountOrderByAggregateInput
   _avg?: Prisma.HrmSettingAvgOrderByAggregateInput
   _max?: Prisma.HrmSettingMaxOrderByAggregateInput
@@ -274,11 +296,15 @@ export type HrmSettingScalarWhereWithAggregatesInput = {
   checkOut?: Prisma.StringWithAggregatesFilter<"HrmSetting"> | string
   createdBy?: Prisma.IntWithAggregatesFilter<"HrmSetting"> | number
   updatedBy?: Prisma.IntNullableWithAggregatesFilter<"HrmSetting"> | number | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"HrmSetting"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"HrmSetting"> | Date | string
 }
 
 export type HrmSettingCreateInput = {
   checkIn: string
   checkOut: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   creator: Prisma.UserCreateNestedOneWithoutHrmSettingCreatorInput
   updater?: Prisma.UserCreateNestedOneWithoutHrmSettingUpdaterInput
 }
@@ -289,11 +315,15 @@ export type HrmSettingUncheckedCreateInput = {
   checkOut: string
   createdBy: number
   updatedBy?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type HrmSettingUpdateInput = {
   checkIn?: Prisma.StringFieldUpdateOperationsInput | string
   checkOut?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creator?: Prisma.UserUpdateOneRequiredWithoutHrmSettingCreatorNestedInput
   updater?: Prisma.UserUpdateOneWithoutHrmSettingUpdaterNestedInput
 }
@@ -304,6 +334,8 @@ export type HrmSettingUncheckedUpdateInput = {
   checkOut?: Prisma.StringFieldUpdateOperationsInput | string
   createdBy?: Prisma.IntFieldUpdateOperationsInput | number
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HrmSettingCreateManyInput = {
@@ -312,11 +344,15 @@ export type HrmSettingCreateManyInput = {
   checkOut: string
   createdBy: number
   updatedBy?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type HrmSettingUpdateManyMutationInput = {
   checkIn?: Prisma.StringFieldUpdateOperationsInput | string
   checkOut?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HrmSettingUncheckedUpdateManyInput = {
@@ -325,6 +361,8 @@ export type HrmSettingUncheckedUpdateManyInput = {
   checkOut?: Prisma.StringFieldUpdateOperationsInput | string
   createdBy?: Prisma.IntFieldUpdateOperationsInput | number
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HrmSettingListRelationFilter = {
@@ -349,6 +387,8 @@ export type HrmSettingCountOrderByAggregateInput = {
   checkOut?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type HrmSettingAvgOrderByAggregateInput = {
@@ -363,6 +403,8 @@ export type HrmSettingMaxOrderByAggregateInput = {
   checkOut?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type HrmSettingMinOrderByAggregateInput = {
@@ -371,6 +413,8 @@ export type HrmSettingMinOrderByAggregateInput = {
   checkOut?: Prisma.SortOrder
   createdBy?: Prisma.SortOrder
   updatedBy?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type HrmSettingSumOrderByAggregateInput = {
@@ -466,6 +510,8 @@ export type HrmSettingUncheckedUpdateManyWithoutUpdaterNestedInput = {
 export type HrmSettingCreateWithoutCreatorInput = {
   checkIn: string
   checkOut: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   updater?: Prisma.UserCreateNestedOneWithoutHrmSettingUpdaterInput
 }
 
@@ -474,6 +520,8 @@ export type HrmSettingUncheckedCreateWithoutCreatorInput = {
   checkIn: string
   checkOut: string
   updatedBy?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type HrmSettingCreateOrConnectWithoutCreatorInput = {
@@ -489,6 +537,8 @@ export type HrmSettingCreateManyCreatorInputEnvelope = {
 export type HrmSettingCreateWithoutUpdaterInput = {
   checkIn: string
   checkOut: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
   creator: Prisma.UserCreateNestedOneWithoutHrmSettingCreatorInput
 }
 
@@ -497,6 +547,8 @@ export type HrmSettingUncheckedCreateWithoutUpdaterInput = {
   checkIn: string
   checkOut: string
   createdBy: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type HrmSettingCreateOrConnectWithoutUpdaterInput = {
@@ -534,6 +586,8 @@ export type HrmSettingScalarWhereInput = {
   checkOut?: Prisma.StringFilter<"HrmSetting"> | string
   createdBy?: Prisma.IntFilter<"HrmSetting"> | number
   updatedBy?: Prisma.IntNullableFilter<"HrmSetting"> | number | null
+  createdAt?: Prisma.DateTimeFilter<"HrmSetting"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"HrmSetting"> | Date | string
 }
 
 export type HrmSettingUpsertWithWhereUniqueWithoutUpdaterInput = {
@@ -557,6 +611,8 @@ export type HrmSettingCreateManyCreatorInput = {
   checkIn: string
   checkOut: string
   updatedBy?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type HrmSettingCreateManyUpdaterInput = {
@@ -564,11 +620,15 @@ export type HrmSettingCreateManyUpdaterInput = {
   checkIn: string
   checkOut: string
   createdBy: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type HrmSettingUpdateWithoutCreatorInput = {
   checkIn?: Prisma.StringFieldUpdateOperationsInput | string
   checkOut?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updater?: Prisma.UserUpdateOneWithoutHrmSettingUpdaterNestedInput
 }
 
@@ -577,6 +637,8 @@ export type HrmSettingUncheckedUpdateWithoutCreatorInput = {
   checkIn?: Prisma.StringFieldUpdateOperationsInput | string
   checkOut?: Prisma.StringFieldUpdateOperationsInput | string
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HrmSettingUncheckedUpdateManyWithoutCreatorInput = {
@@ -584,11 +646,15 @@ export type HrmSettingUncheckedUpdateManyWithoutCreatorInput = {
   checkIn?: Prisma.StringFieldUpdateOperationsInput | string
   checkOut?: Prisma.StringFieldUpdateOperationsInput | string
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HrmSettingUpdateWithoutUpdaterInput = {
   checkIn?: Prisma.StringFieldUpdateOperationsInput | string
   checkOut?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creator?: Prisma.UserUpdateOneRequiredWithoutHrmSettingCreatorNestedInput
 }
 
@@ -597,6 +663,8 @@ export type HrmSettingUncheckedUpdateWithoutUpdaterInput = {
   checkIn?: Prisma.StringFieldUpdateOperationsInput | string
   checkOut?: Prisma.StringFieldUpdateOperationsInput | string
   createdBy?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type HrmSettingUncheckedUpdateManyWithoutUpdaterInput = {
@@ -604,6 +672,8 @@ export type HrmSettingUncheckedUpdateManyWithoutUpdaterInput = {
   checkIn?: Prisma.StringFieldUpdateOperationsInput | string
   checkOut?: Prisma.StringFieldUpdateOperationsInput | string
   createdBy?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -614,6 +684,8 @@ export type HrmSettingSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   checkOut?: boolean
   createdBy?: boolean
   updatedBy?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updater?: boolean | Prisma.HrmSetting$updaterArgs<ExtArgs>
 }, ExtArgs["result"]["hrmSetting"]>
@@ -626,9 +698,11 @@ export type HrmSettingSelectScalar = {
   checkOut?: boolean
   createdBy?: boolean
   updatedBy?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type HrmSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "checkIn" | "checkOut" | "createdBy" | "updatedBy", ExtArgs["result"]["hrmSetting"]>
+export type HrmSettingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "checkIn" | "checkOut" | "createdBy" | "updatedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["hrmSetting"]>
 export type HrmSettingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updater?: boolean | Prisma.HrmSetting$updaterArgs<ExtArgs>
@@ -646,6 +720,8 @@ export type $HrmSettingPayload<ExtArgs extends runtime.Types.Extensions.Internal
     checkOut: string
     createdBy: number
     updatedBy: number | null
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["hrmSetting"]>
   composites: {}
 }
@@ -1022,6 +1098,8 @@ export interface HrmSettingFieldRefs {
   readonly checkOut: Prisma.FieldRef<"HrmSetting", 'String'>
   readonly createdBy: Prisma.FieldRef<"HrmSetting", 'Int'>
   readonly updatedBy: Prisma.FieldRef<"HrmSetting", 'Int'>
+  readonly createdAt: Prisma.FieldRef<"HrmSetting", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"HrmSetting", 'DateTime'>
 }
     
 

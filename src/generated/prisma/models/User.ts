@@ -327,8 +327,8 @@ export type UserWhereInput = {
   customerGroupUpdater?: Prisma.CustomerGroupListRelationFilter
   customerCreator?: Prisma.CustomerListRelationFilter
   customerUpdater?: Prisma.CustomerListRelationFilter
-  categoryCreator?: Prisma.CategoryListRelationFilter
-  categoryUpdater?: Prisma.CategoryListRelationFilter
+  productCategoryCreator?: Prisma.ProductCategoryListRelationFilter
+  productCategoryUpdater?: Prisma.ProductCategoryListRelationFilter
   brandCreator?: Prisma.BrandListRelationFilter
   brandUpdater?: Prisma.BrandListRelationFilter
   taxCreator?: Prisma.TaxListRelationFilter
@@ -387,8 +387,8 @@ export type UserOrderByWithRelationInput = {
   customerGroupUpdater?: Prisma.CustomerGroupOrderByRelationAggregateInput
   customerCreator?: Prisma.CustomerOrderByRelationAggregateInput
   customerUpdater?: Prisma.CustomerOrderByRelationAggregateInput
-  categoryCreator?: Prisma.CategoryOrderByRelationAggregateInput
-  categoryUpdater?: Prisma.CategoryOrderByRelationAggregateInput
+  productCategoryCreator?: Prisma.ProductCategoryOrderByRelationAggregateInput
+  productCategoryUpdater?: Prisma.ProductCategoryOrderByRelationAggregateInput
   brandCreator?: Prisma.BrandOrderByRelationAggregateInput
   brandUpdater?: Prisma.BrandOrderByRelationAggregateInput
   taxCreator?: Prisma.TaxOrderByRelationAggregateInput
@@ -451,8 +451,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   customerGroupUpdater?: Prisma.CustomerGroupListRelationFilter
   customerCreator?: Prisma.CustomerListRelationFilter
   customerUpdater?: Prisma.CustomerListRelationFilter
-  categoryCreator?: Prisma.CategoryListRelationFilter
-  categoryUpdater?: Prisma.CategoryListRelationFilter
+  productCategoryCreator?: Prisma.ProductCategoryListRelationFilter
+  productCategoryUpdater?: Prisma.ProductCategoryListRelationFilter
   brandCreator?: Prisma.BrandListRelationFilter
   brandUpdater?: Prisma.BrandListRelationFilter
   taxCreator?: Prisma.TaxListRelationFilter
@@ -549,8 +549,8 @@ export type UserCreateInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -606,8 +606,8 @@ export type UserUncheckedCreateInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -662,8 +662,8 @@ export type UserUpdateInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -719,8 +719,8 @@ export type UserUncheckedUpdateInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -1377,34 +1377,34 @@ export type UserUpdateOneWithoutCustomerUpdaterNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCustomerUpdaterInput, Prisma.UserUpdateWithoutCustomerUpdaterInput>, Prisma.UserUncheckedUpdateWithoutCustomerUpdaterInput>
 }
 
-export type UserCreateNestedOneWithoutCategoryCreatorInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutCategoryCreatorInput, Prisma.UserUncheckedCreateWithoutCategoryCreatorInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCategoryCreatorInput
+export type UserCreateNestedOneWithoutProductCategoryCreatorInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProductCategoryCreatorInput, Prisma.UserUncheckedCreateWithoutProductCategoryCreatorInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProductCategoryCreatorInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserCreateNestedOneWithoutCategoryUpdaterInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutCategoryUpdaterInput, Prisma.UserUncheckedCreateWithoutCategoryUpdaterInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCategoryUpdaterInput
+export type UserCreateNestedOneWithoutProductCategoryUpdaterInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProductCategoryUpdaterInput, Prisma.UserUncheckedCreateWithoutProductCategoryUpdaterInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProductCategoryUpdaterInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutCategoryCreatorNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutCategoryCreatorInput, Prisma.UserUncheckedCreateWithoutCategoryCreatorInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCategoryCreatorInput
-  upsert?: Prisma.UserUpsertWithoutCategoryCreatorInput
+export type UserUpdateOneRequiredWithoutProductCategoryCreatorNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProductCategoryCreatorInput, Prisma.UserUncheckedCreateWithoutProductCategoryCreatorInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProductCategoryCreatorInput
+  upsert?: Prisma.UserUpsertWithoutProductCategoryCreatorInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCategoryCreatorInput, Prisma.UserUpdateWithoutCategoryCreatorInput>, Prisma.UserUncheckedUpdateWithoutCategoryCreatorInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProductCategoryCreatorInput, Prisma.UserUpdateWithoutProductCategoryCreatorInput>, Prisma.UserUncheckedUpdateWithoutProductCategoryCreatorInput>
 }
 
-export type UserUpdateOneWithoutCategoryUpdaterNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutCategoryUpdaterInput, Prisma.UserUncheckedCreateWithoutCategoryUpdaterInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCategoryUpdaterInput
-  upsert?: Prisma.UserUpsertWithoutCategoryUpdaterInput
+export type UserUpdateOneWithoutProductCategoryUpdaterNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProductCategoryUpdaterInput, Prisma.UserUncheckedCreateWithoutProductCategoryUpdaterInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProductCategoryUpdaterInput
+  upsert?: Prisma.UserUpsertWithoutProductCategoryUpdaterInput
   disconnect?: Prisma.UserWhereInput | boolean
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCategoryUpdaterInput, Prisma.UserUpdateWithoutCategoryUpdaterInput>, Prisma.UserUncheckedUpdateWithoutCategoryUpdaterInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProductCategoryUpdaterInput, Prisma.UserUpdateWithoutProductCategoryUpdaterInput>, Prisma.UserUncheckedUpdateWithoutProductCategoryUpdaterInput>
 }
 
 export type UserCreateNestedOneWithoutBrandCreatorInput = {
@@ -1654,8 +1654,8 @@ export type UserCreateWithoutRoleInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -1710,8 +1710,8 @@ export type UserUncheckedCreateWithoutRoleInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -1811,8 +1811,8 @@ export type UserCreateWithoutCreatedUsersInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -1867,8 +1867,8 @@ export type UserUncheckedCreateWithoutCreatedUsersInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -1927,8 +1927,8 @@ export type UserCreateWithoutCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -1983,8 +1983,8 @@ export type UserUncheckedCreateWithoutCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -2048,8 +2048,8 @@ export type UserCreateWithoutUpdatedUsersInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -2104,8 +2104,8 @@ export type UserUncheckedCreateWithoutUpdatedUsersInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -2164,8 +2164,8 @@ export type UserCreateWithoutUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -2220,8 +2220,8 @@ export type UserUncheckedCreateWithoutUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -2296,8 +2296,8 @@ export type UserUpdateWithoutCreatedUsersInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -2352,8 +2352,8 @@ export type UserUncheckedUpdateWithoutCreatedUsersInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -2434,8 +2434,8 @@ export type UserUpdateWithoutUpdatedUsersInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -2490,8 +2490,8 @@ export type UserUncheckedUpdateWithoutUpdatedUsersInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -2561,8 +2561,8 @@ export type UserCreateWithoutHrmSettingCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -2617,8 +2617,8 @@ export type UserUncheckedCreateWithoutHrmSettingCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -2677,8 +2677,8 @@ export type UserCreateWithoutHrmSettingUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -2733,8 +2733,8 @@ export type UserUncheckedCreateWithoutHrmSettingUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -2804,8 +2804,8 @@ export type UserUpdateWithoutHrmSettingCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -2860,8 +2860,8 @@ export type UserUncheckedUpdateWithoutHrmSettingCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -2926,8 +2926,8 @@ export type UserUpdateWithoutHrmSettingUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -2982,8 +2982,8 @@ export type UserUncheckedUpdateWithoutHrmSettingUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -3037,8 +3037,8 @@ export type UserCreateWithoutDepartmentCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -3093,8 +3093,8 @@ export type UserUncheckedCreateWithoutDepartmentCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -3153,8 +3153,8 @@ export type UserCreateWithoutDepartmentUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -3209,8 +3209,8 @@ export type UserUncheckedCreateWithoutDepartmentUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -3280,8 +3280,8 @@ export type UserUpdateWithoutDepartmentCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -3336,8 +3336,8 @@ export type UserUncheckedUpdateWithoutDepartmentCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -3402,8 +3402,8 @@ export type UserUpdateWithoutDepartmentUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -3458,8 +3458,8 @@ export type UserUncheckedUpdateWithoutDepartmentUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -3513,8 +3513,8 @@ export type UserCreateWithoutEmployeeCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -3569,8 +3569,8 @@ export type UserUncheckedCreateWithoutEmployeeCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -3629,8 +3629,8 @@ export type UserCreateWithoutEmployeeUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -3685,8 +3685,8 @@ export type UserUncheckedCreateWithoutEmployeeUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -3756,8 +3756,8 @@ export type UserUpdateWithoutEmployeeCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -3812,8 +3812,8 @@ export type UserUncheckedUpdateWithoutEmployeeCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -3878,8 +3878,8 @@ export type UserUpdateWithoutEmployeeUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -3934,8 +3934,8 @@ export type UserUncheckedUpdateWithoutEmployeeUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -3989,8 +3989,8 @@ export type UserCreateWithoutAttendanceCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -4045,8 +4045,8 @@ export type UserUncheckedCreateWithoutAttendanceCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -4105,8 +4105,8 @@ export type UserCreateWithoutAttendanceUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -4161,8 +4161,8 @@ export type UserUncheckedCreateWithoutAttendanceUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -4232,8 +4232,8 @@ export type UserUpdateWithoutAttendanceCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -4288,8 +4288,8 @@ export type UserUncheckedUpdateWithoutAttendanceCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -4354,8 +4354,8 @@ export type UserUpdateWithoutAttendanceUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -4410,8 +4410,8 @@ export type UserUncheckedUpdateWithoutAttendanceUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -4465,8 +4465,8 @@ export type UserCreateWithoutAccountCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -4521,8 +4521,8 @@ export type UserUncheckedCreateWithoutAccountCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -4581,8 +4581,8 @@ export type UserCreateWithoutAccountUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -4637,8 +4637,8 @@ export type UserUncheckedCreateWithoutAccountUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -4708,8 +4708,8 @@ export type UserUpdateWithoutAccountCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -4764,8 +4764,8 @@ export type UserUncheckedUpdateWithoutAccountCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -4830,8 +4830,8 @@ export type UserUpdateWithoutAccountUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -4886,8 +4886,8 @@ export type UserUncheckedUpdateWithoutAccountUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -4941,8 +4941,8 @@ export type UserCreateWithoutPayrollCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -4997,8 +4997,8 @@ export type UserUncheckedCreateWithoutPayrollCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -5057,8 +5057,8 @@ export type UserCreateWithoutPayrollUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -5113,8 +5113,8 @@ export type UserUncheckedCreateWithoutPayrollUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -5184,8 +5184,8 @@ export type UserUpdateWithoutPayrollCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -5240,8 +5240,8 @@ export type UserUncheckedUpdateWithoutPayrollCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -5306,8 +5306,8 @@ export type UserUpdateWithoutPayrollUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -5362,8 +5362,8 @@ export type UserUncheckedUpdateWithoutPayrollUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -5417,8 +5417,8 @@ export type UserCreateWithoutWarehouseCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -5473,8 +5473,8 @@ export type UserUncheckedCreateWithoutWarehouseCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -5533,8 +5533,8 @@ export type UserCreateWithoutWarehouseUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -5589,8 +5589,8 @@ export type UserUncheckedCreateWithoutWarehouseUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -5660,8 +5660,8 @@ export type UserUpdateWithoutWarehouseCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -5716,8 +5716,8 @@ export type UserUncheckedUpdateWithoutWarehouseCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -5782,8 +5782,8 @@ export type UserUpdateWithoutWarehouseUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -5838,8 +5838,8 @@ export type UserUncheckedUpdateWithoutWarehouseUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -5893,8 +5893,8 @@ export type UserCreateWithoutExpenseCategoryCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -5949,8 +5949,8 @@ export type UserUncheckedCreateWithoutExpenseCategoryCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -6009,8 +6009,8 @@ export type UserCreateWithoutExpenseCategoryUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -6065,8 +6065,8 @@ export type UserUncheckedCreateWithoutExpenseCategoryUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -6136,8 +6136,8 @@ export type UserUpdateWithoutExpenseCategoryCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -6192,8 +6192,8 @@ export type UserUncheckedUpdateWithoutExpenseCategoryCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -6258,8 +6258,8 @@ export type UserUpdateWithoutExpenseCategoryUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -6314,8 +6314,8 @@ export type UserUncheckedUpdateWithoutExpenseCategoryUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -6369,8 +6369,8 @@ export type UserCreateWithoutExpenseCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -6425,8 +6425,8 @@ export type UserUncheckedCreateWithoutExpenseCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -6485,8 +6485,8 @@ export type UserCreateWithoutExpenseUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -6541,8 +6541,8 @@ export type UserUncheckedCreateWithoutExpenseUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -6612,8 +6612,8 @@ export type UserUpdateWithoutExpenseCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -6668,8 +6668,8 @@ export type UserUncheckedUpdateWithoutExpenseCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -6734,8 +6734,8 @@ export type UserUpdateWithoutExpenseUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -6790,8 +6790,8 @@ export type UserUncheckedUpdateWithoutExpenseUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -6845,8 +6845,8 @@ export type UserCreateWithoutCustomerGroupCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -6901,8 +6901,8 @@ export type UserUncheckedCreateWithoutCustomerGroupCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -6961,8 +6961,8 @@ export type UserCreateWithoutCustomerGroupUpdaterInput = {
   customerGroupCreator?: Prisma.CustomerGroupCreateNestedManyWithoutCreatorInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -7017,8 +7017,8 @@ export type UserUncheckedCreateWithoutCustomerGroupUpdaterInput = {
   customerGroupCreator?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutCreatorInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -7088,8 +7088,8 @@ export type UserUpdateWithoutCustomerGroupCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -7144,8 +7144,8 @@ export type UserUncheckedUpdateWithoutCustomerGroupCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -7210,8 +7210,8 @@ export type UserUpdateWithoutCustomerGroupUpdaterInput = {
   customerGroupCreator?: Prisma.CustomerGroupUpdateManyWithoutCreatorNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -7266,8 +7266,8 @@ export type UserUncheckedUpdateWithoutCustomerGroupUpdaterInput = {
   customerGroupCreator?: Prisma.CustomerGroupUncheckedUpdateManyWithoutCreatorNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -7321,8 +7321,8 @@ export type UserCreateWithoutCustomerCreatorInput = {
   customerGroupCreator?: Prisma.CustomerGroupCreateNestedManyWithoutCreatorInput
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -7377,8 +7377,8 @@ export type UserUncheckedCreateWithoutCustomerCreatorInput = {
   customerGroupCreator?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutCreatorInput
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -7437,8 +7437,8 @@ export type UserCreateWithoutCustomerUpdaterInput = {
   customerGroupCreator?: Prisma.CustomerGroupCreateNestedManyWithoutCreatorInput
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -7493,8 +7493,8 @@ export type UserUncheckedCreateWithoutCustomerUpdaterInput = {
   customerGroupCreator?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutCreatorInput
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -7564,8 +7564,8 @@ export type UserUpdateWithoutCustomerCreatorInput = {
   customerGroupCreator?: Prisma.CustomerGroupUpdateManyWithoutCreatorNestedInput
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -7620,8 +7620,8 @@ export type UserUncheckedUpdateWithoutCustomerCreatorInput = {
   customerGroupCreator?: Prisma.CustomerGroupUncheckedUpdateManyWithoutCreatorNestedInput
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -7686,8 +7686,8 @@ export type UserUpdateWithoutCustomerUpdaterInput = {
   customerGroupCreator?: Prisma.CustomerGroupUpdateManyWithoutCreatorNestedInput
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -7742,8 +7742,8 @@ export type UserUncheckedUpdateWithoutCustomerUpdaterInput = {
   customerGroupCreator?: Prisma.CustomerGroupUncheckedUpdateManyWithoutCreatorNestedInput
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -7760,7 +7760,7 @@ export type UserUncheckedUpdateWithoutCustomerUpdaterInput = {
   saleUpdater?: Prisma.SaleUncheckedUpdateManyWithoutUpdaterNestedInput
 }
 
-export type UserCreateWithoutCategoryCreatorInput = {
+export type UserCreateWithoutProductCategoryCreatorInput = {
   name: string
   email: string
   phoneNo?: string | null
@@ -7798,7 +7798,7 @@ export type UserCreateWithoutCategoryCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -7815,7 +7815,7 @@ export type UserCreateWithoutCategoryCreatorInput = {
   saleUpdater?: Prisma.SaleCreateNestedManyWithoutUpdaterInput
 }
 
-export type UserUncheckedCreateWithoutCategoryCreatorInput = {
+export type UserUncheckedCreateWithoutProductCategoryCreatorInput = {
   id?: number
   name: string
   email: string
@@ -7854,7 +7854,7 @@ export type UserUncheckedCreateWithoutCategoryCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -7871,12 +7871,12 @@ export type UserUncheckedCreateWithoutCategoryCreatorInput = {
   saleUpdater?: Prisma.SaleUncheckedCreateNestedManyWithoutUpdaterInput
 }
 
-export type UserCreateOrConnectWithoutCategoryCreatorInput = {
+export type UserCreateOrConnectWithoutProductCategoryCreatorInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutCategoryCreatorInput, Prisma.UserUncheckedCreateWithoutCategoryCreatorInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProductCategoryCreatorInput, Prisma.UserUncheckedCreateWithoutProductCategoryCreatorInput>
 }
 
-export type UserCreateWithoutCategoryUpdaterInput = {
+export type UserCreateWithoutProductCategoryUpdaterInput = {
   name: string
   email: string
   phoneNo?: string | null
@@ -7914,7 +7914,7 @@ export type UserCreateWithoutCategoryUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -7931,7 +7931,7 @@ export type UserCreateWithoutCategoryUpdaterInput = {
   saleUpdater?: Prisma.SaleCreateNestedManyWithoutUpdaterInput
 }
 
-export type UserUncheckedCreateWithoutCategoryUpdaterInput = {
+export type UserUncheckedCreateWithoutProductCategoryUpdaterInput = {
   id?: number
   name: string
   email: string
@@ -7970,7 +7970,7 @@ export type UserUncheckedCreateWithoutCategoryUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -7987,23 +7987,23 @@ export type UserUncheckedCreateWithoutCategoryUpdaterInput = {
   saleUpdater?: Prisma.SaleUncheckedCreateNestedManyWithoutUpdaterInput
 }
 
-export type UserCreateOrConnectWithoutCategoryUpdaterInput = {
+export type UserCreateOrConnectWithoutProductCategoryUpdaterInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutCategoryUpdaterInput, Prisma.UserUncheckedCreateWithoutCategoryUpdaterInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProductCategoryUpdaterInput, Prisma.UserUncheckedCreateWithoutProductCategoryUpdaterInput>
 }
 
-export type UserUpsertWithoutCategoryCreatorInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutCategoryCreatorInput, Prisma.UserUncheckedUpdateWithoutCategoryCreatorInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutCategoryCreatorInput, Prisma.UserUncheckedCreateWithoutCategoryCreatorInput>
+export type UserUpsertWithoutProductCategoryCreatorInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProductCategoryCreatorInput, Prisma.UserUncheckedUpdateWithoutProductCategoryCreatorInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProductCategoryCreatorInput, Prisma.UserUncheckedCreateWithoutProductCategoryCreatorInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutCategoryCreatorInput = {
+export type UserUpdateToOneWithWhereWithoutProductCategoryCreatorInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutCategoryCreatorInput, Prisma.UserUncheckedUpdateWithoutCategoryCreatorInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProductCategoryCreatorInput, Prisma.UserUncheckedUpdateWithoutProductCategoryCreatorInput>
 }
 
-export type UserUpdateWithoutCategoryCreatorInput = {
+export type UserUpdateWithoutProductCategoryCreatorInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8041,7 +8041,7 @@ export type UserUpdateWithoutCategoryCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -8058,7 +8058,7 @@ export type UserUpdateWithoutCategoryCreatorInput = {
   saleUpdater?: Prisma.SaleUpdateManyWithoutUpdaterNestedInput
 }
 
-export type UserUncheckedUpdateWithoutCategoryCreatorInput = {
+export type UserUncheckedUpdateWithoutProductCategoryCreatorInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -8097,7 +8097,7 @@ export type UserUncheckedUpdateWithoutCategoryCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -8114,18 +8114,18 @@ export type UserUncheckedUpdateWithoutCategoryCreatorInput = {
   saleUpdater?: Prisma.SaleUncheckedUpdateManyWithoutUpdaterNestedInput
 }
 
-export type UserUpsertWithoutCategoryUpdaterInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutCategoryUpdaterInput, Prisma.UserUncheckedUpdateWithoutCategoryUpdaterInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutCategoryUpdaterInput, Prisma.UserUncheckedCreateWithoutCategoryUpdaterInput>
+export type UserUpsertWithoutProductCategoryUpdaterInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProductCategoryUpdaterInput, Prisma.UserUncheckedUpdateWithoutProductCategoryUpdaterInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProductCategoryUpdaterInput, Prisma.UserUncheckedCreateWithoutProductCategoryUpdaterInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutCategoryUpdaterInput = {
+export type UserUpdateToOneWithWhereWithoutProductCategoryUpdaterInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutCategoryUpdaterInput, Prisma.UserUncheckedUpdateWithoutCategoryUpdaterInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProductCategoryUpdaterInput, Prisma.UserUncheckedUpdateWithoutProductCategoryUpdaterInput>
 }
 
-export type UserUpdateWithoutCategoryUpdaterInput = {
+export type UserUpdateWithoutProductCategoryUpdaterInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   phoneNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8163,7 +8163,7 @@ export type UserUpdateWithoutCategoryUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -8180,7 +8180,7 @@ export type UserUpdateWithoutCategoryUpdaterInput = {
   saleUpdater?: Prisma.SaleUpdateManyWithoutUpdaterNestedInput
 }
 
-export type UserUncheckedUpdateWithoutCategoryUpdaterInput = {
+export type UserUncheckedUpdateWithoutProductCategoryUpdaterInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
@@ -8219,7 +8219,7 @@ export type UserUncheckedUpdateWithoutCategoryUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -8274,8 +8274,8 @@ export type UserCreateWithoutBrandCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
   taxUpdater?: Prisma.TaxCreateNestedManyWithoutUpdaterInput
@@ -8330,8 +8330,8 @@ export type UserUncheckedCreateWithoutBrandCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
   taxUpdater?: Prisma.TaxUncheckedCreateNestedManyWithoutUpdaterInput
@@ -8390,8 +8390,8 @@ export type UserCreateWithoutBrandUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
   taxUpdater?: Prisma.TaxCreateNestedManyWithoutUpdaterInput
@@ -8446,8 +8446,8 @@ export type UserUncheckedCreateWithoutBrandUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
   taxUpdater?: Prisma.TaxUncheckedCreateNestedManyWithoutUpdaterInput
@@ -8517,8 +8517,8 @@ export type UserUpdateWithoutBrandCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
   taxUpdater?: Prisma.TaxUpdateManyWithoutUpdaterNestedInput
@@ -8573,8 +8573,8 @@ export type UserUncheckedUpdateWithoutBrandCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
   taxUpdater?: Prisma.TaxUncheckedUpdateManyWithoutUpdaterNestedInput
@@ -8639,8 +8639,8 @@ export type UserUpdateWithoutBrandUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
   taxUpdater?: Prisma.TaxUpdateManyWithoutUpdaterNestedInput
@@ -8695,8 +8695,8 @@ export type UserUncheckedUpdateWithoutBrandUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
   taxUpdater?: Prisma.TaxUncheckedUpdateManyWithoutUpdaterNestedInput
@@ -8750,8 +8750,8 @@ export type UserCreateWithoutTaxCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxUpdater?: Prisma.TaxCreateNestedManyWithoutUpdaterInput
@@ -8806,8 +8806,8 @@ export type UserUncheckedCreateWithoutTaxCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxUpdater?: Prisma.TaxUncheckedCreateNestedManyWithoutUpdaterInput
@@ -8866,8 +8866,8 @@ export type UserCreateWithoutTaxUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -8922,8 +8922,8 @@ export type UserUncheckedCreateWithoutTaxUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -8993,8 +8993,8 @@ export type UserUpdateWithoutTaxCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxUpdater?: Prisma.TaxUpdateManyWithoutUpdaterNestedInput
@@ -9049,8 +9049,8 @@ export type UserUncheckedUpdateWithoutTaxCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxUpdater?: Prisma.TaxUncheckedUpdateManyWithoutUpdaterNestedInput
@@ -9115,8 +9115,8 @@ export type UserUpdateWithoutTaxUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -9171,8 +9171,8 @@ export type UserUncheckedUpdateWithoutTaxUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -9226,8 +9226,8 @@ export type UserCreateWithoutUnitCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -9282,8 +9282,8 @@ export type UserUncheckedCreateWithoutUnitCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -9342,8 +9342,8 @@ export type UserCreateWithoutUnitUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -9398,8 +9398,8 @@ export type UserUncheckedCreateWithoutUnitUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -9469,8 +9469,8 @@ export type UserUpdateWithoutUnitCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -9525,8 +9525,8 @@ export type UserUncheckedUpdateWithoutUnitCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -9591,8 +9591,8 @@ export type UserUpdateWithoutUnitUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -9647,8 +9647,8 @@ export type UserUncheckedUpdateWithoutUnitUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -9702,8 +9702,8 @@ export type UserCreateWithoutProductCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -9758,8 +9758,8 @@ export type UserUncheckedCreateWithoutProductCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -9818,8 +9818,8 @@ export type UserCreateWithoutProductUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -9874,8 +9874,8 @@ export type UserUncheckedCreateWithoutProductUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -9945,8 +9945,8 @@ export type UserUpdateWithoutProductCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -10001,8 +10001,8 @@ export type UserUncheckedUpdateWithoutProductCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -10067,8 +10067,8 @@ export type UserUpdateWithoutProductUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -10123,8 +10123,8 @@ export type UserUncheckedUpdateWithoutProductUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -10178,8 +10178,8 @@ export type UserCreateWithoutSupplierCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -10234,8 +10234,8 @@ export type UserUncheckedCreateWithoutSupplierCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -10294,8 +10294,8 @@ export type UserCreateWithoutSupplierUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -10350,8 +10350,8 @@ export type UserUncheckedCreateWithoutSupplierUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -10421,8 +10421,8 @@ export type UserUpdateWithoutSupplierCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -10477,8 +10477,8 @@ export type UserUncheckedUpdateWithoutSupplierCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -10543,8 +10543,8 @@ export type UserUpdateWithoutSupplierUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -10599,8 +10599,8 @@ export type UserUncheckedUpdateWithoutSupplierUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -10654,8 +10654,8 @@ export type UserCreateWithoutPurchaseCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -10710,8 +10710,8 @@ export type UserUncheckedCreateWithoutPurchaseCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -10770,8 +10770,8 @@ export type UserCreateWithoutPurchaseUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -10826,8 +10826,8 @@ export type UserUncheckedCreateWithoutPurchaseUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -10897,8 +10897,8 @@ export type UserUpdateWithoutPurchaseCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -10953,8 +10953,8 @@ export type UserUncheckedUpdateWithoutPurchaseCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -11019,8 +11019,8 @@ export type UserUpdateWithoutPurchaseUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -11075,8 +11075,8 @@ export type UserUncheckedUpdateWithoutPurchaseUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -11130,8 +11130,8 @@ export type UserCreateWithoutSaleCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -11186,8 +11186,8 @@ export type UserUncheckedCreateWithoutSaleCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -11246,8 +11246,8 @@ export type UserCreateWithoutSaleUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxCreateNestedManyWithoutCreatorInput
@@ -11302,8 +11302,8 @@ export type UserUncheckedCreateWithoutSaleUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedCreateNestedManyWithoutUpdaterInput
   customerCreator?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatorInput
   customerUpdater?: Prisma.CustomerUncheckedCreateNestedManyWithoutUpdaterInput
-  categoryCreator?: Prisma.CategoryUncheckedCreateNestedManyWithoutCreatorInput
-  categoryUpdater?: Prisma.CategoryUncheckedCreateNestedManyWithoutUpdaterInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutCreatorInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedCreateNestedManyWithoutUpdaterInput
   brandCreator?: Prisma.BrandUncheckedCreateNestedManyWithoutCreatorInput
   brandUpdater?: Prisma.BrandUncheckedCreateNestedManyWithoutUpdaterInput
   taxCreator?: Prisma.TaxUncheckedCreateNestedManyWithoutCreatorInput
@@ -11373,8 +11373,8 @@ export type UserUpdateWithoutSaleCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -11429,8 +11429,8 @@ export type UserUncheckedUpdateWithoutSaleCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -11495,8 +11495,8 @@ export type UserUpdateWithoutSaleUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -11551,8 +11551,8 @@ export type UserUncheckedUpdateWithoutSaleUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -11621,8 +11621,8 @@ export type UserUpdateWithoutRoleInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -11677,8 +11677,8 @@ export type UserUncheckedUpdateWithoutRoleInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -11780,8 +11780,8 @@ export type UserUpdateWithoutCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -11836,8 +11836,8 @@ export type UserUncheckedUpdateWithoutCreatorInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -11907,8 +11907,8 @@ export type UserUpdateWithoutUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUpdateManyWithoutCreatorNestedInput
@@ -11963,8 +11963,8 @@ export type UserUncheckedUpdateWithoutUpdaterInput = {
   customerGroupUpdater?: Prisma.CustomerGroupUncheckedUpdateManyWithoutUpdaterNestedInput
   customerCreator?: Prisma.CustomerUncheckedUpdateManyWithoutCreatorNestedInput
   customerUpdater?: Prisma.CustomerUncheckedUpdateManyWithoutUpdaterNestedInput
-  categoryCreator?: Prisma.CategoryUncheckedUpdateManyWithoutCreatorNestedInput
-  categoryUpdater?: Prisma.CategoryUncheckedUpdateManyWithoutUpdaterNestedInput
+  productCategoryCreator?: Prisma.ProductCategoryUncheckedUpdateManyWithoutCreatorNestedInput
+  productCategoryUpdater?: Prisma.ProductCategoryUncheckedUpdateManyWithoutUpdaterNestedInput
   brandCreator?: Prisma.BrandUncheckedUpdateManyWithoutCreatorNestedInput
   brandUpdater?: Prisma.BrandUncheckedUpdateManyWithoutUpdaterNestedInput
   taxCreator?: Prisma.TaxUncheckedUpdateManyWithoutCreatorNestedInput
@@ -12027,8 +12027,8 @@ export type UserCountOutputType = {
   customerGroupUpdater: number
   customerCreator: number
   customerUpdater: number
-  categoryCreator: number
-  categoryUpdater: number
+  productCategoryCreator: number
+  productCategoryUpdater: number
   brandCreator: number
   brandUpdater: number
   taxCreator: number
@@ -12070,8 +12070,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   customerGroupUpdater?: boolean | UserCountOutputTypeCountCustomerGroupUpdaterArgs
   customerCreator?: boolean | UserCountOutputTypeCountCustomerCreatorArgs
   customerUpdater?: boolean | UserCountOutputTypeCountCustomerUpdaterArgs
-  categoryCreator?: boolean | UserCountOutputTypeCountCategoryCreatorArgs
-  categoryUpdater?: boolean | UserCountOutputTypeCountCategoryUpdaterArgs
+  productCategoryCreator?: boolean | UserCountOutputTypeCountProductCategoryCreatorArgs
+  productCategoryUpdater?: boolean | UserCountOutputTypeCountProductCategoryUpdaterArgs
   brandCreator?: boolean | UserCountOutputTypeCountBrandCreatorArgs
   brandUpdater?: boolean | UserCountOutputTypeCountBrandUpdaterArgs
   taxCreator?: boolean | UserCountOutputTypeCountTaxCreatorArgs
@@ -12269,15 +12269,15 @@ export type UserCountOutputTypeCountCustomerUpdaterArgs<ExtArgs extends runtime.
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountCategoryCreatorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CategoryWhereInput
+export type UserCountOutputTypeCountProductCategoryCreatorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProductCategoryWhereInput
 }
 
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountCategoryUpdaterArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CategoryWhereInput
+export type UserCountOutputTypeCountProductCategoryUpdaterArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProductCategoryWhereInput
 }
 
 /**
@@ -12421,8 +12421,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   customerGroupUpdater?: boolean | Prisma.User$customerGroupUpdaterArgs<ExtArgs>
   customerCreator?: boolean | Prisma.User$customerCreatorArgs<ExtArgs>
   customerUpdater?: boolean | Prisma.User$customerUpdaterArgs<ExtArgs>
-  categoryCreator?: boolean | Prisma.User$categoryCreatorArgs<ExtArgs>
-  categoryUpdater?: boolean | Prisma.User$categoryUpdaterArgs<ExtArgs>
+  productCategoryCreator?: boolean | Prisma.User$productCategoryCreatorArgs<ExtArgs>
+  productCategoryUpdater?: boolean | Prisma.User$productCategoryUpdaterArgs<ExtArgs>
   brandCreator?: boolean | Prisma.User$brandCreatorArgs<ExtArgs>
   brandUpdater?: boolean | Prisma.User$brandUpdaterArgs<ExtArgs>
   taxCreator?: boolean | Prisma.User$taxCreatorArgs<ExtArgs>
@@ -12488,8 +12488,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   customerGroupUpdater?: boolean | Prisma.User$customerGroupUpdaterArgs<ExtArgs>
   customerCreator?: boolean | Prisma.User$customerCreatorArgs<ExtArgs>
   customerUpdater?: boolean | Prisma.User$customerUpdaterArgs<ExtArgs>
-  categoryCreator?: boolean | Prisma.User$categoryCreatorArgs<ExtArgs>
-  categoryUpdater?: boolean | Prisma.User$categoryUpdaterArgs<ExtArgs>
+  productCategoryCreator?: boolean | Prisma.User$productCategoryCreatorArgs<ExtArgs>
+  productCategoryUpdater?: boolean | Prisma.User$productCategoryUpdaterArgs<ExtArgs>
   brandCreator?: boolean | Prisma.User$brandCreatorArgs<ExtArgs>
   brandUpdater?: boolean | Prisma.User$brandUpdaterArgs<ExtArgs>
   taxCreator?: boolean | Prisma.User$taxCreatorArgs<ExtArgs>
@@ -12537,8 +12537,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     customerGroupUpdater: Prisma.$CustomerGroupPayload<ExtArgs>[]
     customerCreator: Prisma.$CustomerPayload<ExtArgs>[]
     customerUpdater: Prisma.$CustomerPayload<ExtArgs>[]
-    categoryCreator: Prisma.$CategoryPayload<ExtArgs>[]
-    categoryUpdater: Prisma.$CategoryPayload<ExtArgs>[]
+    productCategoryCreator: Prisma.$ProductCategoryPayload<ExtArgs>[]
+    productCategoryUpdater: Prisma.$ProductCategoryPayload<ExtArgs>[]
     brandCreator: Prisma.$BrandPayload<ExtArgs>[]
     brandUpdater: Prisma.$BrandPayload<ExtArgs>[]
     taxCreator: Prisma.$TaxPayload<ExtArgs>[]
@@ -12936,8 +12936,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   customerGroupUpdater<T extends Prisma.User$customerGroupUpdaterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$customerGroupUpdaterArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   customerCreator<T extends Prisma.User$customerCreatorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$customerCreatorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   customerUpdater<T extends Prisma.User$customerUpdaterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$customerUpdaterArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  categoryCreator<T extends Prisma.User$categoryCreatorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$categoryCreatorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  categoryUpdater<T extends Prisma.User$categoryUpdaterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$categoryUpdaterArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  productCategoryCreator<T extends Prisma.User$productCategoryCreatorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$productCategoryCreatorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  productCategoryUpdater<T extends Prisma.User$productCategoryUpdaterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$productCategoryUpdaterArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   brandCreator<T extends Prisma.User$brandCreatorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$brandCreatorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   brandUpdater<T extends Prisma.User$brandUpdaterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$brandUpdaterArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BrandPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   taxCreator<T extends Prisma.User$taxCreatorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taxCreatorArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaxPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -13933,51 +13933,51 @@ export type User$customerUpdaterArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
- * User.categoryCreator
+ * User.productCategoryCreator
  */
-export type User$categoryCreatorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$productCategoryCreatorArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Category
+   * Select specific fields to fetch from the ProductCategory
    */
-  select?: Prisma.CategorySelect<ExtArgs> | null
+  select?: Prisma.ProductCategorySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Category
+   * Omit specific fields from the ProductCategory
    */
-  omit?: Prisma.CategoryOmit<ExtArgs> | null
+  omit?: Prisma.ProductCategoryOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CategoryInclude<ExtArgs> | null
-  where?: Prisma.CategoryWhereInput
-  orderBy?: Prisma.CategoryOrderByWithRelationInput | Prisma.CategoryOrderByWithRelationInput[]
-  cursor?: Prisma.CategoryWhereUniqueInput
+  include?: Prisma.ProductCategoryInclude<ExtArgs> | null
+  where?: Prisma.ProductCategoryWhereInput
+  orderBy?: Prisma.ProductCategoryOrderByWithRelationInput | Prisma.ProductCategoryOrderByWithRelationInput[]
+  cursor?: Prisma.ProductCategoryWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.CategoryScalarFieldEnum | Prisma.CategoryScalarFieldEnum[]
+  distinct?: Prisma.ProductCategoryScalarFieldEnum | Prisma.ProductCategoryScalarFieldEnum[]
 }
 
 /**
- * User.categoryUpdater
+ * User.productCategoryUpdater
  */
-export type User$categoryUpdaterArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$productCategoryUpdaterArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Category
+   * Select specific fields to fetch from the ProductCategory
    */
-  select?: Prisma.CategorySelect<ExtArgs> | null
+  select?: Prisma.ProductCategorySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Category
+   * Omit specific fields from the ProductCategory
    */
-  omit?: Prisma.CategoryOmit<ExtArgs> | null
+  omit?: Prisma.ProductCategoryOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CategoryInclude<ExtArgs> | null
-  where?: Prisma.CategoryWhereInput
-  orderBy?: Prisma.CategoryOrderByWithRelationInput | Prisma.CategoryOrderByWithRelationInput[]
-  cursor?: Prisma.CategoryWhereUniqueInput
+  include?: Prisma.ProductCategoryInclude<ExtArgs> | null
+  where?: Prisma.ProductCategoryWhereInput
+  orderBy?: Prisma.ProductCategoryOrderByWithRelationInput | Prisma.ProductCategoryOrderByWithRelationInput[]
+  cursor?: Prisma.ProductCategoryWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.CategoryScalarFieldEnum | Prisma.CategoryScalarFieldEnum[]
+  distinct?: Prisma.ProductCategoryScalarFieldEnum | Prisma.ProductCategoryScalarFieldEnum[]
 }
 
 /**

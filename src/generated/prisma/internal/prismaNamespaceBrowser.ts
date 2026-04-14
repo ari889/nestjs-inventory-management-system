@@ -69,7 +69,7 @@ export const ModelName = {
   Expense: 'Expense',
   CustomerGroup: 'CustomerGroup',
   Customer: 'Customer',
-  Category: 'Category',
+  ProductCategory: 'ProductCategory',
   Brand: 'Brand',
   Tax: 'Tax',
   Unit: 'Unit',
@@ -202,7 +202,9 @@ export const HrmSettingScalarFieldEnum = {
   checkIn: 'checkIn',
   checkOut: 'checkOut',
   createdBy: 'createdBy',
-  updatedBy: 'updatedBy'
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type HrmSettingScalarFieldEnum = (typeof HrmSettingScalarFieldEnum)[keyof typeof HrmSettingScalarFieldEnum]
@@ -373,7 +375,7 @@ export const CustomerScalarFieldEnum = {
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
 
 
-export const CategoryScalarFieldEnum = {
+export const ProductCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   status: 'status',
@@ -383,7 +385,7 @@ export const CategoryScalarFieldEnum = {
   updatedAt: 'updatedAt'
 } as const
 
-export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+export type ProductCategoryScalarFieldEnum = (typeof ProductCategoryScalarFieldEnum)[keyof typeof ProductCategoryScalarFieldEnum]
 
 
 export const BrandScalarFieldEnum = {
@@ -744,11 +746,11 @@ export const CustomerOrderByRelevanceFieldEnum = {
 export type CustomerOrderByRelevanceFieldEnum = (typeof CustomerOrderByRelevanceFieldEnum)[keyof typeof CustomerOrderByRelevanceFieldEnum]
 
 
-export const CategoryOrderByRelevanceFieldEnum = {
+export const ProductCategoryOrderByRelevanceFieldEnum = {
   name: 'name'
 } as const
 
-export type CategoryOrderByRelevanceFieldEnum = (typeof CategoryOrderByRelevanceFieldEnum)[keyof typeof CategoryOrderByRelevanceFieldEnum]
+export type ProductCategoryOrderByRelevanceFieldEnum = (typeof ProductCategoryOrderByRelevanceFieldEnum)[keyof typeof ProductCategoryOrderByRelevanceFieldEnum]
 
 
 export const BrandOrderByRelevanceFieldEnum = {

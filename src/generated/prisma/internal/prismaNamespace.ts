@@ -402,7 +402,7 @@ export const ModelName = {
   Expense: 'Expense',
   CustomerGroup: 'CustomerGroup',
   Customer: 'Customer',
-  Category: 'Category',
+  ProductCategory: 'ProductCategory',
   Brand: 'Brand',
   Tax: 'Tax',
   Unit: 'Unit',
@@ -429,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "role" | "user" | "menu" | "module" | "moduleRole" | "permission" | "permissionRole" | "hrmSetting" | "department" | "employee" | "attendance" | "account" | "payroll" | "warehouse" | "expenseCategory" | "expense" | "customerGroup" | "customer" | "category" | "brand" | "tax" | "unit" | "product" | "warehouseProduct" | "supplier" | "purchase" | "purchaseProduct" | "sale" | "saleProduct" | "setting"
+    modelProps: "role" | "user" | "menu" | "module" | "moduleRole" | "permission" | "permissionRole" | "hrmSetting" | "department" | "employee" | "attendance" | "account" | "payroll" | "warehouse" | "expenseCategory" | "expense" | "customerGroup" | "customer" | "productCategory" | "brand" | "tax" | "unit" | "product" | "warehouseProduct" | "supplier" | "purchase" | "purchaseProduct" | "sale" | "saleProduct" | "setting"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1621,69 +1621,69 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Category: {
-      payload: Prisma.$CategoryPayload<ExtArgs>
-      fields: Prisma.CategoryFieldRefs
+    ProductCategory: {
+      payload: Prisma.$ProductCategoryPayload<ExtArgs>
+      fields: Prisma.ProductCategoryFieldRefs
       operations: {
         findUnique: {
-          args: Prisma.CategoryFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload> | null
+          args: Prisma.ProductCategoryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCategoryPayload> | null
         }
         findUniqueOrThrow: {
-          args: Prisma.CategoryFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>
+          args: Prisma.ProductCategoryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCategoryPayload>
         }
         findFirst: {
-          args: Prisma.CategoryFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload> | null
+          args: Prisma.ProductCategoryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCategoryPayload> | null
         }
         findFirstOrThrow: {
-          args: Prisma.CategoryFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>
+          args: Prisma.ProductCategoryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCategoryPayload>
         }
         findMany: {
-          args: Prisma.CategoryFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>[]
+          args: Prisma.ProductCategoryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCategoryPayload>[]
         }
         create: {
-          args: Prisma.CategoryCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>
+          args: Prisma.ProductCategoryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCategoryPayload>
         }
         createMany: {
-          args: Prisma.CategoryCreateManyArgs<ExtArgs>
+          args: Prisma.ProductCategoryCreateManyArgs<ExtArgs>
           result: BatchPayload
         }
         delete: {
-          args: Prisma.CategoryDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>
+          args: Prisma.ProductCategoryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCategoryPayload>
         }
         update: {
-          args: Prisma.CategoryUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>
+          args: Prisma.ProductCategoryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCategoryPayload>
         }
         deleteMany: {
-          args: Prisma.CategoryDeleteManyArgs<ExtArgs>
+          args: Prisma.ProductCategoryDeleteManyArgs<ExtArgs>
           result: BatchPayload
         }
         updateMany: {
-          args: Prisma.CategoryUpdateManyArgs<ExtArgs>
+          args: Prisma.ProductCategoryUpdateManyArgs<ExtArgs>
           result: BatchPayload
         }
         upsert: {
-          args: Prisma.CategoryUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$CategoryPayload>
+          args: Prisma.ProductCategoryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProductCategoryPayload>
         }
         aggregate: {
-          args: Prisma.CategoryAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateCategory>
+          args: Prisma.ProductCategoryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProductCategory>
         }
         groupBy: {
-          args: Prisma.CategoryGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.CategoryGroupByOutputType>[]
+          args: Prisma.ProductCategoryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductCategoryGroupByOutputType>[]
         }
         count: {
-          args: Prisma.CategoryCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.CategoryCountAggregateOutputType> | number
+          args: Prisma.ProductCategoryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProductCategoryCountAggregateOutputType> | number
         }
       }
     }
@@ -2555,7 +2555,9 @@ export const HrmSettingScalarFieldEnum = {
   checkIn: 'checkIn',
   checkOut: 'checkOut',
   createdBy: 'createdBy',
-  updatedBy: 'updatedBy'
+  updatedBy: 'updatedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type HrmSettingScalarFieldEnum = (typeof HrmSettingScalarFieldEnum)[keyof typeof HrmSettingScalarFieldEnum]
@@ -2726,7 +2728,7 @@ export const CustomerScalarFieldEnum = {
 export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
 
 
-export const CategoryScalarFieldEnum = {
+export const ProductCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
   status: 'status',
@@ -2736,7 +2738,7 @@ export const CategoryScalarFieldEnum = {
   updatedAt: 'updatedAt'
 } as const
 
-export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
+export type ProductCategoryScalarFieldEnum = (typeof ProductCategoryScalarFieldEnum)[keyof typeof ProductCategoryScalarFieldEnum]
 
 
 export const BrandScalarFieldEnum = {
@@ -3097,11 +3099,11 @@ export const CustomerOrderByRelevanceFieldEnum = {
 export type CustomerOrderByRelevanceFieldEnum = (typeof CustomerOrderByRelevanceFieldEnum)[keyof typeof CustomerOrderByRelevanceFieldEnum]
 
 
-export const CategoryOrderByRelevanceFieldEnum = {
+export const ProductCategoryOrderByRelevanceFieldEnum = {
   name: 'name'
 } as const
 
-export type CategoryOrderByRelevanceFieldEnum = (typeof CategoryOrderByRelevanceFieldEnum)[keyof typeof CategoryOrderByRelevanceFieldEnum]
+export type ProductCategoryOrderByRelevanceFieldEnum = (typeof ProductCategoryOrderByRelevanceFieldEnum)[keyof typeof ProductCategoryOrderByRelevanceFieldEnum]
 
 
 export const BrandOrderByRelevanceFieldEnum = {
@@ -3369,7 +3371,7 @@ export type GlobalOmitConfig = {
   expense?: Prisma.ExpenseOmit
   customerGroup?: Prisma.CustomerGroupOmit
   customer?: Prisma.CustomerOmit
-  category?: Prisma.CategoryOmit
+  productCategory?: Prisma.ProductCategoryOmit
   brand?: Prisma.BrandOmit
   tax?: Prisma.TaxOmit
   unit?: Prisma.UnitOmit

@@ -85,8 +85,8 @@ model User {
   customerCreator Customer[] @relation("CustomerCreatedBy")
   customerUpdater Customer[] @relation("CustomerUpdatedBy")
 
-  categoryCreator Category[] @relation("CategoryCreatedBy")
-  categoryUpdater Category[] @relation("CategoryUpdatedBy")
+  productCategoryCreator ProductCategory[] @relation("ProductCategoryCreatedBy")
+  productCategoryUpdater ProductCategory[] @relation("ProductCategoryUpdatedBy")
 
   brandCreator Brand[] @relation("BrandCreatedBy")
   brandUpdater Brand[] @relation("BrandUpdatedBy")
@@ -379,14 +379,14 @@ model Customer{
   sales Sale[]
 }
 
-model Category{
+model ProductCategory{
   id Int @default(autoincrement()) @id
   name String
   status Boolean @default(true) // true = Active, False = Inactive
   createdBy Int
-  creator   User @relation("CategoryCreatedBy", fields: [createdBy], references: [id])
+  creator   User @relation("ProductCategoryCreatedBy", fields: [createdBy], references: [id])
   updatedBy Int?
-  updater   User? @relation("CategoryUpdatedBy", fields: [updatedBy], references: [id])
+  updater   User? @relation("ProductCategoryUpdatedBy", fields: [updatedBy], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -456,7 +456,7 @@ model Product {
   brandId Int?
   brand Brand? @relation(fields: [brandId], references: [id])
   categoryId Int
-  category Category @relation(fields: [categoryId], references: [id])
+  category ProductCategory @relation(fields: [categoryId], references: [id])
   unitId Int
   unit Unit @relation("ProductBaseUnit", fields: [unitId], references: [id])
   purchaseUnitId Int

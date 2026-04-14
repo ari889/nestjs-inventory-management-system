@@ -105,6 +105,8 @@ CREATE TABLE `HrmSetting` (
     `checkOut` VARCHAR(191) NOT NULL,
     `createdBy` INTEGER NOT NULL,
     `updatedBy` INTEGER NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -166,7 +168,7 @@ CREATE TABLE `Account` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `accountNo` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
-    `initialBalance` DECIMAL(65, 30) NOT NULL,
+    `initialBalance` DECIMAL(10, 2) NOT NULL,
     `note` VARCHAR(191) NULL,
     `status` BOOLEAN NOT NULL DEFAULT true,
     `createdBy` INTEGER NOT NULL,
@@ -182,7 +184,7 @@ CREATE TABLE `Payroll` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `employeeId` INTEGER NOT NULL,
     `accountId` INTEGER NOT NULL,
-    `amount` DECIMAL(65, 30) NOT NULL,
+    `amount` DECIMAL(10, 2) NOT NULL,
     `paymentMethods` ENUM('1', '2', '3') NOT NULL DEFAULT '1',
     `createdBy` INTEGER NOT NULL,
     `updatedBy` INTEGER NULL,
@@ -227,7 +229,7 @@ CREATE TABLE `Expense` (
     `expenseCategoryId` INTEGER NULL,
     `warehouseId` INTEGER NULL,
     `accountId` INTEGER NULL,
-    `amount` DECIMAL(65, 30) NOT NULL,
+    `amount` DECIMAL(10, 2) NOT NULL,
     `note` VARCHAR(191) NULL,
     `status` BOOLEAN NOT NULL DEFAULT true,
     `createdBy` INTEGER NOT NULL,
@@ -276,7 +278,7 @@ CREATE TABLE `Customer` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
-CREATE TABLE `Category` (
+CREATE TABLE `ProductCategory` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `status` BOOLEAN NOT NULL DEFAULT true,
@@ -306,7 +308,7 @@ CREATE TABLE `Brand` (
 CREATE TABLE `Tax` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
-    `rate` DECIMAL(65, 30) NOT NULL,
+    `rate` DECIMAL(10, 2) NOT NULL,
     `status` BOOLEAN NOT NULL DEFAULT true,
     `createdBy` INTEGER NOT NULL,
     `updatedBy` INTEGER NULL,
@@ -324,7 +326,7 @@ CREATE TABLE `Unit` (
     `unitName` VARCHAR(191) NOT NULL,
     `baseUnitId` INTEGER NULL,
     `operator` VARCHAR(191) NOT NULL DEFAULT '*',
-    `operationValue` DECIMAL(10, 2) NOT NULL DEFAULT 1,
+    `operationValue` DECIMAL(10, 2) NOT NULL DEFAULT 1.00,
     `status` BOOLEAN NOT NULL DEFAULT true,
     `createdBy` INTEGER NOT NULL,
     `updatedBy` INTEGER NULL,
@@ -346,8 +348,8 @@ CREATE TABLE `Product` (
     `unitId` INTEGER NOT NULL,
     `purchaseUnitId` INTEGER NOT NULL,
     `saleUnitId` INTEGER NOT NULL,
-    `cost` DECIMAL(65, 30) NOT NULL,
-    `price` DECIMAL(65, 30) NOT NULL,
+    `cost` DECIMAL(10, 2) NOT NULL,
+    `price` DECIMAL(10, 2) NOT NULL,
     `qty` INTEGER NULL,
     `alertQty` INTEGER NULL,
     `taxId` INTEGER NULL,
@@ -407,15 +409,15 @@ CREATE TABLE `Purchase` (
     `warehouseId` INTEGER NULL,
     `item` DOUBLE NOT NULL,
     `totalQty` DOUBLE NOT NULL,
-    `totalDiscount` DECIMAL(65, 30) NOT NULL,
-    `totalTax` DECIMAL(65, 30) NOT NULL,
-    `totalCost` DECIMAL(65, 30) NOT NULL,
-    `orderTaxRate` DECIMAL(65, 30) NULL,
-    `orderTax` DECIMAL(65, 30) NULL,
-    `orderDiscount` DECIMAL(65, 30) NULL,
-    `shippingCost` DECIMAL(65, 30) NULL,
-    `grandTotal` DECIMAL(65, 30) NOT NULL,
-    `paidAmount` DECIMAL(65, 30) NOT NULL,
+    `totalDiscount` DECIMAL(10, 2) NOT NULL,
+    `totalTax` DECIMAL(10, 2) NOT NULL,
+    `totalCost` DECIMAL(10, 2) NOT NULL,
+    `orderTaxRate` DECIMAL(10, 2) NULL,
+    `orderTax` DECIMAL(10, 2) NULL,
+    `orderDiscount` DECIMAL(10, 2) NULL,
+    `shippingCost` DECIMAL(10, 2) NULL,
+    `grandTotal` DECIMAL(10, 2) NOT NULL,
+    `paidAmount` DECIMAL(10, 2) NOT NULL,
     `purchaseStatus` ENUM('1', '2', '3', '4') NOT NULL,
     `paymentStatus` BOOLEAN NOT NULL DEFAULT false,
     `document` VARCHAR(191) NULL,
@@ -435,14 +437,14 @@ CREATE TABLE `PurchaseProduct` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `purchaseId` INTEGER NULL,
     `productId` INTEGER NULL,
-    `qty` DECIMAL(65, 30) NOT NULL,
-    `received` DECIMAL(65, 30) NOT NULL,
+    `qty` DECIMAL(10, 2) NOT NULL,
+    `received` DECIMAL(10, 2) NOT NULL,
     `unitId` INTEGER NOT NULL,
-    `netUnitCost` DECIMAL(65, 30) NOT NULL,
-    `discount` DECIMAL(65, 30) NOT NULL,
-    `taxRate` DECIMAL(65, 30) NOT NULL,
-    `tax` DECIMAL(65, 30) NOT NULL,
-    `total` DECIMAL(65, 30) NOT NULL,
+    `netUnitCost` DECIMAL(10, 2) NOT NULL,
+    `discount` DECIMAL(10, 2) NOT NULL,
+    `taxRate` DECIMAL(10, 2) NOT NULL,
+    `tax` DECIMAL(10, 2) NOT NULL,
+    `total` DECIMAL(10, 2) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -457,15 +459,15 @@ CREATE TABLE `Sale` (
     `warehouseId` INTEGER NULL,
     `item` DOUBLE NOT NULL,
     `totalQty` DOUBLE NOT NULL,
-    `totalDiscount` DECIMAL(65, 30) NOT NULL,
-    `totalTax` DECIMAL(65, 30) NOT NULL,
-    `totalPrice` DECIMAL(65, 30) NOT NULL,
-    `orderTaxRate` DECIMAL(65, 30) NULL,
-    `orderTax` DECIMAL(65, 30) NULL,
-    `orderDiscount` DECIMAL(65, 30) NULL,
-    `shippingCost` DECIMAL(65, 30) NULL,
-    `grandTotal` DECIMAL(65, 30) NOT NULL,
-    `paidAmount` DECIMAL(65, 30) NOT NULL,
+    `totalDiscount` DECIMAL(10, 2) NOT NULL,
+    `totalTax` DECIMAL(10, 2) NOT NULL,
+    `totalPrice` DECIMAL(10, 2) NOT NULL,
+    `orderTaxRate` DECIMAL(10, 2) NULL,
+    `orderTax` DECIMAL(10, 2) NULL,
+    `orderDiscount` DECIMAL(10, 2) NULL,
+    `shippingCost` DECIMAL(10, 2) NULL,
+    `grandTotal` DECIMAL(10, 2) NOT NULL,
+    `paidAmount` DECIMAL(10, 2) NOT NULL,
     `saleStatus` BOOLEAN NOT NULL DEFAULT false,
     `paymentStatus` ENUM('1', '2', '3') NOT NULL,
     `document` VARCHAR(191) NOT NULL,
@@ -485,13 +487,13 @@ CREATE TABLE `SaleProduct` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `saleId` INTEGER NULL,
     `productId` INTEGER NULL,
-    `qty` DECIMAL(65, 30) NOT NULL,
+    `qty` DECIMAL(10, 2) NOT NULL,
     `saleUnitId` INTEGER NOT NULL,
-    `netUnitPrice` DECIMAL(65, 30) NOT NULL,
-    `discount` DECIMAL(65, 30) NOT NULL,
-    `taxRate` DECIMAL(65, 30) NOT NULL,
-    `tax` DECIMAL(65, 30) NOT NULL,
-    `total` DECIMAL(65, 30) NOT NULL,
+    `netUnitPrice` DECIMAL(10, 2) NOT NULL,
+    `discount` DECIMAL(10, 2) NOT NULL,
+    `taxRate` DECIMAL(10, 2) NOT NULL,
+    `tax` DECIMAL(10, 2) NOT NULL,
+    `total` DECIMAL(10, 2) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -629,10 +631,10 @@ ALTER TABLE `Customer` ADD CONSTRAINT `Customer_createdBy_fkey` FOREIGN KEY (`cr
 ALTER TABLE `Customer` ADD CONSTRAINT `Customer_updatedBy_fkey` FOREIGN KEY (`updatedBy`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Category` ADD CONSTRAINT `Category_createdBy_fkey` FOREIGN KEY (`createdBy`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `ProductCategory` ADD CONSTRAINT `ProductCategory_createdBy_fkey` FOREIGN KEY (`createdBy`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Category` ADD CONSTRAINT `Category_updatedBy_fkey` FOREIGN KEY (`updatedBy`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE `ProductCategory` ADD CONSTRAINT `ProductCategory_updatedBy_fkey` FOREIGN KEY (`updatedBy`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Brand` ADD CONSTRAINT `Brand_createdBy_fkey` FOREIGN KEY (`createdBy`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -659,7 +661,7 @@ ALTER TABLE `Unit` ADD CONSTRAINT `Unit_updatedBy_fkey` FOREIGN KEY (`updatedBy`
 ALTER TABLE `Product` ADD CONSTRAINT `Product_brandId_fkey` FOREIGN KEY (`brandId`) REFERENCES `Brand`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Product` ADD CONSTRAINT `Product_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Product` ADD CONSTRAINT `Product_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `ProductCategory`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Product` ADD CONSTRAINT `Product_unitId_fkey` FOREIGN KEY (`unitId`) REFERENCES `Unit`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
