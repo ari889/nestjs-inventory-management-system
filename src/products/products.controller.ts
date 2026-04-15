@@ -74,6 +74,12 @@ export class ProductsController {
     type: Number,
     example: 10,
   })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: Number,
+    example: 10,
+  })
   @ApiOkResponse({
     description: 'Product fetched success response!',
     schema: {
@@ -183,12 +189,14 @@ export class ProductsController {
       new ParseEnumPipe(SortDirection),
     )
     direction: string = 'desc',
+    @Query('search') search?: string,
   ) {
     const data = await this.productsService.findAll({
       page,
       limit,
       order,
       direction,
+      search,
     });
     return {
       success: true,
