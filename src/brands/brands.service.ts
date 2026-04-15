@@ -29,14 +29,24 @@ export class BrandsService {
     limit,
     order,
     direction,
+    search = '',
   }: {
     page: number;
     limit: number;
     order: string;
     direction: string;
+    search?: string;
   }): Promise<{ items: Brand[]; totalItems: number }> {
+    const where = search
+      ? {
+          title: {
+            contains: search,
+          },
+        }
+      : {};
     const [items, totalItems] = await Promise.all([
       this.prisma.brand.findMany({
+        where,
         skip: page * limit,
         take: limit,
         orderBy: {
@@ -51,7 +61,7 @@ export class BrandsService {
           },
         },
       }),
-      this.prisma.brand.count(),
+      this.prisma.brand.count({ where }),
     ]);
     return {
       items,

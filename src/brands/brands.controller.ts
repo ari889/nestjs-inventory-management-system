@@ -48,6 +48,7 @@ export class BrandsController {
    * @param limit
    * @param order
    * @param direction
+   * @param search
    * @returns Brands
    */
   @ApiQuery({
@@ -73,15 +74,21 @@ export class BrandsController {
     type: Number,
     example: 10,
   })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    example: "Brand's name",
+  })
   @ApiOkResponse({
-    description: 'Warehouses fetched success response!',
+    description: 'Brands fetched success response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Warehouses fetched successfully!',
+          example: 'Brands fetched successfully!',
         },
         data: {
           type: 'object',
@@ -125,12 +132,14 @@ export class BrandsController {
       new ParseEnumPipe(SortDirection),
     )
     direction: string = 'desc',
+    @Query('search') search?: string,
   ) {
     const data = await this.brandsService.findAll({
       page,
       limit,
       order,
       direction,
+      search,
     });
     return {
       success: true,
@@ -145,14 +154,14 @@ export class BrandsController {
    * @returns Brand
    */
   @ApiOkResponse({
-    description: 'Customer group fetched successful response!',
+    description: 'Brand fetched successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Customer group fetched successfully!',
+          example: 'Brand fetched successfully!',
         },
         data: {
           type: 'object',
@@ -286,7 +295,7 @@ export class BrandsController {
    * @returns Brand
    */
   @ApiOkResponse({
-    description: 'Customer group update generated response!',
+    description: 'Brand update generated response!',
     schema: {
       type: 'object',
       properties: {

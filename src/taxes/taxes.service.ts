@@ -17,14 +17,24 @@ export class TaxesService {
     limit,
     order,
     direction,
+    search = '',
   }: {
     page: number;
     limit: number;
     order: string;
     direction: string;
+    search?: string;
   }): Promise<{ items: Tax[]; totalItems: number }> {
+    const where = search
+      ? {
+          name: {
+            contains: search,
+          },
+        }
+      : {};
     const [items, totalItems] = await Promise.all([
       this.prisma.tax.findMany({
+        where,
         skip: page * limit,
         take: limit,
         orderBy: {
@@ -39,7 +49,7 @@ export class TaxesService {
           },
         },
       }),
-      this.prisma.tax.count(),
+      this.prisma.tax.count({ where }),
     ]);
     return {
       items,

@@ -66,15 +66,21 @@ export class TaxesController {
     type: Number,
     example: 10,
   })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    example: 'Tax 10%',
+  })
   @ApiOkResponse({
-    description: 'Customer groups fetched success response!',
+    description: 'Taxes fetched success response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Customer groups fetched successfully!',
+          example: 'Taxes fetched successfully!',
         },
         data: {
           type: 'object',
@@ -118,12 +124,14 @@ export class TaxesController {
       new ParseEnumPipe(SortDirection),
     )
     direction: string = 'desc',
+    @Query('search') search?: string,
   ) {
     const data = await this.taxesService.findAll({
       page,
       limit,
       order,
       direction,
+      search,
     });
     return {
       success: true,
