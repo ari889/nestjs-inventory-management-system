@@ -98,6 +98,49 @@ export class PurchasesService {
             name: true,
           },
         },
+        supplier: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        warehouse: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        tax: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        purchaseProducts: {
+          include: {
+            productTax: {
+              select: {
+                id: true,
+                name: true,
+                rate: true,
+              },
+            },
+            unit: {
+              select: {
+                id: true,
+                unitName: true,
+              },
+            },
+            product: {
+              select: {
+                id: true,
+                name: true,
+                code: true,
+                price: true,
+              },
+            },
+          },
+        },
       },
     });
     if (!purchase) throw new NotFoundException('Purchase not found.');
@@ -129,9 +172,6 @@ export class PurchasesService {
         documentUrl = await saveFile(document, 'purchases');
       }
 
-      // =========================
-      // SAFE TOTAL CALCULATIONS
-      // =========================
       const totalDiscount = dto.products.reduce(
         (sum, p) => sum + Number(p.discount || 0),
         0,
@@ -172,6 +212,7 @@ export class PurchasesService {
           data: {
             supplierId: dto.supplierId,
             warehouseId: dto.warehouseId,
+            taxId: dto.taxId ?? null,
             purchaseStatus: dto.purchaseStatus,
 
             item,
@@ -203,9 +244,10 @@ export class PurchasesService {
               create: dto.products.map((p) => ({
                 productId: p.productId,
                 unitId: p.unitId,
+                taxId: p.taxId ?? null,
 
-                qty: new Prisma.Decimal(p.qty || 0),
-                received: new Prisma.Decimal(p.received || 0),
+                qty: Number(p.qty || 0),
+                received: Number(p.received || 0),
 
                 netUnitCost: new Prisma.Decimal(p.netUnitCost || 0),
                 discount: new Prisma.Decimal(p.discount || 0),
@@ -280,6 +322,7 @@ export class PurchasesService {
         return purchase;
       });
     } catch (error: unknown) {
+      console.log(error);
       if (error instanceof NotFoundException) throw error;
       if (error instanceof BadRequestException) throw error;
 
@@ -330,12 +373,40 @@ export class PurchasesService {
         );
       }
 
-      const incomingProductIds = dto.products
-        .map((p) => p.productId)
-        .filter(
-          (productId): productId is number =>
-            productId !== null && productId !== undefined,
-        );
+      const totalDiscount = dto.products.reduce(
+        (sum, p) => sum + Number(p.discount || 0),
+        0,
+      );
+
+      const totalTax = dto.products.reduce(
+        (sum, p) => sum + Number(p.tax || 0),
+        0,
+      );
+
+      const totalCost = dto.products.reduce(
+        (sum, p) => sum + Number(p.netUnitCost || 0) * Number(p.qty || 0),
+        0,
+      );
+
+      const item = dto.products.length;
+
+      const totalQty = dto.products.reduce(
+        (sum, p) => sum + Number(p.qty || 0),
+        0,
+      );
+
+      const orderTaxRate = Number(dto.orderTaxRate || 0);
+      const orderTax = Number(dto.orderTax || 0);
+      const orderDiscount = Number(dto.orderDiscount || 0);
+      const shippingCost = Number(dto.shippingCost || 0);
+
+      const grandTotal =
+        totalCost -
+        totalDiscount +
+        totalTax -
+        orderDiscount +
+        orderTax +
+        shippingCost;
 
       return await this.prisma.$transaction(async (tx) => {
         await Promise.all(
@@ -361,11 +432,11 @@ export class PurchasesService {
                     new Prisma.Decimal(unit.operationValue),
                   );
 
-            const oldRoundedQty = Math.round(oldReceivedQty.toNumber());
+            const oldQtyValue = Math.round(oldReceivedQty.toNumber());
 
             await tx.product.update({
               where: { id: oldProduct.productId },
-              data: { qty: { decrement: oldRoundedQty } },
+              data: { qty: { decrement: oldQtyValue } },
             });
 
             const warehouseProduct = await tx.warehouseProduct.findFirst({
@@ -379,7 +450,7 @@ export class PurchasesService {
             if (warehouseProduct) {
               await tx.warehouseProduct.update({
                 where: { id: warehouseProduct.id },
-                data: { qty: { decrement: oldRoundedQty } },
+                data: { qty: { decrement: oldQtyValue } },
               });
             }
           }),
@@ -388,7 +459,113 @@ export class PurchasesService {
         await tx.purchaseProduct.deleteMany({
           where: {
             purchaseId: id,
-            productId: { notIn: incomingProductIds },
+            id: {
+              notIn:
+                dto.products
+                  .map((p) => p.id)
+                  .filter(
+                    (id): id is number => id !== null && id !== undefined,
+                  ) ?? [],
+            },
+          },
+        });
+
+        const updated = await tx.purchase.update({
+          where: { id },
+          data: {
+            supplierId: dto.supplierId,
+            warehouseId: dto.warehouseId,
+            taxId: dto.taxId ?? null,
+            purchaseStatus: dto.purchaseStatus,
+
+            item,
+            totalQty,
+
+            totalDiscount: new Prisma.Decimal(totalDiscount),
+            totalTax: new Prisma.Decimal(totalTax),
+            totalCost: new Prisma.Decimal(totalCost),
+
+            orderTaxRate: new Prisma.Decimal(orderTaxRate),
+            orderTax: new Prisma.Decimal(orderTax),
+            orderDiscount: new Prisma.Decimal(orderDiscount),
+
+            shippingCost: new Prisma.Decimal(shippingCost),
+            grandTotal: new Prisma.Decimal(grandTotal),
+            paidAmount: new Prisma.Decimal(0),
+
+            note: dto.note,
+            document: documentUrl,
+            updatedBy: updator.id,
+
+            purchaseProducts: {
+              upsert: dto.products
+                .filter((p) => p.id)
+                .map((p) => {
+                  const qty = Number(p.qty || 0);
+                  const cost = Number(p.netUnitCost || 0);
+
+                  return {
+                    where: { id: p.id },
+                    update: {
+                      productId: p.productId,
+                      unitId: p.unitId,
+                      taxId: p.taxId ?? null,
+
+                      qty,
+                      received: Number(p.received || 0),
+
+                      netUnitCost: new Prisma.Decimal(cost),
+                      discount: new Prisma.Decimal(p.discount || 0),
+                      taxRate: new Prisma.Decimal(p.taxRate || 0),
+                      tax: new Prisma.Decimal(p.tax || 0),
+
+                      total: new Prisma.Decimal(qty * cost),
+                    },
+                    create: {
+                      productId: p.productId,
+                      unitId: p.unitId,
+                      taxId: p.taxId ?? null,
+
+                      qty,
+                      received: Number(p.received || 0),
+
+                      netUnitCost: new Prisma.Decimal(cost),
+                      discount: new Prisma.Decimal(p.discount || 0),
+                      taxRate: new Prisma.Decimal(p.taxRate || 0),
+                      tax: new Prisma.Decimal(p.tax || 0),
+
+                      total: new Prisma.Decimal(qty * cost),
+                    },
+                  };
+                }),
+              create: dto.products
+                .filter((p) => !p.id)
+                .map((p) => {
+                  const qty = Number(p.qty || 0);
+                  const cost = Number(p.netUnitCost || 0);
+
+                  return {
+                    productId: p.productId,
+                    unitId: p.unitId,
+                    taxId: p.taxId ?? null,
+
+                    qty,
+                    received: Number(p.received || 0),
+
+                    netUnitCost: new Prisma.Decimal(cost),
+                    discount: new Prisma.Decimal(p.discount || 0),
+                    taxRate: new Prisma.Decimal(p.taxRate || 0),
+                    tax: new Prisma.Decimal(p.tax || 0),
+
+                    total: new Prisma.Decimal(qty * cost),
+                  };
+                }),
+            },
+          },
+
+          include: {
+            creator: { select: { id: true, name: true } },
+            purchaseProducts: true,
           },
         });
 
@@ -411,47 +588,11 @@ export class PurchasesService {
                     new Prisma.Decimal(unit.operationValue),
                   );
 
-            const newRoundedQty = Math.round(newReceivedQty.toNumber());
-
-            const existing = await tx.purchaseProduct.findFirst({
-              where: { purchaseId: id, productId: p.productId },
-              select: { id: true },
-            });
-
-            if (existing) {
-              await tx.purchaseProduct.update({
-                where: { id: existing.id },
-                data: {
-                  unitId: p.unitId,
-                  qty: new Prisma.Decimal(p.qty),
-                  received: new Prisma.Decimal(p.received),
-                  netUnitCost: new Prisma.Decimal(p.netUnitCost),
-                  discount: new Prisma.Decimal(p.discount),
-                  taxRate: new Prisma.Decimal(p.taxRate),
-                  tax: new Prisma.Decimal(p.tax),
-                  total: new Prisma.Decimal(p.total),
-                },
-              });
-            } else {
-              await tx.purchaseProduct.create({
-                data: {
-                  purchaseId: id,
-                  productId: p.productId,
-                  unitId: p.unitId,
-                  qty: new Prisma.Decimal(p.qty),
-                  received: new Prisma.Decimal(p.received),
-                  netUnitCost: new Prisma.Decimal(p.netUnitCost),
-                  discount: new Prisma.Decimal(p.discount),
-                  taxRate: new Prisma.Decimal(p.taxRate),
-                  tax: new Prisma.Decimal(p.tax),
-                  total: new Prisma.Decimal(p.total),
-                },
-              });
-            }
+            const newQtyValue = newReceivedQty.toNumber();
 
             await tx.product.update({
               where: { id: p.productId },
-              data: { qty: { increment: newRoundedQty } },
+              data: { qty: { increment: newQtyValue } },
             });
 
             const warehouseProduct = await tx.warehouseProduct.findFirst({
@@ -465,50 +606,24 @@ export class PurchasesService {
             if (warehouseProduct) {
               await tx.warehouseProduct.update({
                 where: { id: warehouseProduct.id },
-                data: { qty: { increment: newRoundedQty } },
+                data: { qty: { increment: newQtyValue } },
               });
             } else {
               await tx.warehouseProduct.create({
                 data: {
                   warehouseId: dto.warehouseId,
                   productId: p.productId,
-                  qty: newRoundedQty,
+                  qty: newQtyValue,
                 },
               });
             }
           }),
         );
 
-        return tx.purchase.update({
-          where: { id },
-          data: {
-            supplierId: dto.supplierId,
-            warehouseId: dto.warehouseId,
-            purchaseStatus: dto.purchaseStatus,
-            item: dto.item,
-            totalQty: dto.totalQty,
-            totalDiscount: new Prisma.Decimal(dto.totalDiscount),
-            totalTax: new Prisma.Decimal(dto.totalTax),
-            totalCost: new Prisma.Decimal(dto.totalCost),
-            orderTaxRate: new Prisma.Decimal(dto.orderTaxRate),
-            orderTax: new Prisma.Decimal(dto.orderTax),
-            orderDiscount: new Prisma.Decimal(dto.orderDiscount),
-            shippingCost: new Prisma.Decimal(dto.shippingCost),
-            grandTotal: new Prisma.Decimal(dto.grandTotal),
-            paidAmount: new Prisma.Decimal(dto.paidAmount),
-            note: dto.note,
-            paymentStatus: false,
-            status: true,
-            document: documentUrl,
-            updatedBy: updator.id,
-          },
-          include: {
-            creator: { select: { id: true, name: true } },
-            purchaseProducts: true,
-          },
-        });
+        return updated;
       });
     } catch (error: unknown) {
+      console.log(error);
       if (error instanceof NotFoundException) throw error;
       if (error instanceof BadRequestException) throw error;
       throw new InternalServerErrorException('Failed to update Purchase!');
@@ -516,7 +631,7 @@ export class PurchasesService {
   }
 
   /**
-   * Delete a purchase by id
+   * Remove purchase from table
    * @param id
    * @returns Purchase
    */
@@ -563,30 +678,43 @@ export class PurchasesService {
 
           const oldRoundedQty = Math.round(oldReceivedQty.toNumber());
 
+          // Decrement product qty
           await tx.product.update({
             where: { id: oldProduct.productId },
             data: { qty: { decrement: oldRoundedQty } },
           });
 
+          // Find warehouse product
           const warehouseProduct = await tx.warehouseProduct.findFirst({
             where: {
               warehouseId: purchase.warehouseId,
               productId: oldProduct.productId,
             },
-            select: { id: true },
+            select: { id: true, qty: true },
           });
 
           if (warehouseProduct) {
-            await tx.warehouseProduct.update({
-              where: { id: warehouseProduct.id },
-              data: { qty: { decrement: oldRoundedQty } },
-            });
+            const newQty = warehouseProduct.qty - oldRoundedQty;
+
+            if (newQty <= 0) {
+              // Remove warehouse product entry if qty reaches 0
+              await tx.warehouseProduct.delete({
+                where: { id: warehouseProduct.id },
+              });
+            } else {
+              await tx.warehouseProduct.update({
+                where: { id: warehouseProduct.id },
+                data: { qty: { decrement: oldRoundedQty } },
+              });
+            }
           }
         }),
       );
 
+      // Delete purchase products entries
       await tx.purchaseProduct.deleteMany({ where: { purchaseId: id } });
 
+      // Delete the purchase itself
       return tx.purchase.delete({ where: { id } });
     });
 
@@ -596,7 +724,7 @@ export class PurchasesService {
   }
 
   /**
-   * Bulk delete using ids
+   * Bulk delete purchases
    * @param ids
    * @returns { count: number }
    */
@@ -646,32 +774,46 @@ export class PurchasesService {
 
             const oldRoundedQty = Math.round(oldReceivedQty.toNumber());
 
+            // Decrement product qty
             await tx.product.update({
               where: { id: oldProduct.productId },
               data: { qty: { decrement: oldRoundedQty } },
             });
 
+            // Find warehouse product
             const warehouseProduct = await tx.warehouseProduct.findFirst({
               where: {
                 warehouseId: purchase.warehouseId,
                 productId: oldProduct.productId,
               },
-              select: { id: true },
+              select: { id: true, qty: true },
             });
 
             if (warehouseProduct) {
-              await tx.warehouseProduct.update({
-                where: { id: warehouseProduct.id },
-                data: { qty: { decrement: oldRoundedQty } },
-              });
+              const newQty = warehouseProduct.qty - oldRoundedQty;
+
+              if (newQty <= 0) {
+                // Remove warehouse product entry if qty reaches 0
+                await tx.warehouseProduct.delete({
+                  where: { id: warehouseProduct.id },
+                });
+              } else {
+                await tx.warehouseProduct.update({
+                  where: { id: warehouseProduct.id },
+                  data: { qty: { decrement: oldRoundedQty } },
+                });
+              }
             }
           }),
         ),
       );
 
+      // Delete all purchase product entries
       await tx.purchaseProduct.deleteMany({
         where: { purchaseId: { in: ids } },
       });
+
+      // Delete all purchases
       await tx.purchase.deleteMany({ where: { id: { in: ids } } });
     });
 

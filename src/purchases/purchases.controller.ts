@@ -215,7 +215,6 @@ export class PurchasesController {
     @UploadedFiles() files: { document?: MemoryStorageFile[] },
     @Req() req: FastifyRequest,
   ) {
-    console.log({ body });
     const creatorEmail = req?.user?.email;
     const validated = new ZodValidationPipe(PurchaseSchema).transform({
       ...body,
@@ -268,6 +267,7 @@ export class PurchasesController {
     @UploadedFiles() files: { document?: MemoryStorageFile[] },
     @Req() req: FastifyRequest,
   ) {
+    console.log(body);
     const validated = new ZodValidationPipe(PurchaseSchema).transform({
       ...body,
       products:

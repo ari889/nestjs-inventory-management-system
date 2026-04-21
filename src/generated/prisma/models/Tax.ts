@@ -255,6 +255,8 @@ export type TaxWhereInput = {
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updater?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   products?: Prisma.ProductListRelationFilter
+  purchases?: Prisma.PurchaseListRelationFilter
+  purchaseProductTaxes?: Prisma.PurchaseProductListRelationFilter
 }
 
 export type TaxOrderByWithRelationInput = {
@@ -269,6 +271,8 @@ export type TaxOrderByWithRelationInput = {
   creator?: Prisma.UserOrderByWithRelationInput
   updater?: Prisma.UserOrderByWithRelationInput
   products?: Prisma.ProductOrderByRelationAggregateInput
+  purchases?: Prisma.PurchaseOrderByRelationAggregateInput
+  purchaseProductTaxes?: Prisma.PurchaseProductOrderByRelationAggregateInput
   _relevance?: Prisma.TaxOrderByRelevanceInput
 }
 
@@ -287,6 +291,8 @@ export type TaxWhereUniqueInput = Prisma.AtLeast<{
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   updater?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   products?: Prisma.ProductListRelationFilter
+  purchases?: Prisma.PurchaseListRelationFilter
+  purchaseProductTaxes?: Prisma.PurchaseProductListRelationFilter
 }, "id" | "name">
 
 export type TaxOrderByWithAggregationInput = {
@@ -328,6 +334,8 @@ export type TaxCreateInput = {
   creator: Prisma.UserCreateNestedOneWithoutTaxCreatorInput
   updater?: Prisma.UserCreateNestedOneWithoutTaxUpdaterInput
   products?: Prisma.ProductCreateNestedManyWithoutTaxInput
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTaxInput
+  purchaseProductTaxes?: Prisma.PurchaseProductCreateNestedManyWithoutProductTaxInput
 }
 
 export type TaxUncheckedCreateInput = {
@@ -340,6 +348,8 @@ export type TaxUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutTaxInput
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTaxInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutProductTaxInput
 }
 
 export type TaxUpdateInput = {
@@ -351,6 +361,8 @@ export type TaxUpdateInput = {
   creator?: Prisma.UserUpdateOneRequiredWithoutTaxCreatorNestedInput
   updater?: Prisma.UserUpdateOneWithoutTaxUpdaterNestedInput
   products?: Prisma.ProductUpdateManyWithoutTaxNestedInput
+  purchases?: Prisma.PurchaseUpdateManyWithoutTaxNestedInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUpdateManyWithoutProductTaxNestedInput
 }
 
 export type TaxUncheckedUpdateInput = {
@@ -363,6 +375,8 @@ export type TaxUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutTaxNestedInput
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTaxNestedInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUncheckedUpdateManyWithoutProductTaxNestedInput
 }
 
 export type TaxCreateManyInput = {
@@ -563,6 +577,38 @@ export type TaxUpdateOneWithoutProductsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TaxUpdateToOneWithWhereWithoutProductsInput, Prisma.TaxUpdateWithoutProductsInput>, Prisma.TaxUncheckedUpdateWithoutProductsInput>
 }
 
+export type TaxCreateNestedOneWithoutPurchasesInput = {
+  create?: Prisma.XOR<Prisma.TaxCreateWithoutPurchasesInput, Prisma.TaxUncheckedCreateWithoutPurchasesInput>
+  connectOrCreate?: Prisma.TaxCreateOrConnectWithoutPurchasesInput
+  connect?: Prisma.TaxWhereUniqueInput
+}
+
+export type TaxUpdateOneWithoutPurchasesNestedInput = {
+  create?: Prisma.XOR<Prisma.TaxCreateWithoutPurchasesInput, Prisma.TaxUncheckedCreateWithoutPurchasesInput>
+  connectOrCreate?: Prisma.TaxCreateOrConnectWithoutPurchasesInput
+  upsert?: Prisma.TaxUpsertWithoutPurchasesInput
+  disconnect?: Prisma.TaxWhereInput | boolean
+  delete?: Prisma.TaxWhereInput | boolean
+  connect?: Prisma.TaxWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TaxUpdateToOneWithWhereWithoutPurchasesInput, Prisma.TaxUpdateWithoutPurchasesInput>, Prisma.TaxUncheckedUpdateWithoutPurchasesInput>
+}
+
+export type TaxCreateNestedOneWithoutPurchaseProductTaxesInput = {
+  create?: Prisma.XOR<Prisma.TaxCreateWithoutPurchaseProductTaxesInput, Prisma.TaxUncheckedCreateWithoutPurchaseProductTaxesInput>
+  connectOrCreate?: Prisma.TaxCreateOrConnectWithoutPurchaseProductTaxesInput
+  connect?: Prisma.TaxWhereUniqueInput
+}
+
+export type TaxUpdateOneWithoutPurchaseProductTaxesNestedInput = {
+  create?: Prisma.XOR<Prisma.TaxCreateWithoutPurchaseProductTaxesInput, Prisma.TaxUncheckedCreateWithoutPurchaseProductTaxesInput>
+  connectOrCreate?: Prisma.TaxCreateOrConnectWithoutPurchaseProductTaxesInput
+  upsert?: Prisma.TaxUpsertWithoutPurchaseProductTaxesInput
+  disconnect?: Prisma.TaxWhereInput | boolean
+  delete?: Prisma.TaxWhereInput | boolean
+  connect?: Prisma.TaxWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TaxUpdateToOneWithWhereWithoutPurchaseProductTaxesInput, Prisma.TaxUpdateWithoutPurchaseProductTaxesInput>, Prisma.TaxUncheckedUpdateWithoutPurchaseProductTaxesInput>
+}
+
 export type TaxCreateWithoutCreatorInput = {
   name: string
   rate: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -571,6 +617,8 @@ export type TaxCreateWithoutCreatorInput = {
   updatedAt?: Date | string
   updater?: Prisma.UserCreateNestedOneWithoutTaxUpdaterInput
   products?: Prisma.ProductCreateNestedManyWithoutTaxInput
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTaxInput
+  purchaseProductTaxes?: Prisma.PurchaseProductCreateNestedManyWithoutProductTaxInput
 }
 
 export type TaxUncheckedCreateWithoutCreatorInput = {
@@ -582,6 +630,8 @@ export type TaxUncheckedCreateWithoutCreatorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutTaxInput
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTaxInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutProductTaxInput
 }
 
 export type TaxCreateOrConnectWithoutCreatorInput = {
@@ -602,6 +652,8 @@ export type TaxCreateWithoutUpdaterInput = {
   updatedAt?: Date | string
   creator: Prisma.UserCreateNestedOneWithoutTaxCreatorInput
   products?: Prisma.ProductCreateNestedManyWithoutTaxInput
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTaxInput
+  purchaseProductTaxes?: Prisma.PurchaseProductCreateNestedManyWithoutProductTaxInput
 }
 
 export type TaxUncheckedCreateWithoutUpdaterInput = {
@@ -613,6 +665,8 @@ export type TaxUncheckedCreateWithoutUpdaterInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   products?: Prisma.ProductUncheckedCreateNestedManyWithoutTaxInput
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTaxInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutProductTaxInput
 }
 
 export type TaxCreateOrConnectWithoutUpdaterInput = {
@@ -679,6 +733,8 @@ export type TaxCreateWithoutProductsInput = {
   updatedAt?: Date | string
   creator: Prisma.UserCreateNestedOneWithoutTaxCreatorInput
   updater?: Prisma.UserCreateNestedOneWithoutTaxUpdaterInput
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTaxInput
+  purchaseProductTaxes?: Prisma.PurchaseProductCreateNestedManyWithoutProductTaxInput
 }
 
 export type TaxUncheckedCreateWithoutProductsInput = {
@@ -690,6 +746,8 @@ export type TaxUncheckedCreateWithoutProductsInput = {
   updatedBy?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTaxInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutProductTaxInput
 }
 
 export type TaxCreateOrConnectWithoutProductsInput = {
@@ -716,6 +774,8 @@ export type TaxUpdateWithoutProductsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creator?: Prisma.UserUpdateOneRequiredWithoutTaxCreatorNestedInput
   updater?: Prisma.UserUpdateOneWithoutTaxUpdaterNestedInput
+  purchases?: Prisma.PurchaseUpdateManyWithoutTaxNestedInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUpdateManyWithoutProductTaxNestedInput
 }
 
 export type TaxUncheckedUpdateWithoutProductsInput = {
@@ -727,6 +787,140 @@ export type TaxUncheckedUpdateWithoutProductsInput = {
   updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTaxNestedInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUncheckedUpdateManyWithoutProductTaxNestedInput
+}
+
+export type TaxCreateWithoutPurchasesInput = {
+  name: string
+  rate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  creator: Prisma.UserCreateNestedOneWithoutTaxCreatorInput
+  updater?: Prisma.UserCreateNestedOneWithoutTaxUpdaterInput
+  products?: Prisma.ProductCreateNestedManyWithoutTaxInput
+  purchaseProductTaxes?: Prisma.PurchaseProductCreateNestedManyWithoutProductTaxInput
+}
+
+export type TaxUncheckedCreateWithoutPurchasesInput = {
+  id?: number
+  name: string
+  rate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: boolean
+  createdBy: number
+  updatedBy?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutTaxInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutProductTaxInput
+}
+
+export type TaxCreateOrConnectWithoutPurchasesInput = {
+  where: Prisma.TaxWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaxCreateWithoutPurchasesInput, Prisma.TaxUncheckedCreateWithoutPurchasesInput>
+}
+
+export type TaxUpsertWithoutPurchasesInput = {
+  update: Prisma.XOR<Prisma.TaxUpdateWithoutPurchasesInput, Prisma.TaxUncheckedUpdateWithoutPurchasesInput>
+  create: Prisma.XOR<Prisma.TaxCreateWithoutPurchasesInput, Prisma.TaxUncheckedCreateWithoutPurchasesInput>
+  where?: Prisma.TaxWhereInput
+}
+
+export type TaxUpdateToOneWithWhereWithoutPurchasesInput = {
+  where?: Prisma.TaxWhereInput
+  data: Prisma.XOR<Prisma.TaxUpdateWithoutPurchasesInput, Prisma.TaxUncheckedUpdateWithoutPurchasesInput>
+}
+
+export type TaxUpdateWithoutPurchasesInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creator?: Prisma.UserUpdateOneRequiredWithoutTaxCreatorNestedInput
+  updater?: Prisma.UserUpdateOneWithoutTaxUpdaterNestedInput
+  products?: Prisma.ProductUpdateManyWithoutTaxNestedInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUpdateManyWithoutProductTaxNestedInput
+}
+
+export type TaxUncheckedUpdateWithoutPurchasesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdBy?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  products?: Prisma.ProductUncheckedUpdateManyWithoutTaxNestedInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUncheckedUpdateManyWithoutProductTaxNestedInput
+}
+
+export type TaxCreateWithoutPurchaseProductTaxesInput = {
+  name: string
+  rate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  creator: Prisma.UserCreateNestedOneWithoutTaxCreatorInput
+  updater?: Prisma.UserCreateNestedOneWithoutTaxUpdaterInput
+  products?: Prisma.ProductCreateNestedManyWithoutTaxInput
+  purchases?: Prisma.PurchaseCreateNestedManyWithoutTaxInput
+}
+
+export type TaxUncheckedCreateWithoutPurchaseProductTaxesInput = {
+  id?: number
+  name: string
+  rate: runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: boolean
+  createdBy: number
+  updatedBy?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  products?: Prisma.ProductUncheckedCreateNestedManyWithoutTaxInput
+  purchases?: Prisma.PurchaseUncheckedCreateNestedManyWithoutTaxInput
+}
+
+export type TaxCreateOrConnectWithoutPurchaseProductTaxesInput = {
+  where: Prisma.TaxWhereUniqueInput
+  create: Prisma.XOR<Prisma.TaxCreateWithoutPurchaseProductTaxesInput, Prisma.TaxUncheckedCreateWithoutPurchaseProductTaxesInput>
+}
+
+export type TaxUpsertWithoutPurchaseProductTaxesInput = {
+  update: Prisma.XOR<Prisma.TaxUpdateWithoutPurchaseProductTaxesInput, Prisma.TaxUncheckedUpdateWithoutPurchaseProductTaxesInput>
+  create: Prisma.XOR<Prisma.TaxCreateWithoutPurchaseProductTaxesInput, Prisma.TaxUncheckedCreateWithoutPurchaseProductTaxesInput>
+  where?: Prisma.TaxWhereInput
+}
+
+export type TaxUpdateToOneWithWhereWithoutPurchaseProductTaxesInput = {
+  where?: Prisma.TaxWhereInput
+  data: Prisma.XOR<Prisma.TaxUpdateWithoutPurchaseProductTaxesInput, Prisma.TaxUncheckedUpdateWithoutPurchaseProductTaxesInput>
+}
+
+export type TaxUpdateWithoutPurchaseProductTaxesInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creator?: Prisma.UserUpdateOneRequiredWithoutTaxCreatorNestedInput
+  updater?: Prisma.UserUpdateOneWithoutTaxUpdaterNestedInput
+  products?: Prisma.ProductUpdateManyWithoutTaxNestedInput
+  purchases?: Prisma.PurchaseUpdateManyWithoutTaxNestedInput
+}
+
+export type TaxUncheckedUpdateWithoutPurchaseProductTaxesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  rate?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdBy?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  products?: Prisma.ProductUncheckedUpdateManyWithoutTaxNestedInput
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTaxNestedInput
 }
 
 export type TaxCreateManyCreatorInput = {
@@ -757,6 +951,8 @@ export type TaxUpdateWithoutCreatorInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updater?: Prisma.UserUpdateOneWithoutTaxUpdaterNestedInput
   products?: Prisma.ProductUpdateManyWithoutTaxNestedInput
+  purchases?: Prisma.PurchaseUpdateManyWithoutTaxNestedInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUpdateManyWithoutProductTaxNestedInput
 }
 
 export type TaxUncheckedUpdateWithoutCreatorInput = {
@@ -768,6 +964,8 @@ export type TaxUncheckedUpdateWithoutCreatorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutTaxNestedInput
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTaxNestedInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUncheckedUpdateManyWithoutProductTaxNestedInput
 }
 
 export type TaxUncheckedUpdateManyWithoutCreatorInput = {
@@ -788,6 +986,8 @@ export type TaxUpdateWithoutUpdaterInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creator?: Prisma.UserUpdateOneRequiredWithoutTaxCreatorNestedInput
   products?: Prisma.ProductUpdateManyWithoutTaxNestedInput
+  purchases?: Prisma.PurchaseUpdateManyWithoutTaxNestedInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUpdateManyWithoutProductTaxNestedInput
 }
 
 export type TaxUncheckedUpdateWithoutUpdaterInput = {
@@ -799,6 +999,8 @@ export type TaxUncheckedUpdateWithoutUpdaterInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   products?: Prisma.ProductUncheckedUpdateManyWithoutTaxNestedInput
+  purchases?: Prisma.PurchaseUncheckedUpdateManyWithoutTaxNestedInput
+  purchaseProductTaxes?: Prisma.PurchaseProductUncheckedUpdateManyWithoutProductTaxNestedInput
 }
 
 export type TaxUncheckedUpdateManyWithoutUpdaterInput = {
@@ -818,10 +1020,14 @@ export type TaxUncheckedUpdateManyWithoutUpdaterInput = {
 
 export type TaxCountOutputType = {
   products: number
+  purchases: number
+  purchaseProductTaxes: number
 }
 
 export type TaxCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   products?: boolean | TaxCountOutputTypeCountProductsArgs
+  purchases?: boolean | TaxCountOutputTypeCountPurchasesArgs
+  purchaseProductTaxes?: boolean | TaxCountOutputTypeCountPurchaseProductTaxesArgs
 }
 
 /**
@@ -841,6 +1047,20 @@ export type TaxCountOutputTypeCountProductsArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.ProductWhereInput
 }
 
+/**
+ * TaxCountOutputType without action
+ */
+export type TaxCountOutputTypeCountPurchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseWhereInput
+}
+
+/**
+ * TaxCountOutputType without action
+ */
+export type TaxCountOutputTypeCountPurchaseProductTaxesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PurchaseProductWhereInput
+}
+
 
 export type TaxSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -854,6 +1074,8 @@ export type TaxSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updater?: boolean | Prisma.Tax$updaterArgs<ExtArgs>
   products?: boolean | Prisma.Tax$productsArgs<ExtArgs>
+  purchases?: boolean | Prisma.Tax$purchasesArgs<ExtArgs>
+  purchaseProductTaxes?: boolean | Prisma.Tax$purchaseProductTaxesArgs<ExtArgs>
   _count?: boolean | Prisma.TaxCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tax"]>
 
@@ -875,6 +1097,8 @@ export type TaxInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   updater?: boolean | Prisma.Tax$updaterArgs<ExtArgs>
   products?: boolean | Prisma.Tax$productsArgs<ExtArgs>
+  purchases?: boolean | Prisma.Tax$purchasesArgs<ExtArgs>
+  purchaseProductTaxes?: boolean | Prisma.Tax$purchaseProductTaxesArgs<ExtArgs>
   _count?: boolean | Prisma.TaxCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -884,6 +1108,8 @@ export type $TaxPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     creator: Prisma.$UserPayload<ExtArgs>
     updater: Prisma.$UserPayload<ExtArgs> | null
     products: Prisma.$ProductPayload<ExtArgs>[]
+    purchases: Prisma.$PurchasePayload<ExtArgs>[]
+    purchaseProductTaxes: Prisma.$PurchaseProductPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1237,6 +1463,8 @@ export interface Prisma__TaxClient<T, Null = never, ExtArgs extends runtime.Type
   creator<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   updater<T extends Prisma.Tax$updaterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tax$updaterArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   products<T extends Prisma.Tax$productsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tax$productsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  purchases<T extends Prisma.Tax$purchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tax$purchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  purchaseProductTaxes<T extends Prisma.Tax$purchaseProductTaxesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tax$purchaseProductTaxesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PurchaseProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1657,6 +1885,54 @@ export type Tax$productsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.ProductScalarFieldEnum | Prisma.ProductScalarFieldEnum[]
+}
+
+/**
+ * Tax.purchases
+ */
+export type Tax$purchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Purchase
+   */
+  select?: Prisma.PurchaseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Purchase
+   */
+  omit?: Prisma.PurchaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseInclude<ExtArgs> | null
+  where?: Prisma.PurchaseWhereInput
+  orderBy?: Prisma.PurchaseOrderByWithRelationInput | Prisma.PurchaseOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseScalarFieldEnum | Prisma.PurchaseScalarFieldEnum[]
+}
+
+/**
+ * Tax.purchaseProductTaxes
+ */
+export type Tax$purchaseProductTaxesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PurchaseProduct
+   */
+  select?: Prisma.PurchaseProductSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PurchaseProduct
+   */
+  omit?: Prisma.PurchaseProductOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PurchaseProductInclude<ExtArgs> | null
+  where?: Prisma.PurchaseProductWhereInput
+  orderBy?: Prisma.PurchaseProductOrderByWithRelationInput | Prisma.PurchaseProductOrderByWithRelationInput[]
+  cursor?: Prisma.PurchaseProductWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PurchaseProductScalarFieldEnum | Prisma.PurchaseProductScalarFieldEnum[]
 }
 
 /**

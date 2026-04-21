@@ -14,6 +14,9 @@ export class ProductDto {
   })
   unitId!: number;
 
+  @ApiPropertyOptional({ example: 1, description: 'Tax ID' })
+  taxId?: number | null;
+
   @ApiProperty({
     example: 1,
     description: 'Quantity',
@@ -77,6 +80,13 @@ export class CreatePurchaseDto {
     description: 'Warehouse ID',
   })
   warehouseId!: number;
+
+  @ApiProperty({
+    example: 1,
+    required: false,
+    description: 'Tax ID',
+  })
+  taxId?: number;
 
   @ApiProperty({
     example: 'RECEIVED',

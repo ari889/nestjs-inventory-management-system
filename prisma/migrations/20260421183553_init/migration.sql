@@ -418,6 +418,7 @@ CREATE TABLE `Purchase` (
     `shippingCost` DECIMAL(10, 2) NULL,
     `grandTotal` DECIMAL(10, 2) NOT NULL,
     `paidAmount` DECIMAL(10, 2) NOT NULL,
+    `taxId` INTEGER NULL,
     `purchaseStatus` ENUM('1', '2', '3', '4') NOT NULL,
     `paymentStatus` BOOLEAN NOT NULL DEFAULT false,
     `document` VARCHAR(191) NULL,
@@ -437,9 +438,10 @@ CREATE TABLE `PurchaseProduct` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `purchaseId` INTEGER NULL,
     `productId` INTEGER NULL,
-    `qty` DECIMAL(10, 2) NOT NULL,
-    `received` DECIMAL(10, 2) NOT NULL,
+    `qty` INTEGER NOT NULL,
+    `received` INTEGER NOT NULL,
     `unitId` INTEGER NOT NULL,
+    `taxId` INTEGER NULL,
     `netUnitCost` DECIMAL(10, 2) NOT NULL,
     `discount` DECIMAL(10, 2) NOT NULL,
     `taxRate` DECIMAL(10, 2) NOT NULL,
@@ -487,7 +489,7 @@ CREATE TABLE `SaleProduct` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `saleId` INTEGER NULL,
     `productId` INTEGER NULL,
-    `qty` DECIMAL(10, 2) NOT NULL,
+    `qty` INTEGER NOT NULL,
     `saleUnitId` INTEGER NOT NULL,
     `netUnitPrice` DECIMAL(10, 2) NOT NULL,
     `discount` DECIMAL(10, 2) NOT NULL,
@@ -700,6 +702,9 @@ ALTER TABLE `Purchase` ADD CONSTRAINT `Purchase_supplierId_fkey` FOREIGN KEY (`s
 ALTER TABLE `Purchase` ADD CONSTRAINT `Purchase_warehouseId_fkey` FOREIGN KEY (`warehouseId`) REFERENCES `Warehouse`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Purchase` ADD CONSTRAINT `Purchase_taxId_fkey` FOREIGN KEY (`taxId`) REFERENCES `Tax`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Purchase` ADD CONSTRAINT `Purchase_createdBy_fkey` FOREIGN KEY (`createdBy`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -713,6 +718,9 @@ ALTER TABLE `PurchaseProduct` ADD CONSTRAINT `PurchaseProduct_productId_fkey` FO
 
 -- AddForeignKey
 ALTER TABLE `PurchaseProduct` ADD CONSTRAINT `PurchaseProduct_unitId_fkey` FOREIGN KEY (`unitId`) REFERENCES `Unit`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `PurchaseProduct` ADD CONSTRAINT `PurchaseProduct_taxId_fkey` FOREIGN KEY (`taxId`) REFERENCES `Tax`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Sale` ADD CONSTRAINT `Sale_customerId_fkey` FOREIGN KEY (`customerId`) REFERENCES `Customer`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

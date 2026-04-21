@@ -22,9 +22,10 @@ const decimalString = (fieldName: string) =>
     });
 
 const productSchema = z.object({
-  id: z.number({ message: 'Select a product!' }).int().positive(),
+  id: z.number({ message: 'Select a product!' }).int().positive().nullable(),
   productId: z.number({ message: 'Product ID is required!' }).int().positive(),
   unitId: z.number({ message: 'Select a unit!' }).int().positive(),
+  taxId: z.number({ message: 'Select a tax!' }).int().positive().nullable(),
   qty: z.coerce.number({ message: 'Quantity is required!' }).int().positive(),
   received: z.coerce
     .number({ message: 'Received is required!' })
@@ -48,6 +49,8 @@ export const PurchaseSchema = z.object({
     .int()
     .positive(),
 
+  taxId: z.coerce.number().int().positive().optional().nullable(),
+
   orderTax: z
     .string({
       message: 'Order tax is required!',
@@ -61,7 +64,7 @@ export const PurchaseSchema = z.object({
     .optional()
     .nullable(),
 
-  orderTaxRate: z.string('Order Tax Rate is required!'),
+  orderTaxRate: z.string('Order Tax Rate is required!').optional().nullable(),
 
   orderDiscount: z
     .string({

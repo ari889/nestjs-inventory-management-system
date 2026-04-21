@@ -421,6 +421,8 @@ model Tax {
   updatedAt DateTime @updatedAt
 
   products Product[]
+  purchases Purchase[]
+  purchaseProductTaxes PurchaseProduct[]
 }
 
 model Unit {
@@ -544,6 +546,8 @@ model Purchase {
   shippingCost Decimal? @db.Decimal(10, 2)
   grandTotal Decimal @db.Decimal(10, 2)
   paidAmount Decimal @db.Decimal(10, 2)
+  taxId Int?
+  tax Tax? @relation(fields: [taxId], references: [id])
   purchaseStatus PurchaseStatus
   paymentStatus Boolean @default(false) // true = Paid, False = Due
   document String?
@@ -569,6 +573,8 @@ model PurchaseProduct {
   received Int
   unitId Int
   unit Unit @relation(fields: [unitId], references: [id])
+  taxId Int?
+  productTax Tax? @relation(fields: [taxId], references: [id])
   netUnitCost Decimal @db.Decimal(10, 2)
   discount Decimal @db.Decimal(10, 2)
   taxRate Decimal @db.Decimal(10, 2)
