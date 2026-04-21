@@ -22,7 +22,7 @@ export class SuppliersService {
     limit,
     order,
     direction,
-    search,
+    search = '',
   }: {
     page: number;
     limit: number;

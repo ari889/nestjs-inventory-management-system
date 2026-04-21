@@ -77,8 +77,8 @@ export class ProductsController {
   @ApiQuery({
     name: 'search',
     required: false,
-    type: Number,
-    example: 10,
+    type: String,
+    example: 'Product 1',
   })
   @ApiOkResponse({
     description: 'Product fetched success response!',

@@ -144,37 +144,31 @@ export class ModulesService {
    * @param email
    * @returns Module
    */
-  async getModuleByRole(email: string): Promise<ModuleItemDto[]> {
+  async getModuleByRole(email: string): Promise<any[]> {
     const user = await this.userService.findByEmail(email);
     if (!user) throw new NotFoundException('User not found!');
 
-    const isSuperAdmin = user.id === 1;
-
-    const whereFilter = !isSuperAdmin
-      ? { moduleRole: { some: { roleId: user.role.id } } }
-      : {};
+    const isSuperAdmin = user.role?.id === 1;
 
     const modules = await this.prisma.module.findMany({
-      where: whereFilter,
+      where: {
+        parentId: null,
+        ...(!isSuperAdmin && {
+          moduleRole: { some: { roleId: user.role?.id } },
+        }),
+      },
       orderBy: { order: 'asc' },
       include: {
-        permissions: {
-          where: {
-            slug: { endsWith: '-access' }, // ← filter at query level
-            ...(!isSuperAdmin && {
-              permissionRole: { some: { roleId: user.role.id } },
-            }),
-          },
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
+        children: {
+          where: !isSuperAdmin
+            ? { moduleRole: { some: { roleId: user.role?.id } } }
+            : {},
+          orderBy: { order: 'asc' },
         },
       },
     });
 
-    return this.buildTreeWithPermissions(modules);
+    return modules;
   }
 
   /**

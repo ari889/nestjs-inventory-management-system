@@ -156,7 +156,7 @@ const modulesData = [
     id: 4,
     menuId: 1,
     type: false,
-    moduleName: 'List',
+    moduleName: 'Category',
     dividerTitle: null,
     iconClass: 'Plus',
     url: '/admin/products/categories',
@@ -699,11 +699,11 @@ const permissionsData = [
   { moduleId: 7, name: 'Stock Bulk Delete', slug: 'stock-bulk-delete' },
 
   // Purchase
-  { moduleId: 8, name: 'Purchase Access', slug: 'purchase-access' },
-  { moduleId: 8, name: 'Purchase Add', slug: 'purchase-add' },
-  { moduleId: 8, name: 'Purchase Edit', slug: 'purchase-edit' },
-  { moduleId: 8, name: 'Purchase Delete', slug: 'purchase-delete' },
-  { moduleId: 8, name: 'Purchase Bulk Delete', slug: 'purchase-bulk-delete' },
+  { moduleId: 10, name: 'Purchase Access', slug: 'purchase-access' },
+  { moduleId: 9, name: 'Purchase Add', slug: 'purchase-add' },
+  { moduleId: 10, name: 'Purchase Edit', slug: 'purchase-edit' },
+  { moduleId: 10, name: 'Purchase Delete', slug: 'purchase-delete' },
+  { moduleId: 10, name: 'Purchase Bulk Delete', slug: 'purchase-bulk-delete' },
 
   // Sale
   { moduleId: 11, name: 'Sale Access', slug: 'sale-access' },

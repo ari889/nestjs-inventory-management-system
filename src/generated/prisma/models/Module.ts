@@ -294,7 +294,7 @@ export type ModuleWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Module"> | Date | string
   menu?: Prisma.XOR<Prisma.MenuScalarRelationFilter, Prisma.MenuWhereInput>
   parent?: Prisma.XOR<Prisma.ModuleNullableScalarRelationFilter, Prisma.ModuleWhereInput> | null
-  parents?: Prisma.ModuleListRelationFilter
+  children?: Prisma.ModuleListRelationFilter
   moduleRole?: Prisma.ModuleRoleListRelationFilter
   permissions?: Prisma.PermissionListRelationFilter
 }
@@ -315,7 +315,7 @@ export type ModuleOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   menu?: Prisma.MenuOrderByWithRelationInput
   parent?: Prisma.ModuleOrderByWithRelationInput
-  parents?: Prisma.ModuleOrderByRelationAggregateInput
+  children?: Prisma.ModuleOrderByRelationAggregateInput
   moduleRole?: Prisma.ModuleRoleOrderByRelationAggregateInput
   permissions?: Prisma.PermissionOrderByRelationAggregateInput
   _relevance?: Prisma.ModuleOrderByRelevanceInput
@@ -340,7 +340,7 @@ export type ModuleWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"Module"> | Date | string
   menu?: Prisma.XOR<Prisma.MenuScalarRelationFilter, Prisma.MenuWhereInput>
   parent?: Prisma.XOR<Prisma.ModuleNullableScalarRelationFilter, Prisma.ModuleWhereInput> | null
-  parents?: Prisma.ModuleListRelationFilter
+  children?: Prisma.ModuleListRelationFilter
   moduleRole?: Prisma.ModuleRoleListRelationFilter
   permissions?: Prisma.PermissionListRelationFilter
 }, "id">
@@ -397,8 +397,8 @@ export type ModuleCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   menu: Prisma.MenuCreateNestedOneWithoutModulesInput
-  parent?: Prisma.ModuleCreateNestedOneWithoutParentsInput
-  parents?: Prisma.ModuleCreateNestedManyWithoutParentInput
+  parent?: Prisma.ModuleCreateNestedOneWithoutChildrenInput
+  children?: Prisma.ModuleCreateNestedManyWithoutParentInput
   moduleRole?: Prisma.ModuleRoleCreateNestedManyWithoutModuleInput
   permissions?: Prisma.PermissionCreateNestedManyWithoutModuleInput
 }
@@ -417,7 +417,7 @@ export type ModuleUncheckedCreateInput = {
   deletable?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  parents?: Prisma.ModuleUncheckedCreateNestedManyWithoutParentInput
+  children?: Prisma.ModuleUncheckedCreateNestedManyWithoutParentInput
   moduleRole?: Prisma.ModuleRoleUncheckedCreateNestedManyWithoutModuleInput
   permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutModuleInput
 }
@@ -434,8 +434,8 @@ export type ModuleUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   menu?: Prisma.MenuUpdateOneRequiredWithoutModulesNestedInput
-  parent?: Prisma.ModuleUpdateOneWithoutParentsNestedInput
-  parents?: Prisma.ModuleUpdateManyWithoutParentNestedInput
+  parent?: Prisma.ModuleUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.ModuleUpdateManyWithoutParentNestedInput
   moduleRole?: Prisma.ModuleRoleUpdateManyWithoutModuleNestedInput
   permissions?: Prisma.PermissionUpdateManyWithoutModuleNestedInput
 }
@@ -454,7 +454,7 @@ export type ModuleUncheckedUpdateInput = {
   deletable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  parents?: Prisma.ModuleUncheckedUpdateManyWithoutParentNestedInput
+  children?: Prisma.ModuleUncheckedUpdateManyWithoutParentNestedInput
   moduleRole?: Prisma.ModuleRoleUncheckedUpdateManyWithoutModuleNestedInput
   permissions?: Prisma.PermissionUncheckedUpdateManyWithoutModuleNestedInput
 }
@@ -634,9 +634,9 @@ export type ModuleUncheckedUpdateManyWithoutMenuNestedInput = {
   deleteMany?: Prisma.ModuleScalarWhereInput | Prisma.ModuleScalarWhereInput[]
 }
 
-export type ModuleCreateNestedOneWithoutParentsInput = {
-  create?: Prisma.XOR<Prisma.ModuleCreateWithoutParentsInput, Prisma.ModuleUncheckedCreateWithoutParentsInput>
-  connectOrCreate?: Prisma.ModuleCreateOrConnectWithoutParentsInput
+export type ModuleCreateNestedOneWithoutChildrenInput = {
+  create?: Prisma.XOR<Prisma.ModuleCreateWithoutChildrenInput, Prisma.ModuleUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.ModuleCreateOrConnectWithoutChildrenInput
   connect?: Prisma.ModuleWhereUniqueInput
 }
 
@@ -658,14 +658,14 @@ export type EnumTargetFieldUpdateOperationsInput = {
   set?: $Enums.Target
 }
 
-export type ModuleUpdateOneWithoutParentsNestedInput = {
-  create?: Prisma.XOR<Prisma.ModuleCreateWithoutParentsInput, Prisma.ModuleUncheckedCreateWithoutParentsInput>
-  connectOrCreate?: Prisma.ModuleCreateOrConnectWithoutParentsInput
-  upsert?: Prisma.ModuleUpsertWithoutParentsInput
+export type ModuleUpdateOneWithoutChildrenNestedInput = {
+  create?: Prisma.XOR<Prisma.ModuleCreateWithoutChildrenInput, Prisma.ModuleUncheckedCreateWithoutChildrenInput>
+  connectOrCreate?: Prisma.ModuleCreateOrConnectWithoutChildrenInput
+  upsert?: Prisma.ModuleUpsertWithoutChildrenInput
   disconnect?: Prisma.ModuleWhereInput | boolean
   delete?: Prisma.ModuleWhereInput | boolean
   connect?: Prisma.ModuleWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ModuleUpdateToOneWithWhereWithoutParentsInput, Prisma.ModuleUpdateWithoutParentsInput>, Prisma.ModuleUncheckedUpdateWithoutParentsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ModuleUpdateToOneWithWhereWithoutChildrenInput, Prisma.ModuleUpdateWithoutChildrenInput>, Prisma.ModuleUncheckedUpdateWithoutChildrenInput>
 }
 
 export type ModuleUpdateManyWithoutParentNestedInput = {
@@ -737,8 +737,8 @@ export type ModuleCreateWithoutMenuInput = {
   deletable?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  parent?: Prisma.ModuleCreateNestedOneWithoutParentsInput
-  parents?: Prisma.ModuleCreateNestedManyWithoutParentInput
+  parent?: Prisma.ModuleCreateNestedOneWithoutChildrenInput
+  children?: Prisma.ModuleCreateNestedManyWithoutParentInput
   moduleRole?: Prisma.ModuleRoleCreateNestedManyWithoutModuleInput
   permissions?: Prisma.PermissionCreateNestedManyWithoutModuleInput
 }
@@ -756,7 +756,7 @@ export type ModuleUncheckedCreateWithoutMenuInput = {
   deletable?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  parents?: Prisma.ModuleUncheckedCreateNestedManyWithoutParentInput
+  children?: Prisma.ModuleUncheckedCreateNestedManyWithoutParentInput
   moduleRole?: Prisma.ModuleRoleUncheckedCreateNestedManyWithoutModuleInput
   permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutModuleInput
 }
@@ -806,7 +806,7 @@ export type ModuleScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Module"> | Date | string
 }
 
-export type ModuleCreateWithoutParentsInput = {
+export type ModuleCreateWithoutChildrenInput = {
   type?: boolean
   moduleName?: string | null
   dividerTitle?: string | null
@@ -818,12 +818,12 @@ export type ModuleCreateWithoutParentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   menu: Prisma.MenuCreateNestedOneWithoutModulesInput
-  parent?: Prisma.ModuleCreateNestedOneWithoutParentsInput
+  parent?: Prisma.ModuleCreateNestedOneWithoutChildrenInput
   moduleRole?: Prisma.ModuleRoleCreateNestedManyWithoutModuleInput
   permissions?: Prisma.PermissionCreateNestedManyWithoutModuleInput
 }
 
-export type ModuleUncheckedCreateWithoutParentsInput = {
+export type ModuleUncheckedCreateWithoutChildrenInput = {
   id?: number
   menuId: number
   type?: boolean
@@ -841,9 +841,9 @@ export type ModuleUncheckedCreateWithoutParentsInput = {
   permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutModuleInput
 }
 
-export type ModuleCreateOrConnectWithoutParentsInput = {
+export type ModuleCreateOrConnectWithoutChildrenInput = {
   where: Prisma.ModuleWhereUniqueInput
-  create: Prisma.XOR<Prisma.ModuleCreateWithoutParentsInput, Prisma.ModuleUncheckedCreateWithoutParentsInput>
+  create: Prisma.XOR<Prisma.ModuleCreateWithoutChildrenInput, Prisma.ModuleUncheckedCreateWithoutChildrenInput>
 }
 
 export type ModuleCreateWithoutParentInput = {
@@ -858,7 +858,7 @@ export type ModuleCreateWithoutParentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   menu: Prisma.MenuCreateNestedOneWithoutModulesInput
-  parents?: Prisma.ModuleCreateNestedManyWithoutParentInput
+  children?: Prisma.ModuleCreateNestedManyWithoutParentInput
   moduleRole?: Prisma.ModuleRoleCreateNestedManyWithoutModuleInput
   permissions?: Prisma.PermissionCreateNestedManyWithoutModuleInput
 }
@@ -876,7 +876,7 @@ export type ModuleUncheckedCreateWithoutParentInput = {
   deletable?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  parents?: Prisma.ModuleUncheckedCreateNestedManyWithoutParentInput
+  children?: Prisma.ModuleUncheckedCreateNestedManyWithoutParentInput
   moduleRole?: Prisma.ModuleRoleUncheckedCreateNestedManyWithoutModuleInput
   permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutModuleInput
 }
@@ -891,18 +891,18 @@ export type ModuleCreateManyParentInputEnvelope = {
   skipDuplicates?: boolean
 }
 
-export type ModuleUpsertWithoutParentsInput = {
-  update: Prisma.XOR<Prisma.ModuleUpdateWithoutParentsInput, Prisma.ModuleUncheckedUpdateWithoutParentsInput>
-  create: Prisma.XOR<Prisma.ModuleCreateWithoutParentsInput, Prisma.ModuleUncheckedCreateWithoutParentsInput>
+export type ModuleUpsertWithoutChildrenInput = {
+  update: Prisma.XOR<Prisma.ModuleUpdateWithoutChildrenInput, Prisma.ModuleUncheckedUpdateWithoutChildrenInput>
+  create: Prisma.XOR<Prisma.ModuleCreateWithoutChildrenInput, Prisma.ModuleUncheckedCreateWithoutChildrenInput>
   where?: Prisma.ModuleWhereInput
 }
 
-export type ModuleUpdateToOneWithWhereWithoutParentsInput = {
+export type ModuleUpdateToOneWithWhereWithoutChildrenInput = {
   where?: Prisma.ModuleWhereInput
-  data: Prisma.XOR<Prisma.ModuleUpdateWithoutParentsInput, Prisma.ModuleUncheckedUpdateWithoutParentsInput>
+  data: Prisma.XOR<Prisma.ModuleUpdateWithoutChildrenInput, Prisma.ModuleUncheckedUpdateWithoutChildrenInput>
 }
 
-export type ModuleUpdateWithoutParentsInput = {
+export type ModuleUpdateWithoutChildrenInput = {
   type?: Prisma.BoolFieldUpdateOperationsInput | boolean
   moduleName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   dividerTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -914,12 +914,12 @@ export type ModuleUpdateWithoutParentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   menu?: Prisma.MenuUpdateOneRequiredWithoutModulesNestedInput
-  parent?: Prisma.ModuleUpdateOneWithoutParentsNestedInput
+  parent?: Prisma.ModuleUpdateOneWithoutChildrenNestedInput
   moduleRole?: Prisma.ModuleRoleUpdateManyWithoutModuleNestedInput
   permissions?: Prisma.PermissionUpdateManyWithoutModuleNestedInput
 }
 
-export type ModuleUncheckedUpdateWithoutParentsInput = {
+export type ModuleUncheckedUpdateWithoutChildrenInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   menuId?: Prisma.IntFieldUpdateOperationsInput | number
   type?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -965,8 +965,8 @@ export type ModuleCreateWithoutModuleRoleInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   menu: Prisma.MenuCreateNestedOneWithoutModulesInput
-  parent?: Prisma.ModuleCreateNestedOneWithoutParentsInput
-  parents?: Prisma.ModuleCreateNestedManyWithoutParentInput
+  parent?: Prisma.ModuleCreateNestedOneWithoutChildrenInput
+  children?: Prisma.ModuleCreateNestedManyWithoutParentInput
   permissions?: Prisma.PermissionCreateNestedManyWithoutModuleInput
 }
 
@@ -984,7 +984,7 @@ export type ModuleUncheckedCreateWithoutModuleRoleInput = {
   deletable?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  parents?: Prisma.ModuleUncheckedCreateNestedManyWithoutParentInput
+  children?: Prisma.ModuleUncheckedCreateNestedManyWithoutParentInput
   permissions?: Prisma.PermissionUncheckedCreateNestedManyWithoutModuleInput
 }
 
@@ -1016,8 +1016,8 @@ export type ModuleUpdateWithoutModuleRoleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   menu?: Prisma.MenuUpdateOneRequiredWithoutModulesNestedInput
-  parent?: Prisma.ModuleUpdateOneWithoutParentsNestedInput
-  parents?: Prisma.ModuleUpdateManyWithoutParentNestedInput
+  parent?: Prisma.ModuleUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.ModuleUpdateManyWithoutParentNestedInput
   permissions?: Prisma.PermissionUpdateManyWithoutModuleNestedInput
 }
 
@@ -1035,7 +1035,7 @@ export type ModuleUncheckedUpdateWithoutModuleRoleInput = {
   deletable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  parents?: Prisma.ModuleUncheckedUpdateManyWithoutParentNestedInput
+  children?: Prisma.ModuleUncheckedUpdateManyWithoutParentNestedInput
   permissions?: Prisma.PermissionUncheckedUpdateManyWithoutModuleNestedInput
 }
 
@@ -1051,8 +1051,8 @@ export type ModuleCreateWithoutPermissionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   menu: Prisma.MenuCreateNestedOneWithoutModulesInput
-  parent?: Prisma.ModuleCreateNestedOneWithoutParentsInput
-  parents?: Prisma.ModuleCreateNestedManyWithoutParentInput
+  parent?: Prisma.ModuleCreateNestedOneWithoutChildrenInput
+  children?: Prisma.ModuleCreateNestedManyWithoutParentInput
   moduleRole?: Prisma.ModuleRoleCreateNestedManyWithoutModuleInput
 }
 
@@ -1070,7 +1070,7 @@ export type ModuleUncheckedCreateWithoutPermissionsInput = {
   deletable?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  parents?: Prisma.ModuleUncheckedCreateNestedManyWithoutParentInput
+  children?: Prisma.ModuleUncheckedCreateNestedManyWithoutParentInput
   moduleRole?: Prisma.ModuleRoleUncheckedCreateNestedManyWithoutModuleInput
 }
 
@@ -1102,8 +1102,8 @@ export type ModuleUpdateWithoutPermissionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   menu?: Prisma.MenuUpdateOneRequiredWithoutModulesNestedInput
-  parent?: Prisma.ModuleUpdateOneWithoutParentsNestedInput
-  parents?: Prisma.ModuleUpdateManyWithoutParentNestedInput
+  parent?: Prisma.ModuleUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.ModuleUpdateManyWithoutParentNestedInput
   moduleRole?: Prisma.ModuleRoleUpdateManyWithoutModuleNestedInput
 }
 
@@ -1121,7 +1121,7 @@ export type ModuleUncheckedUpdateWithoutPermissionsInput = {
   deletable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  parents?: Prisma.ModuleUncheckedUpdateManyWithoutParentNestedInput
+  children?: Prisma.ModuleUncheckedUpdateManyWithoutParentNestedInput
   moduleRole?: Prisma.ModuleRoleUncheckedUpdateManyWithoutModuleNestedInput
 }
 
@@ -1151,8 +1151,8 @@ export type ModuleUpdateWithoutMenuInput = {
   deletable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  parent?: Prisma.ModuleUpdateOneWithoutParentsNestedInput
-  parents?: Prisma.ModuleUpdateManyWithoutParentNestedInput
+  parent?: Prisma.ModuleUpdateOneWithoutChildrenNestedInput
+  children?: Prisma.ModuleUpdateManyWithoutParentNestedInput
   moduleRole?: Prisma.ModuleRoleUpdateManyWithoutModuleNestedInput
   permissions?: Prisma.PermissionUpdateManyWithoutModuleNestedInput
 }
@@ -1170,7 +1170,7 @@ export type ModuleUncheckedUpdateWithoutMenuInput = {
   deletable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  parents?: Prisma.ModuleUncheckedUpdateManyWithoutParentNestedInput
+  children?: Prisma.ModuleUncheckedUpdateManyWithoutParentNestedInput
   moduleRole?: Prisma.ModuleRoleUncheckedUpdateManyWithoutModuleNestedInput
   permissions?: Prisma.PermissionUncheckedUpdateManyWithoutModuleNestedInput
 }
@@ -1217,7 +1217,7 @@ export type ModuleUpdateWithoutParentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   menu?: Prisma.MenuUpdateOneRequiredWithoutModulesNestedInput
-  parents?: Prisma.ModuleUpdateManyWithoutParentNestedInput
+  children?: Prisma.ModuleUpdateManyWithoutParentNestedInput
   moduleRole?: Prisma.ModuleRoleUpdateManyWithoutModuleNestedInput
   permissions?: Prisma.PermissionUpdateManyWithoutModuleNestedInput
 }
@@ -1235,7 +1235,7 @@ export type ModuleUncheckedUpdateWithoutParentInput = {
   deletable?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  parents?: Prisma.ModuleUncheckedUpdateManyWithoutParentNestedInput
+  children?: Prisma.ModuleUncheckedUpdateManyWithoutParentNestedInput
   moduleRole?: Prisma.ModuleRoleUncheckedUpdateManyWithoutModuleNestedInput
   permissions?: Prisma.PermissionUncheckedUpdateManyWithoutModuleNestedInput
 }
@@ -1261,13 +1261,13 @@ export type ModuleUncheckedUpdateManyWithoutParentInput = {
  */
 
 export type ModuleCountOutputType = {
-  parents: number
+  children: number
   moduleRole: number
   permissions: number
 }
 
 export type ModuleCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  parents?: boolean | ModuleCountOutputTypeCountParentsArgs
+  children?: boolean | ModuleCountOutputTypeCountChildrenArgs
   moduleRole?: boolean | ModuleCountOutputTypeCountModuleRoleArgs
   permissions?: boolean | ModuleCountOutputTypeCountPermissionsArgs
 }
@@ -1285,7 +1285,7 @@ export type ModuleCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exten
 /**
  * ModuleCountOutputType without action
  */
-export type ModuleCountOutputTypeCountParentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type ModuleCountOutputTypeCountChildrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ModuleWhereInput
 }
 
@@ -1320,7 +1320,7 @@ export type ModuleSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   updatedAt?: boolean
   menu?: boolean | Prisma.MenuDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.Module$parentArgs<ExtArgs>
-  parents?: boolean | Prisma.Module$parentsArgs<ExtArgs>
+  children?: boolean | Prisma.Module$childrenArgs<ExtArgs>
   moduleRole?: boolean | Prisma.Module$moduleRoleArgs<ExtArgs>
   permissions?: boolean | Prisma.Module$permissionsArgs<ExtArgs>
   _count?: boolean | Prisma.ModuleCountOutputTypeDefaultArgs<ExtArgs>
@@ -1348,7 +1348,7 @@ export type ModuleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type ModuleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   menu?: boolean | Prisma.MenuDefaultArgs<ExtArgs>
   parent?: boolean | Prisma.Module$parentArgs<ExtArgs>
-  parents?: boolean | Prisma.Module$parentsArgs<ExtArgs>
+  children?: boolean | Prisma.Module$childrenArgs<ExtArgs>
   moduleRole?: boolean | Prisma.Module$moduleRoleArgs<ExtArgs>
   permissions?: boolean | Prisma.Module$permissionsArgs<ExtArgs>
   _count?: boolean | Prisma.ModuleCountOutputTypeDefaultArgs<ExtArgs>
@@ -1359,7 +1359,7 @@ export type $ModulePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   objects: {
     menu: Prisma.$MenuPayload<ExtArgs>
     parent: Prisma.$ModulePayload<ExtArgs> | null
-    parents: Prisma.$ModulePayload<ExtArgs>[]
+    children: Prisma.$ModulePayload<ExtArgs>[]
     moduleRole: Prisma.$ModuleRolePayload<ExtArgs>[]
     permissions: Prisma.$PermissionPayload<ExtArgs>[]
   }
@@ -1719,7 +1719,7 @@ export interface Prisma__ModuleClient<T, Null = never, ExtArgs extends runtime.T
   readonly [Symbol.toStringTag]: "PrismaPromise"
   menu<T extends Prisma.MenuDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MenuDefaultArgs<ExtArgs>>): Prisma.Prisma__MenuClient<runtime.Types.Result.GetResult<Prisma.$MenuPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   parent<T extends Prisma.Module$parentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Module$parentArgs<ExtArgs>>): Prisma.Prisma__ModuleClient<runtime.Types.Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  parents<T extends Prisma.Module$parentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Module$parentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  children<T extends Prisma.Module$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Module$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ModulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   moduleRole<T extends Prisma.Module$moduleRoleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Module$moduleRoleArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ModuleRolePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   permissions<T extends Prisma.Module$permissionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Module$permissionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PermissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2126,9 +2126,9 @@ export type Module$parentArgs<ExtArgs extends runtime.Types.Extensions.InternalA
 }
 
 /**
- * Module.parents
+ * Module.children
  */
-export type Module$parentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Module$childrenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the Module
    */

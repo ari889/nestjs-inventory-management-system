@@ -39,9 +39,18 @@ export class ProductsService {
   }): Promise<{ items: Product[]; totalItems: number }> {
     const where = search
       ? {
-          name: {
-            contains: search,
-          },
+          OR: [
+            {
+              name: {
+                contains: search,
+              },
+            },
+            {
+              code: {
+                contains: search,
+              },
+            },
+          ],
         }
       : {};
     const [items, totalItems] = await Promise.all([
@@ -93,12 +102,14 @@ export class ProductsService {
             select: {
               id: true,
               name: true,
+              rate: true,
             },
           },
         },
       }),
       this.prisma.product.count({ where }),
     ]);
+
     return {
       items,
       totalItems,

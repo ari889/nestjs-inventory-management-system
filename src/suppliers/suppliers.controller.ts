@@ -42,6 +42,7 @@ export class SuppliersController {
    * @param limit
    * @param order
    * @param direction
+   * @param search
    * @returns Supplier
    */
   @ApiQuery({

@@ -18,7 +18,7 @@ datasource db {
 // roles table
 model Role {
   id Int @default(autoincrement()) @id
-  roleName String
+  roleName String @db.VarChar(191)
   deletable Boolean @default(true) // true = Yes, False = No
   users User[]
   moduleRole ModuleRole[]
@@ -30,7 +30,7 @@ model Role {
 // users table
 model User {
   id Int @default(autoincrement()) @id
-  name String
+  name String @db.VarChar(191) 
   email String @unique
   phoneNo String?
   emailVeriafiedAt  DateTime?   @default(now())
@@ -135,8 +135,8 @@ model Module{
   url String?
   order Int @default(1)
   parentId Int?
-  parent Module? @relation("ParentID", fields: [parentId], references: [id])
-  parents Module[] @relation("ParentID")
+   parent   Module?  @relation("ParentID", fields: [parentId], references: [id])
+  children Module[] @relation("ParentID")
   target Target @default(SELF)
   moduleRole ModuleRole[]
   permissions Permission[]
@@ -160,7 +160,7 @@ model Permission {
   id Int @default(autoincrement()) @id
   moduleId Int?
   module Module? @relation(fields: [moduleId], references: [id])
-  name String
+  name String @db.VarChar(191) 
   slug String @unique
   permissionRole PermissionRole[]
   deletable Boolean @default(true) // true = Yes, False = No
@@ -193,7 +193,7 @@ model HrmSetting {
 
 model Department {
   id Int @default(autoincrement()) @id
-  name String
+  name String @db.VarChar(191) 
   status Boolean @default(true) // true = Active, False = Inactive
   createdBy Int
   creator   User @relation("DepartmentCreatedBy", fields: [createdBy], references: [id])
@@ -207,7 +207,7 @@ model Department {
 
 model Employee {
   id Int @default(autoincrement()) @id
-  name String
+  name String @db.VarChar(191) 
   image String?
   phone String @unique
   address String
@@ -249,7 +249,7 @@ model Attendance{
 model Account {
   id Int @default(autoincrement()) @id
   accountNo String
-  name String
+  name String @db.VarChar(191) 
   initialBalance Decimal @db.Decimal(10, 2)
   note String?
   status Boolean @default(true) // true = Active, False = Inactive
@@ -288,7 +288,7 @@ model Payroll {
 
 model Warehouse {
   id Int @default(autoincrement()) @id
-  name String
+  name String @db.VarChar(191) 
   phone String?
   email String?
   address String?
@@ -308,7 +308,7 @@ model Warehouse {
 
 model ExpenseCategory {
   id Int @default(autoincrement()) @id
-  name String
+  name String @db.VarChar(191) 
   status Boolean @default(true) // true = Active, False = Inactive
   createdBy Int
   creator   User @relation("ExpenseCategoryCreatedBy", fields: [createdBy], references: [id])
@@ -358,7 +358,7 @@ model Customer{
   id Int @default(autoincrement()) @id
   customerGroupId Int
   customerGroup CustomerGroup @relation(fields: [customerGroupId], references: [id])
-  name String
+  name String @db.VarChar(191) 
   companyName String?
   taxNumber String?
   email String?
@@ -381,7 +381,7 @@ model Customer{
 
 model ProductCategory{
   id Int @default(autoincrement()) @id
-  name String
+  name String @db.VarChar(191) 
   status Boolean @default(true) // true = Active, False = Inactive
   createdBy Int
   creator   User @relation("ProductCategoryCreatedBy", fields: [createdBy], references: [id])
@@ -410,7 +410,7 @@ model Brand {
 
 model Tax {
   id Int @default(autoincrement()) @id
-  name String @unique
+  name String @db.VarChar(191) @unique
   rate Decimal @db.Decimal(10, 2)
   status Boolean @default(true) // true = Active, False = Inactive
   createdBy Int
@@ -449,7 +449,7 @@ model Unit {
 
 model Product {
   id Int @default(autoincrement()) @id
-  name String
+  name String @db.VarChar(191) 
   code String @unique
   barcodeSymbology String
   image String?
@@ -481,6 +481,7 @@ model Product {
 
   warehouseProducts WarehouseProduct[]
   pruchaseProducts PurchaseProduct[]
+  
   saleProducts SaleProduct[]
 }
 
@@ -497,7 +498,7 @@ model WarehouseProduct{
 
 model Supplier {
   id Int @default(autoincrement()) @id
-  name String
+  name String @db.VarChar(191) 
   companyName String?
   vatNumber String?
   email String? @unique
@@ -564,8 +565,8 @@ model PurchaseProduct {
   purchase Purchase? @relation(fields: [purchaseId], references: [id])
   productId Int?
   product Product? @relation(fields: [productId], references: [id])
-  qty Decimal @db.Decimal(10, 2)
-  received Decimal @db.Decimal(10, 2)
+  qty Int
+  received Int
   unitId Int
   unit Unit @relation(fields: [unitId], references: [id])
   netUnitCost Decimal @db.Decimal(10, 2)
@@ -622,7 +623,7 @@ model SaleProduct {
   sale Sale? @relation(fields: [saleId], references: [id])
   productId Int?
   product Product? @relation(fields: [productId], references: [id])
-  qty Decimal @db.Decimal(10, 2)
+  qty Int
   saleUnitId Int
   saleUnit Unit @relation(fields: [saleUnitId], references: [id])
   netUnitPrice Decimal @db.Decimal(10, 2)
@@ -634,7 +635,7 @@ model SaleProduct {
 
 model Setting {
   id Int @default(autoincrement()) @id
-  name String @unique
+  name String @db.VarChar(191) @unique
   value String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
