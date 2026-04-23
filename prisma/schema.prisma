@@ -108,6 +108,9 @@ model User {
 
   saleCreator Sale[] @relation("SaleCreatedBy")
   saleUpdater Sale[] @relation("SaleUpdatedBy")
+
+  paymentCreator Payment[] @relation("PaymentCreatedBy")
+  paymentUpdater Payment[] @relation("PaymentUpdatedBy")
 }
 
 model Menu{
@@ -262,6 +265,7 @@ model Account {
 
   payrolls Payroll[]
   expenses Expense[]
+  payments Payment[]
 }
 
 enum PaymentMethods {
@@ -561,6 +565,7 @@ model Purchase {
   updatedAt DateTime @updatedAt
 
   purchaseProducts PurchaseProduct[]
+  payments Payment[]
 }
 
 model PurchaseProduct {
@@ -643,6 +648,32 @@ model Setting {
   id Int @default(autoincrement()) @id
   name String @db.VarChar(191) @unique
   value String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+enum PaymentMethod {
+  CASH  @map("1")
+  CHEQUE @map("2")
+  MOBILE @map("3")
+}
+
+model Payment {
+  id Int @default(autoincrement()) @id
+  accountId Int
+  account Account @relation(fields: [accountId], references: [id])
+  purchaseId Int?
+  purchases Purchase? @relation(fields: [purchaseId], references: [id])
+  amount Decimal @db.Decimal(10, 2)
+  change Decimal? @db.Decimal(10, 2)
+  paymentMethod PaymentMethod @default(CASH)
+  paymentNo String?
+  paymentNote String?
+  createdBy Int
+  creator   User @relation("PaymentCreatedBy", fields: [createdBy], references: [id])
+  updatedBy Int?
+  updater   User? @relation("PaymentUpdatedBy", fields: [updatedBy], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -272,6 +272,7 @@ export type AccountWhereInput = {
   updater?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   payrolls?: Prisma.PayrollListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
 }
 
 export type AccountOrderByWithRelationInput = {
@@ -289,6 +290,7 @@ export type AccountOrderByWithRelationInput = {
   updater?: Prisma.UserOrderByWithRelationInput
   payrolls?: Prisma.PayrollOrderByRelationAggregateInput
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
+  payments?: Prisma.PaymentOrderByRelationAggregateInput
   _relevance?: Prisma.AccountOrderByRelevanceInput
 }
 
@@ -310,6 +312,7 @@ export type AccountWhereUniqueInput = Prisma.AtLeast<{
   updater?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   payrolls?: Prisma.PayrollListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
+  payments?: Prisma.PaymentListRelationFilter
 }, "id">
 
 export type AccountOrderByWithAggregationInput = {
@@ -358,6 +361,7 @@ export type AccountCreateInput = {
   updater?: Prisma.UserCreateNestedOneWithoutAccountUpdaterInput
   payrolls?: Prisma.PayrollCreateNestedManyWithoutAccountInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutAccountInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAccountInput
 }
 
 export type AccountUncheckedCreateInput = {
@@ -373,6 +377,7 @@ export type AccountUncheckedCreateInput = {
   updatedAt?: Date | string
   payrolls?: Prisma.PayrollUncheckedCreateNestedManyWithoutAccountInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutAccountInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type AccountUpdateInput = {
@@ -387,6 +392,7 @@ export type AccountUpdateInput = {
   updater?: Prisma.UserUpdateOneWithoutAccountUpdaterNestedInput
   payrolls?: Prisma.PayrollUpdateManyWithoutAccountNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutAccountNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAccountNestedInput
 }
 
 export type AccountUncheckedUpdateInput = {
@@ -402,6 +408,7 @@ export type AccountUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payrolls?: Prisma.PayrollUncheckedUpdateManyWithoutAccountNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutAccountNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type AccountCreateManyInput = {
@@ -641,6 +648,20 @@ export type AccountUpdateOneWithoutExpensesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AccountUpdateToOneWithWhereWithoutExpensesInput, Prisma.AccountUpdateWithoutExpensesInput>, Prisma.AccountUncheckedUpdateWithoutExpensesInput>
 }
 
+export type AccountCreateNestedOneWithoutPaymentsInput = {
+  create?: Prisma.XOR<Prisma.AccountCreateWithoutPaymentsInput, Prisma.AccountUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.AccountCreateOrConnectWithoutPaymentsInput
+  connect?: Prisma.AccountWhereUniqueInput
+}
+
+export type AccountUpdateOneRequiredWithoutPaymentsNestedInput = {
+  create?: Prisma.XOR<Prisma.AccountCreateWithoutPaymentsInput, Prisma.AccountUncheckedCreateWithoutPaymentsInput>
+  connectOrCreate?: Prisma.AccountCreateOrConnectWithoutPaymentsInput
+  upsert?: Prisma.AccountUpsertWithoutPaymentsInput
+  connect?: Prisma.AccountWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AccountUpdateToOneWithWhereWithoutPaymentsInput, Prisma.AccountUpdateWithoutPaymentsInput>, Prisma.AccountUncheckedUpdateWithoutPaymentsInput>
+}
+
 export type AccountCreateWithoutCreatorInput = {
   accountNo: string
   name: string
@@ -652,6 +673,7 @@ export type AccountCreateWithoutCreatorInput = {
   updater?: Prisma.UserCreateNestedOneWithoutAccountUpdaterInput
   payrolls?: Prisma.PayrollCreateNestedManyWithoutAccountInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutAccountInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAccountInput
 }
 
 export type AccountUncheckedCreateWithoutCreatorInput = {
@@ -666,6 +688,7 @@ export type AccountUncheckedCreateWithoutCreatorInput = {
   updatedAt?: Date | string
   payrolls?: Prisma.PayrollUncheckedCreateNestedManyWithoutAccountInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutAccountInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type AccountCreateOrConnectWithoutCreatorInput = {
@@ -689,6 +712,7 @@ export type AccountCreateWithoutUpdaterInput = {
   creator: Prisma.UserCreateNestedOneWithoutAccountCreatorInput
   payrolls?: Prisma.PayrollCreateNestedManyWithoutAccountInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutAccountInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAccountInput
 }
 
 export type AccountUncheckedCreateWithoutUpdaterInput = {
@@ -703,6 +727,7 @@ export type AccountUncheckedCreateWithoutUpdaterInput = {
   updatedAt?: Date | string
   payrolls?: Prisma.PayrollUncheckedCreateNestedManyWithoutAccountInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutAccountInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type AccountCreateOrConnectWithoutUpdaterInput = {
@@ -774,6 +799,7 @@ export type AccountCreateWithoutPayrollsInput = {
   creator: Prisma.UserCreateNestedOneWithoutAccountCreatorInput
   updater?: Prisma.UserCreateNestedOneWithoutAccountUpdaterInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutAccountInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAccountInput
 }
 
 export type AccountUncheckedCreateWithoutPayrollsInput = {
@@ -788,6 +814,7 @@ export type AccountUncheckedCreateWithoutPayrollsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutAccountInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type AccountCreateOrConnectWithoutPayrollsInput = {
@@ -817,6 +844,7 @@ export type AccountUpdateWithoutPayrollsInput = {
   creator?: Prisma.UserUpdateOneRequiredWithoutAccountCreatorNestedInput
   updater?: Prisma.UserUpdateOneWithoutAccountUpdaterNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutAccountNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAccountNestedInput
 }
 
 export type AccountUncheckedUpdateWithoutPayrollsInput = {
@@ -831,6 +859,7 @@ export type AccountUncheckedUpdateWithoutPayrollsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutAccountNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type AccountCreateWithoutExpensesInput = {
@@ -844,6 +873,7 @@ export type AccountCreateWithoutExpensesInput = {
   creator: Prisma.UserCreateNestedOneWithoutAccountCreatorInput
   updater?: Prisma.UserCreateNestedOneWithoutAccountUpdaterInput
   payrolls?: Prisma.PayrollCreateNestedManyWithoutAccountInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutAccountInput
 }
 
 export type AccountUncheckedCreateWithoutExpensesInput = {
@@ -858,6 +888,7 @@ export type AccountUncheckedCreateWithoutExpensesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   payrolls?: Prisma.PayrollUncheckedCreateNestedManyWithoutAccountInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutAccountInput
 }
 
 export type AccountCreateOrConnectWithoutExpensesInput = {
@@ -887,6 +918,7 @@ export type AccountUpdateWithoutExpensesInput = {
   creator?: Prisma.UserUpdateOneRequiredWithoutAccountCreatorNestedInput
   updater?: Prisma.UserUpdateOneWithoutAccountUpdaterNestedInput
   payrolls?: Prisma.PayrollUpdateManyWithoutAccountNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAccountNestedInput
 }
 
 export type AccountUncheckedUpdateWithoutExpensesInput = {
@@ -901,6 +933,81 @@ export type AccountUncheckedUpdateWithoutExpensesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payrolls?: Prisma.PayrollUncheckedUpdateManyWithoutAccountNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAccountNestedInput
+}
+
+export type AccountCreateWithoutPaymentsInput = {
+  accountNo: string
+  name: string
+  initialBalance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  note?: string | null
+  status?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  creator: Prisma.UserCreateNestedOneWithoutAccountCreatorInput
+  updater?: Prisma.UserCreateNestedOneWithoutAccountUpdaterInput
+  payrolls?: Prisma.PayrollCreateNestedManyWithoutAccountInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutAccountInput
+}
+
+export type AccountUncheckedCreateWithoutPaymentsInput = {
+  id?: number
+  accountNo: string
+  name: string
+  initialBalance: runtime.Decimal | runtime.DecimalJsLike | number | string
+  note?: string | null
+  status?: boolean
+  createdBy: number
+  updatedBy?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payrolls?: Prisma.PayrollUncheckedCreateNestedManyWithoutAccountInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutAccountInput
+}
+
+export type AccountCreateOrConnectWithoutPaymentsInput = {
+  where: Prisma.AccountWhereUniqueInput
+  create: Prisma.XOR<Prisma.AccountCreateWithoutPaymentsInput, Prisma.AccountUncheckedCreateWithoutPaymentsInput>
+}
+
+export type AccountUpsertWithoutPaymentsInput = {
+  update: Prisma.XOR<Prisma.AccountUpdateWithoutPaymentsInput, Prisma.AccountUncheckedUpdateWithoutPaymentsInput>
+  create: Prisma.XOR<Prisma.AccountCreateWithoutPaymentsInput, Prisma.AccountUncheckedCreateWithoutPaymentsInput>
+  where?: Prisma.AccountWhereInput
+}
+
+export type AccountUpdateToOneWithWhereWithoutPaymentsInput = {
+  where?: Prisma.AccountWhereInput
+  data: Prisma.XOR<Prisma.AccountUpdateWithoutPaymentsInput, Prisma.AccountUncheckedUpdateWithoutPaymentsInput>
+}
+
+export type AccountUpdateWithoutPaymentsInput = {
+  accountNo?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  initialBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creator?: Prisma.UserUpdateOneRequiredWithoutAccountCreatorNestedInput
+  updater?: Prisma.UserUpdateOneWithoutAccountUpdaterNestedInput
+  payrolls?: Prisma.PayrollUpdateManyWithoutAccountNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutAccountNestedInput
+}
+
+export type AccountUncheckedUpdateWithoutPaymentsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  accountNo?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  initialBalance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdBy?: Prisma.IntFieldUpdateOperationsInput | number
+  updatedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payrolls?: Prisma.PayrollUncheckedUpdateManyWithoutAccountNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type AccountCreateManyCreatorInput = {
@@ -938,6 +1045,7 @@ export type AccountUpdateWithoutCreatorInput = {
   updater?: Prisma.UserUpdateOneWithoutAccountUpdaterNestedInput
   payrolls?: Prisma.PayrollUpdateManyWithoutAccountNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutAccountNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAccountNestedInput
 }
 
 export type AccountUncheckedUpdateWithoutCreatorInput = {
@@ -952,6 +1060,7 @@ export type AccountUncheckedUpdateWithoutCreatorInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payrolls?: Prisma.PayrollUncheckedUpdateManyWithoutAccountNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutAccountNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type AccountUncheckedUpdateManyWithoutCreatorInput = {
@@ -977,6 +1086,7 @@ export type AccountUpdateWithoutUpdaterInput = {
   creator?: Prisma.UserUpdateOneRequiredWithoutAccountCreatorNestedInput
   payrolls?: Prisma.PayrollUpdateManyWithoutAccountNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutAccountNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutAccountNestedInput
 }
 
 export type AccountUncheckedUpdateWithoutUpdaterInput = {
@@ -991,6 +1101,7 @@ export type AccountUncheckedUpdateWithoutUpdaterInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payrolls?: Prisma.PayrollUncheckedUpdateManyWithoutAccountNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutAccountNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutAccountNestedInput
 }
 
 export type AccountUncheckedUpdateManyWithoutUpdaterInput = {
@@ -1013,11 +1124,13 @@ export type AccountUncheckedUpdateManyWithoutUpdaterInput = {
 export type AccountCountOutputType = {
   payrolls: number
   expenses: number
+  payments: number
 }
 
 export type AccountCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   payrolls?: boolean | AccountCountOutputTypeCountPayrollsArgs
   expenses?: boolean | AccountCountOutputTypeCountExpensesArgs
+  payments?: boolean | AccountCountOutputTypeCountPaymentsArgs
 }
 
 /**
@@ -1044,6 +1157,13 @@ export type AccountCountOutputTypeCountExpensesArgs<ExtArgs extends runtime.Type
   where?: Prisma.ExpenseWhereInput
 }
 
+/**
+ * AccountCountOutputType without action
+ */
+export type AccountCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PaymentWhereInput
+}
+
 
 export type AccountSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1060,6 +1180,7 @@ export type AccountSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   updater?: boolean | Prisma.Account$updaterArgs<ExtArgs>
   payrolls?: boolean | Prisma.Account$payrollsArgs<ExtArgs>
   expenses?: boolean | Prisma.Account$expensesArgs<ExtArgs>
+  payments?: boolean | Prisma.Account$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.AccountCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["account"]>
 
@@ -1084,6 +1205,7 @@ export type AccountInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   updater?: boolean | Prisma.Account$updaterArgs<ExtArgs>
   payrolls?: boolean | Prisma.Account$payrollsArgs<ExtArgs>
   expenses?: boolean | Prisma.Account$expensesArgs<ExtArgs>
+  payments?: boolean | Prisma.Account$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.AccountCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1094,6 +1216,7 @@ export type $AccountPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     updater: Prisma.$UserPayload<ExtArgs> | null
     payrolls: Prisma.$PayrollPayload<ExtArgs>[]
     expenses: Prisma.$ExpensePayload<ExtArgs>[]
+    payments: Prisma.$PaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1450,6 +1573,7 @@ export interface Prisma__AccountClient<T, Null = never, ExtArgs extends runtime.
   updater<T extends Prisma.Account$updaterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Account$updaterArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   payrolls<T extends Prisma.Account$payrollsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Account$payrollsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   expenses<T extends Prisma.Account$expensesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Account$expensesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  payments<T extends Prisma.Account$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Account$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1896,6 +2020,30 @@ export type Account$expensesArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.ExpenseScalarFieldEnum | Prisma.ExpenseScalarFieldEnum[]
+}
+
+/**
+ * Account.payments
+ */
+export type Account$paymentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Payment
+   */
+  select?: Prisma.PaymentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Payment
+   */
+  omit?: Prisma.PaymentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PaymentInclude<ExtArgs> | null
+  where?: Prisma.PaymentWhereInput
+  orderBy?: Prisma.PaymentOrderByWithRelationInput | Prisma.PaymentOrderByWithRelationInput[]
+  cursor?: Prisma.PaymentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
 }
 
 /**

@@ -33,6 +33,7 @@ import { HrmSettingsModule } from './hrm-settings/hrm-settings.module';
 import { ProductCategoriesModule } from './product-categories/product-categories.module';
 import { ProductsModule } from './products/products.module';
 import { PurchasesModule } from './purchases/purchases.module';
+import { PurchasePaymentsModule } from './purchase-payments/purchase-payments.module';
 
 @Module({
   imports: [
@@ -93,6 +94,7 @@ import { PurchasesModule } from './purchases/purchases.module';
     ProductCategoriesModule,
     ProductsModule,
     PurchasesModule,
+    PurchasePaymentsModule,
   ],
   providers: [
     {

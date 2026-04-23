@@ -167,3 +167,8 @@ export type SaleProduct = Prisma.SaleProductModel
  * 
  */
 export type Setting = Prisma.SettingModel
+/**
+ * Model Payment
+ * 
+ */
+export type Payment = Prisma.PaymentModel
