@@ -563,6 +563,7 @@ export const SaleScalarFieldEnum = {
   shippingCost: 'shippingCost',
   grandTotal: 'grandTotal',
   paidAmount: 'paidAmount',
+  taxId: 'taxId',
   saleStatus: 'saleStatus',
   paymentStatus: 'paymentStatus',
   document: 'document',
@@ -582,12 +583,15 @@ export const SaleProductScalarFieldEnum = {
   saleId: 'saleId',
   productId: 'productId',
   qty: 'qty',
-  saleUnitId: 'saleUnitId',
+  unitId: 'unitId',
+  taxId: 'taxId',
   netUnitPrice: 'netUnitPrice',
   discount: 'discount',
   taxRate: 'taxRate',
   tax: 'tax',
-  total: 'total'
+  total: 'total',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type SaleProductScalarFieldEnum = (typeof SaleProductScalarFieldEnum)[keyof typeof SaleProductScalarFieldEnum]
@@ -608,6 +612,7 @@ export const PaymentScalarFieldEnum = {
   id: 'id',
   accountId: 'accountId',
   purchaseId: 'purchaseId',
+  saleId: 'saleId',
   amount: 'amount',
   change: 'change',
   paymentMethod: 'paymentMethod',

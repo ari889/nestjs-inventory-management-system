@@ -426,7 +426,9 @@ model Tax {
 
   products Product[]
   purchases Purchase[]
+  sales Sale[]
   purchaseProductTaxes PurchaseProduct[]
+  saleProductTaxes SaleProduct[]
 }
 
 model Unit {
@@ -613,9 +615,11 @@ model Sale {
   shippingCost Decimal? @db.Decimal(10, 2)
   grandTotal Decimal @db.Decimal(10, 2)
   paidAmount Decimal @db.Decimal(10, 2)
+  taxId Int?
+  tax Tax? @relation(fields: [taxId], references: [id])
   saleStatus Boolean @default(false) // true = Completed, False = Pending
   paymentStatus PaymentStatus
-  document String
+  document String?
   note String?
   status Boolean @default(true) // true = Active, False = Inactive
   createdBy Int
@@ -626,6 +630,7 @@ model Sale {
   updatedAt DateTime @updatedAt
 
   saleProducts SaleProduct[]
+  payments Payment[]
 }
 
 model SaleProduct {
@@ -634,14 +639,18 @@ model SaleProduct {
   sale Sale? @relation(fields: [saleId], references: [id])
   productId Int?
   product Product? @relation(fields: [productId], references: [id])
+  unitId Int
+  unit Unit @relation(fields: [unitId], references: [id])
   qty Int
-  saleUnitId Int
-  saleUnit Unit @relation(fields: [saleUnitId], references: [id])
-  netUnitPrice Decimal @db.Decimal(10, 2)
-  discount Decimal @db.Decimal(10, 2)
+  taxId Int?
+  productTax Tax? @relation(fields: [taxId], references: [id])
   taxRate Decimal @db.Decimal(10, 2)
   tax Decimal @db.Decimal(10, 2)
+  netUnitPrice Decimal @db.Decimal(10, 2)
+  discount Decimal @db.Decimal(10, 2)
   total Decimal @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Setting {
@@ -665,6 +674,8 @@ model Payment {
   account Account @relation(fields: [accountId], references: [id])
   purchaseId Int?
   purchases Purchase? @relation(fields: [purchaseId], references: [id])
+  saleId Int?
+  sales Sale? @relation(fields: [saleId], references: [id])
   amount Decimal @db.Decimal(10, 2)
   change Decimal? @db.Decimal(10, 2)
   paymentMethod PaymentMethod @default(CASH)

@@ -470,9 +470,10 @@ CREATE TABLE `Sale` (
     `shippingCost` DECIMAL(10, 2) NULL,
     `grandTotal` DECIMAL(10, 2) NOT NULL,
     `paidAmount` DECIMAL(10, 2) NOT NULL,
+    `taxId` INTEGER NULL,
     `saleStatus` BOOLEAN NOT NULL DEFAULT false,
     `paymentStatus` ENUM('1', '2', '3') NOT NULL,
-    `document` VARCHAR(191) NOT NULL,
+    `document` VARCHAR(191) NULL,
     `note` VARCHAR(191) NULL,
     `status` BOOLEAN NOT NULL DEFAULT true,
     `createdBy` INTEGER NOT NULL,
@@ -489,13 +490,16 @@ CREATE TABLE `SaleProduct` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `saleId` INTEGER NULL,
     `productId` INTEGER NULL,
+    `unitId` INTEGER NOT NULL,
     `qty` INTEGER NOT NULL,
-    `saleUnitId` INTEGER NOT NULL,
-    `netUnitPrice` DECIMAL(10, 2) NOT NULL,
-    `discount` DECIMAL(10, 2) NOT NULL,
+    `taxId` INTEGER NULL,
     `taxRate` DECIMAL(10, 2) NOT NULL,
     `tax` DECIMAL(10, 2) NOT NULL,
+    `netUnitPrice` DECIMAL(10, 2) NOT NULL,
+    `discount` DECIMAL(10, 2) NOT NULL,
     `total` DECIMAL(10, 2) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -509,6 +513,25 @@ CREATE TABLE `Setting` (
     `updatedAt` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `Setting_name_key`(`name`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Payment` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `accountId` INTEGER NOT NULL,
+    `purchaseId` INTEGER NULL,
+    `saleId` INTEGER NULL,
+    `amount` DECIMAL(10, 2) NOT NULL,
+    `change` DECIMAL(10, 2) NULL,
+    `paymentMethod` ENUM('1', '2', '3') NOT NULL DEFAULT '1',
+    `paymentNo` VARCHAR(191) NULL,
+    `paymentNote` VARCHAR(191) NULL,
+    `createdBy` INTEGER NOT NULL,
+    `updatedBy` INTEGER NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -729,6 +752,9 @@ ALTER TABLE `Sale` ADD CONSTRAINT `Sale_customerId_fkey` FOREIGN KEY (`customerI
 ALTER TABLE `Sale` ADD CONSTRAINT `Sale_warehouseId_fkey` FOREIGN KEY (`warehouseId`) REFERENCES `Warehouse`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `Sale` ADD CONSTRAINT `Sale_taxId_fkey` FOREIGN KEY (`taxId`) REFERENCES `Tax`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `Sale` ADD CONSTRAINT `Sale_createdBy_fkey` FOREIGN KEY (`createdBy`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -741,4 +767,22 @@ ALTER TABLE `SaleProduct` ADD CONSTRAINT `SaleProduct_saleId_fkey` FOREIGN KEY (
 ALTER TABLE `SaleProduct` ADD CONSTRAINT `SaleProduct_productId_fkey` FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `SaleProduct` ADD CONSTRAINT `SaleProduct_saleUnitId_fkey` FOREIGN KEY (`saleUnitId`) REFERENCES `Unit`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `SaleProduct` ADD CONSTRAINT `SaleProduct_unitId_fkey` FOREIGN KEY (`unitId`) REFERENCES `Unit`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `SaleProduct` ADD CONSTRAINT `SaleProduct_taxId_fkey` FOREIGN KEY (`taxId`) REFERENCES `Tax`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Payment` ADD CONSTRAINT `Payment_accountId_fkey` FOREIGN KEY (`accountId`) REFERENCES `Account`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Payment` ADD CONSTRAINT `Payment_purchaseId_fkey` FOREIGN KEY (`purchaseId`) REFERENCES `Purchase`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Payment` ADD CONSTRAINT `Payment_saleId_fkey` FOREIGN KEY (`saleId`) REFERENCES `Sale`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Payment` ADD CONSTRAINT `Payment_createdBy_fkey` FOREIGN KEY (`createdBy`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Payment` ADD CONSTRAINT `Payment_updatedBy_fkey` FOREIGN KEY (`updatedBy`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;

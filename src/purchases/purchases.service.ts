@@ -322,7 +322,6 @@ export class PurchasesService {
         return purchase;
       });
     } catch (error: unknown) {
-      console.log(error);
       if (error instanceof NotFoundException) throw error;
       if (error instanceof BadRequestException) throw error;
 
@@ -623,7 +622,6 @@ export class PurchasesService {
         return updated;
       });
     } catch (error: unknown) {
-      console.log(error);
       if (error instanceof NotFoundException) throw error;
       if (error instanceof BadRequestException) throw error;
       throw new InternalServerErrorException('Failed to update Purchase!');
@@ -678,13 +676,11 @@ export class PurchasesService {
 
           const oldRoundedQty = Math.round(oldReceivedQty.toNumber());
 
-          // Decrement product qty
           await tx.product.update({
             where: { id: oldProduct.productId },
             data: { qty: { decrement: oldRoundedQty } },
           });
 
-          // Find warehouse product
           const warehouseProduct = await tx.warehouseProduct.findFirst({
             where: {
               warehouseId: purchase.warehouseId,
@@ -697,7 +693,6 @@ export class PurchasesService {
             const newQty = warehouseProduct.qty - oldRoundedQty;
 
             if (newQty <= 0) {
-              // Remove warehouse product entry if qty reaches 0
               await tx.warehouseProduct.delete({
                 where: { id: warehouseProduct.id },
               });
@@ -711,10 +706,8 @@ export class PurchasesService {
         }),
       );
 
-      // Delete purchase products entries
       await tx.purchaseProduct.deleteMany({ where: { purchaseId: id } });
 
-      // Delete the purchase itself
       return tx.purchase.delete({ where: { id } });
     });
 
@@ -774,13 +767,11 @@ export class PurchasesService {
 
             const oldRoundedQty = Math.round(oldReceivedQty.toNumber());
 
-            // Decrement product qty
             await tx.product.update({
               where: { id: oldProduct.productId },
               data: { qty: { decrement: oldRoundedQty } },
             });
 
-            // Find warehouse product
             const warehouseProduct = await tx.warehouseProduct.findFirst({
               where: {
                 warehouseId: purchase.warehouseId,
@@ -793,7 +784,6 @@ export class PurchasesService {
               const newQty = warehouseProduct.qty - oldRoundedQty;
 
               if (newQty <= 0) {
-                // Remove warehouse product entry if qty reaches 0
                 await tx.warehouseProduct.delete({
                   where: { id: warehouseProduct.id },
                 });
@@ -808,12 +798,10 @@ export class PurchasesService {
         ),
       );
 
-      // Delete all purchase product entries
       await tx.purchaseProduct.deleteMany({
         where: { purchaseId: { in: ids } },
       });
 
-      // Delete all purchases
       await tx.purchase.deleteMany({ where: { id: { in: ids } } });
     });
 

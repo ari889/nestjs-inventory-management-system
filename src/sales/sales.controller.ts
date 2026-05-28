@@ -12,6 +12,7 @@ import {
   Post,
   Query,
   Req,
+  UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -23,62 +24,62 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { PurchasesService } from './purchases.service';
+import { SalesService } from './sales.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import { SortDirection } from 'src/@types/default.types';
+import { CreateSaleDto, UpdateSaleDto } from './dto/sale.dto';
 import {
   FileFieldsInterceptor,
   MemoryStorageFile,
-  UploadedFiles,
 } from '@blazity/nest-file-fastify';
 import type { FastifyRequest } from 'fastify';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { PurchaseSchema } from './schemas/purchase.schema';
-import { CreatePurchaseDto, UpdatePurchaseDto } from './dto/purchase.dto';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { SaleCreateSchema, SaleUpdateSchema } from './schemas/sale.schema';
 
-const purchaseProductSchema = {
+const saleProductSchema = {
   type: 'object',
   properties: {
     id: { type: 'number', example: 1 },
-    purchaseId: { type: 'number', example: 1 },
+    saleId: { type: 'number', example: 1 },
     productId: { type: 'number', example: 1 },
     unitId: { type: 'number', example: 1 },
     qty: { type: 'string', example: '10.00' },
-    received: { type: 'string', example: '10.00' },
-    netUnitCost: { type: 'string', example: '50.00' },
-    discount: { type: 'string', example: '5.00' },
+    taxId: { type: 'number', example: 1 },
     taxRate: { type: 'string', example: '10.00' },
     tax: { type: 'string', example: '5.00' },
+    netUnitPrice: { type: 'string', example: '50.00' },
+    discount: { type: 'string', example: '5.00' },
     total: { type: 'string', example: '100.00' },
     createdAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
     updatedAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
   },
 };
 
-const purchaseSchema = {
+const saleSchema = {
   type: 'object',
   properties: {
     id: { type: 'number', example: 1 },
-    purchaseNo: { type: 'string', example: 'PUR-1710000000000' },
-    supplierId: { type: 'number', example: 1 },
+    saleNo: { type: 'string', example: 'PUR-1710000000000' },
+    customerId: { type: 'number', example: 1 },
     warehouseId: { type: 'number', example: 1 },
     item: { type: 'number', example: 3 },
     totalQty: { type: 'number', example: 10 },
     totalDiscount: { type: 'string', example: '10.00' },
     totalTax: { type: 'string', example: '5.00' },
-    totalCost: { type: 'string', example: '100.00' },
+    totalPrice: { type: 'string', example: '100.00' },
     orderTaxRate: { type: 'string', example: '5.00' },
     orderTax: { type: 'string', example: '5.00' },
     orderDiscount: { type: 'string', example: '10.00' },
     shippingCost: { type: 'string', example: '20.00' },
     grandTotal: { type: 'string', example: '115.00' },
+    taxId: { type: 'number', example: 1 },
     paidAmount: { type: 'string', example: '50.00' },
-    purchaseStatus: { type: 'string', example: 'RECEIVED' },
-    paymentStatus: { type: 'boolean', example: false },
+    saleStatus: { type: 'boolean', example: true },
+    paymentStatus: { type: 'string', example: 'PAID' },
     document: {
       type: 'string',
-      example: '/uploads/purchases/file.jpg',
+      example: '/uploads/sales/file.jpg',
       nullable: true,
     },
     note: { type: 'string', example: 'Some note', nullable: true },
@@ -90,9 +91,9 @@ const purchaseSchema = {
         name: { type: 'string', example: 'John Doe' },
       },
     },
-    purchaseProducts: {
+    saleProducts: {
       type: 'array',
-      items: purchaseProductSchema,
+      items: saleProductSchema,
     },
     createdAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
     updatedAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
@@ -101,12 +102,12 @@ const purchaseSchema = {
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
-@Controller('purchases')
-export class PurchasesController {
-  constructor(private readonly purchasesService: PurchasesService) {}
+@Controller('sales')
+export class SalesController {
+  constructor(private readonly salesService: SalesService) {}
 
   /**
-   * Find All Purchases
+   * Find All Sales
    */
   @ApiQuery({ name: 'page', required: false, type: Number, example: 0 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
@@ -119,23 +120,23 @@ export class PurchasesController {
   })
   @ApiQuery({ name: 'search', required: false, type: String, example: 'PUR-' })
   @ApiOkResponse({
-    description: 'Purchases fetched successfully!',
+    description: 'Sales fetched successfully!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean', example: true },
-        message: { type: 'string', example: 'Purchases fetched successfully!' },
+        message: { type: 'string', example: 'Sales fetched successfully!' },
         data: {
           type: 'object',
           properties: {
-            items: { type: 'array', items: purchaseSchema },
+            items: { type: 'array', items: saleSchema },
             totalItems: { type: 'number', example: 100 },
           },
         },
       },
     },
   })
-  @Permission('purchase-access')
+  @Permission('sale-access')
   @Get()
   async findAll(
     @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
@@ -149,7 +150,7 @@ export class PurchasesController {
     direction: string = 'desc',
     @Query('search') search?: string,
   ) {
-    const data = await this.purchasesService.findAll({
+    const data = await this.salesService.findAll({
       page,
       limit,
       order,
@@ -158,56 +159,56 @@ export class PurchasesController {
     });
     return {
       success: true,
-      message: 'Purchases fetched successfully!',
+      message: 'Sales fetched successfully!',
       data,
     };
   }
 
   /**
-   * Purchase Details by Id
+   * Sale Details by Id
    */
   @ApiOkResponse({
-    description: 'Purchase fetched successfully!',
+    description: 'Sale fetched successfully!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean', example: true },
-        message: { type: 'string', example: 'Purchase fetched successfully!' },
-        data: purchaseSchema,
+        message: { type: 'string', example: 'Sale fetched successfully!' },
+        data: saleSchema,
       },
     },
   })
-  @Permission('purchase-view')
+  @Permission('sale-view')
   @Get(':id')
   async find(@Param('id', ParseIntPipe) id: number) {
-    const purchase = await this.purchasesService.findOne(id);
+    const sale = await this.salesService.findOne(id);
     return {
       success: true,
-      message: 'Purchase fetched successfully!',
-      data: purchase,
+      message: 'Sale fetched successfully!',
+      data: sale,
     };
   }
 
   /**
-   * Create a Purchase
+   * Create a Sale
    */
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    type: CreatePurchaseDto,
-    description: 'Purchase creation payload with optional document file',
+    type: CreateSaleDto,
+    description: 'Sale creation payload with optional document file',
   })
   @ApiOkResponse({
-    description: 'Purchase created successfully!',
+    description: 'Sale created successfully!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean', example: true },
-        message: { type: 'string', example: 'Purchase created successfully!' },
-        data: purchaseSchema,
+        message: { type: 'string', example: 'Sale created successfully!' },
+        data: saleSchema,
       },
     },
   })
-  @Permission('purchase-create')
+  @Permission('sale-create')
   @Post()
   @UseInterceptors(FileFieldsInterceptor([{ name: 'document', maxCount: 1 }]))
   async create(
@@ -216,17 +217,17 @@ export class PurchasesController {
     @Req() req: FastifyRequest,
   ) {
     const creatorEmail = req?.user?.email;
-    const validated = new ZodValidationPipe(PurchaseSchema).transform({
+    const validated = new ZodValidationPipe(SaleCreateSchema).transform({
       ...body,
       products:
         typeof body.products === 'string'
           ? (JSON.parse(body.products) as unknown)
           : body.products,
-      status: body.status === 'true' || body.status === true,
+      saleStatus: body.saleStatus === 'true' || body.saleStatus === true, // ← was `status`
       document: files.document?.[0],
-    }) as CreatePurchaseDto;
+    }) as CreateSaleDto;
 
-    const purchase = await this.purchasesService.create(
+    const sale = await this.salesService.create(
       validated,
       creatorEmail,
       validated.document,
@@ -234,31 +235,31 @@ export class PurchasesController {
 
     return {
       success: true,
-      message: 'Purchase created successfully!',
-      data: purchase,
+      message: 'Sale created successfully!',
+      data: sale,
     };
   }
 
   /**
-   * Update Purchase by Id
+   * Update Sale by Id
    */
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    type: UpdatePurchaseDto,
-    description: 'Purchase update payload with optional document file',
+    type: UpdateSaleDto,
+    description: 'Sale update payload with optional document file',
   })
   @ApiOkResponse({
-    description: 'Purchase updated successfully!',
+    description: 'Sale updated successfully!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean', example: true },
-        message: { type: 'string', example: 'Purchase updated successfully!' },
-        data: purchaseSchema,
+        message: { type: 'string', example: 'Sale updated successfully!' },
+        data: saleSchema,
       },
     },
   })
-  @Permission('purchase-edit')
+  @Permission('sale-edit')
   @Patch(':id')
   @UseInterceptors(FileFieldsInterceptor([{ name: 'document', maxCount: 1 }]))
   async update(
@@ -267,7 +268,7 @@ export class PurchasesController {
     @UploadedFiles() files: { document?: MemoryStorageFile[] },
     @Req() req: FastifyRequest,
   ) {
-    const validated = new ZodValidationPipe(PurchaseSchema).transform({
+    const validated = new ZodValidationPipe(SaleUpdateSchema).transform({
       ...body,
       products:
         typeof body.products === 'string'
@@ -275,9 +276,10 @@ export class PurchasesController {
           : body.products,
       status: body.status === 'true' || body.status === true,
       document: files.document?.[0],
-    }) as UpdatePurchaseDto;
+    }) as UpdateSaleDto;
+    console.log(validated);
 
-    const purchase = await this.purchasesService.update(
+    const sale = await this.salesService.update(
       id,
       validated,
       req?.user?.email,
@@ -286,38 +288,38 @@ export class PurchasesController {
 
     return {
       success: true,
-      message: 'Purchase updated successfully!',
-      data: purchase,
+      message: 'Sale updated successfully!',
+      data: sale,
     };
   }
 
   /**
-   * Delete Purchase by Id
+   * Delete Sale by Id
    */
   @ApiOkResponse({
-    description: 'Purchase deleted successfully!',
+    description: 'Sale deleted successfully!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean', example: true },
-        message: { type: 'string', example: 'Purchase deleted successfully!' },
-        data: purchaseSchema,
+        message: { type: 'string', example: 'Sale deleted successfully!' },
+        data: saleSchema,
       },
     },
   })
-  @Permission('purchase-delete')
+  @Permission('sale-delete')
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const purchase = await this.purchasesService.remove(id);
+    const sale = await this.salesService.remove(id);
     return {
       success: true,
-      message: 'Purchase deleted successfully!',
-      data: purchase,
+      message: 'Sale deleted successfully!',
+      data: sale,
     };
   }
 
   /**
-   * Bulk Delete Purchases
+   * Bulk Delete Sales
    */
   @ApiBody({
     schema: {
@@ -333,12 +335,12 @@ export class PurchasesController {
     },
   })
   @ApiOkResponse({
-    description: 'Purchases bulk deleted successfully!',
+    description: 'Sales bulk deleted successfully!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean', example: true },
-        message: { type: 'string', example: 'Purchases deleted successfully!' },
+        message: { type: 'string', example: 'Sales deleted successfully!' },
         data: {
           type: 'object',
           properties: {
@@ -348,16 +350,16 @@ export class PurchasesController {
       },
     },
   })
-  @Permission('purchase-bulk-delete')
+  @Permission('sale-bulk-delete')
   @Delete('bulk')
   async bulkDelete(@Body() body: BlukDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
-    const purchases = await this.purchasesService.bulkDelete(body.ids);
+    const sales = await this.salesService.bulkDelete(body.ids);
     return {
       success: true,
-      message: 'Purchases deleted successfully!',
-      data: purchases,
+      message: 'Sales deleted successfully!',
+      data: sales,
     };
   }
 }

@@ -6,10 +6,11 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { PurchasePaymentsService } from './purchase-payments.service';
+import { PaymentsService } from './payments.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import {
   ApiBearerAuth,
@@ -18,30 +19,25 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import {
-  type PurchasePaymentDto,
-  PurchasePaymentSchema,
-} from './schema/purchase-payment.schema';
+import { type PaymentDto, PaymentSchema } from './schema/payment.schema';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import type { FastifyRequest } from 'fastify';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
-@Controller('purchase-payments')
-export class PurchasePaymentsController {
-  constructor(
-    private readonly purchasePaymentsService: PurchasePaymentsService,
-  ) {}
+@Controller('payments')
+export class PaymentsController {
+  constructor(private readonly paymentsService: PaymentsService) {}
 
   @ApiOkResponse({
-    description: 'Purchase payment fetched successful response!',
+    description: 'Payment fetched successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Purchase payment fetched successfully!',
+          example: 'Payment fetched successfully!',
         },
         data: {
           type: 'array',
@@ -49,6 +45,7 @@ export class PurchasePaymentsController {
             id: { type: 'number', example: 1 },
             accountId: { type: 'number', example: 1 },
             purchaseId: { type: 'number', example: 1 },
+            saleId: { type: 'number', example: 1 },
             amount: { type: 'number', example: 1000 },
             change: { type: 'number', example: 0 },
             paymentMethod: { type: 'string', example: 'CASH' },
@@ -69,31 +66,34 @@ export class PurchasePaymentsController {
       },
     },
   })
-  @Permission('purchase-payment-view')
-  @Get(':purchaseId')
-  async fincAll(@Param('purchaseId', ParseIntPipe) purchaseId: number) {
-    const payments = await this.purchasePaymentsService.findAll(purchaseId);
+  @Permission('payment-view')
+  @Get(':id')
+  async findAll(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('column') column: string,
+  ) {
+    const payments = await this.paymentsService.findAll(id, column);
     return {
       success: true,
-      message: 'Purchase payment fetched successfully!',
+      message: 'Payment fetched successfully!',
       data: payments,
     };
   }
 
   /**
-   * Create purchase payment
+   * Create payment
    * @param dto
    * @returns Payment
    */
   @ApiOkResponse({
-    description: 'Purchase Payment created successful response!',
+    description: 'Payment created successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Purchase Payment created successfully!',
+          example: 'Payment created successfully!',
         },
         data: {
           type: 'array',
@@ -101,6 +101,7 @@ export class PurchasePaymentsController {
             id: { type: 'number', example: 1 },
             accountId: { type: 'number', example: 1 },
             purchaseId: { type: 'number', example: 1 },
+            saleId: { type: 'number', example: 1 },
             amount: { type: 'number', example: 1000 },
             change: { type: 'number', example: 0 },
             paymentMethod: { type: 'string', example: 'CASH' },
@@ -129,6 +130,7 @@ export class PurchasePaymentsController {
       properties: {
         accountId: { type: 'number', example: 1 },
         purchaseId: { type: 'number', example: 1 },
+        saleId: { type: 'number', example: 1 },
         amount: { type: 'number', example: 1000 },
         change: { type: 'number', example: 0 },
         paymentMethod: { type: 'string', example: 'CASH' },
@@ -137,38 +139,35 @@ export class PurchasePaymentsController {
       },
     },
   })
-  @Permission('purchase-payment-create')
+  @Permission('payment-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(PurchasePaymentSchema))
-    dto: PurchasePaymentDto,
+    @Body(new ZodValidationPipe(PaymentSchema))
+    dto: PaymentDto,
     @Req() req: FastifyRequest,
   ) {
-    const purchasePayment = await this.purchasePaymentsService.create(
-      dto,
-      req?.user?.email,
-    );
+    const payment = await this.paymentsService.create(dto, req?.user?.email);
     return {
       success: true,
       message: 'Payment created successfully!',
-      data: purchasePayment,
+      data: payment,
     };
   }
 
   /**
-   * Delete purchase payment by id
+   * Delete payment by id
    * @param id
    * @returns Payment
    */
   @ApiOkResponse({
-    description: 'Purchase Payment deleted successful response!',
+    description: 'Payment deleted successful response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
         message: {
           type: 'string',
-          example: 'Purchase payment Payload fetched successfully!',
+          example: 'Payment Payload fetched successfully!',
         },
         data: {
           type: 'object',
@@ -176,6 +175,7 @@ export class PurchasePaymentsController {
             id: { type: 'number', example: 1 },
             accountId: { type: 'number', example: 1 },
             purchaseId: { type: 'number', example: 1 },
+            saleId: { type: 'number', example: 1 },
             amount: { type: 'number', example: 1000 },
             change: { type: 'number', example: 0 },
             paymentMethod: { type: 'string', example: 'CASH' },
@@ -196,14 +196,14 @@ export class PurchasePaymentsController {
       },
     },
   })
-  @Permission('purchase-payment-delete')
+  @Permission('payment-delete')
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const account = await this.purchasePaymentsService.remove(id);
+    const payment = await this.paymentsService.remove(id);
     return {
       success: true,
-      message: 'Purchase payment deleted successfully!',
-      data: account,
+      message: 'Payment deleted successfully!',
+      data: payment,
     };
   }
 }

@@ -393,7 +393,7 @@ export type UnitCreateInput = {
   purchaseProductsUnit?: Prisma.ProductCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutUnitInput
 }
 
 export type UnitUncheckedCreateInput = {
@@ -413,7 +413,7 @@ export type UnitUncheckedCreateInput = {
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutUnitInput
 }
 
 export type UnitUpdateInput = {
@@ -432,7 +432,7 @@ export type UnitUpdateInput = {
   purchaseProductsUnit?: Prisma.ProductUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUncheckedUpdateInput = {
@@ -452,7 +452,7 @@ export type UnitUncheckedUpdateInput = {
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitCreateManyInput = {
@@ -804,7 +804,7 @@ export type UnitCreateWithoutCreatorInput = {
   purchaseProductsUnit?: Prisma.ProductCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutUnitInput
 }
 
 export type UnitUncheckedCreateWithoutCreatorInput = {
@@ -823,7 +823,7 @@ export type UnitUncheckedCreateWithoutCreatorInput = {
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutUnitInput
 }
 
 export type UnitCreateOrConnectWithoutCreatorInput = {
@@ -851,7 +851,7 @@ export type UnitCreateWithoutUpdaterInput = {
   purchaseProductsUnit?: Prisma.ProductCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutUnitInput
 }
 
 export type UnitUncheckedCreateWithoutUpdaterInput = {
@@ -870,7 +870,7 @@ export type UnitUncheckedCreateWithoutUpdaterInput = {
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutUnitInput
 }
 
 export type UnitCreateOrConnectWithoutUpdaterInput = {
@@ -947,7 +947,7 @@ export type UnitCreateWithoutBaseUnitsInput = {
   purchaseProductsUnit?: Prisma.ProductCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutUnitInput
 }
 
 export type UnitUncheckedCreateWithoutBaseUnitsInput = {
@@ -966,7 +966,7 @@ export type UnitUncheckedCreateWithoutBaseUnitsInput = {
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutUnitInput
 }
 
 export type UnitCreateOrConnectWithoutBaseUnitsInput = {
@@ -989,7 +989,7 @@ export type UnitCreateWithoutBaseUnitInput = {
   purchaseProductsUnit?: Prisma.ProductCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutUnitInput
 }
 
 export type UnitUncheckedCreateWithoutBaseUnitInput = {
@@ -1008,7 +1008,7 @@ export type UnitUncheckedCreateWithoutBaseUnitInput = {
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutUnitInput
 }
 
 export type UnitCreateOrConnectWithoutBaseUnitInput = {
@@ -1047,7 +1047,7 @@ export type UnitUpdateWithoutBaseUnitsInput = {
   purchaseProductsUnit?: Prisma.ProductUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUncheckedUpdateWithoutBaseUnitsInput = {
@@ -1066,7 +1066,7 @@ export type UnitUncheckedUpdateWithoutBaseUnitsInput = {
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUpsertWithWhereUniqueWithoutBaseUnitInput = {
@@ -1100,7 +1100,7 @@ export type UnitCreateWithoutBaseProductsInput = {
   purchaseProductsUnit?: Prisma.ProductCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutUnitInput
 }
 
 export type UnitUncheckedCreateWithoutBaseProductsInput = {
@@ -1119,7 +1119,7 @@ export type UnitUncheckedCreateWithoutBaseProductsInput = {
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutUnitInput
 }
 
 export type UnitCreateOrConnectWithoutBaseProductsInput = {
@@ -1142,7 +1142,7 @@ export type UnitCreateWithoutPurchaseProductsUnitInput = {
   baseProducts?: Prisma.ProductCreateNestedManyWithoutUnitInput
   saleProductsUnit?: Prisma.ProductCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutUnitInput
 }
 
 export type UnitUncheckedCreateWithoutPurchaseProductsUnitInput = {
@@ -1161,7 +1161,7 @@ export type UnitUncheckedCreateWithoutPurchaseProductsUnitInput = {
   baseProducts?: Prisma.ProductUncheckedCreateNestedManyWithoutUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutUnitInput
 }
 
 export type UnitCreateOrConnectWithoutPurchaseProductsUnitInput = {
@@ -1184,7 +1184,7 @@ export type UnitCreateWithoutSaleProductsUnitInput = {
   baseProducts?: Prisma.ProductCreateNestedManyWithoutUnitInput
   purchaseProductsUnit?: Prisma.ProductCreateNestedManyWithoutPurchaseUnitInput
   purchaseProducts?: Prisma.PurchaseProductCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutUnitInput
 }
 
 export type UnitUncheckedCreateWithoutSaleProductsUnitInput = {
@@ -1203,7 +1203,7 @@ export type UnitUncheckedCreateWithoutSaleProductsUnitInput = {
   baseProducts?: Prisma.ProductUncheckedCreateNestedManyWithoutUnitInput
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedCreateNestedManyWithoutUnitInput
-  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutUnitInput
 }
 
 export type UnitCreateOrConnectWithoutSaleProductsUnitInput = {
@@ -1237,7 +1237,7 @@ export type UnitUpdateWithoutBaseProductsInput = {
   purchaseProductsUnit?: Prisma.ProductUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUncheckedUpdateWithoutBaseProductsInput = {
@@ -1256,7 +1256,7 @@ export type UnitUncheckedUpdateWithoutBaseProductsInput = {
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUpsertWithoutPurchaseProductsUnitInput = {
@@ -1285,7 +1285,7 @@ export type UnitUpdateWithoutPurchaseProductsUnitInput = {
   baseProducts?: Prisma.ProductUpdateManyWithoutUnitNestedInput
   saleProductsUnit?: Prisma.ProductUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUncheckedUpdateWithoutPurchaseProductsUnitInput = {
@@ -1304,7 +1304,7 @@ export type UnitUncheckedUpdateWithoutPurchaseProductsUnitInput = {
   baseProducts?: Prisma.ProductUncheckedUpdateManyWithoutUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUpsertWithoutSaleProductsUnitInput = {
@@ -1333,7 +1333,7 @@ export type UnitUpdateWithoutSaleProductsUnitInput = {
   baseProducts?: Prisma.ProductUpdateManyWithoutUnitNestedInput
   purchaseProductsUnit?: Prisma.ProductUpdateManyWithoutPurchaseUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUncheckedUpdateWithoutSaleProductsUnitInput = {
@@ -1352,7 +1352,7 @@ export type UnitUncheckedUpdateWithoutSaleProductsUnitInput = {
   baseProducts?: Prisma.ProductUncheckedUpdateManyWithoutUnitNestedInput
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitCreateWithoutPurchaseProductsInput = {
@@ -1370,7 +1370,7 @@ export type UnitCreateWithoutPurchaseProductsInput = {
   baseProducts?: Prisma.ProductCreateNestedManyWithoutUnitInput
   purchaseProductsUnit?: Prisma.ProductCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductCreateNestedManyWithoutSaleUnitInput
-  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductCreateNestedManyWithoutUnitInput
 }
 
 export type UnitUncheckedCreateWithoutPurchaseProductsInput = {
@@ -1389,7 +1389,7 @@ export type UnitUncheckedCreateWithoutPurchaseProductsInput = {
   baseProducts?: Prisma.ProductUncheckedCreateNestedManyWithoutUnitInput
   purchaseProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutPurchaseUnitInput
   saleProductsUnit?: Prisma.ProductUncheckedCreateNestedManyWithoutSaleUnitInput
-  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutSaleUnitInput
+  saleProducts?: Prisma.SaleProductUncheckedCreateNestedManyWithoutUnitInput
 }
 
 export type UnitCreateOrConnectWithoutPurchaseProductsInput = {
@@ -1423,7 +1423,7 @@ export type UnitUpdateWithoutPurchaseProductsInput = {
   baseProducts?: Prisma.ProductUpdateManyWithoutUnitNestedInput
   purchaseProductsUnit?: Prisma.ProductUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUpdateManyWithoutSaleUnitNestedInput
-  saleProducts?: Prisma.SaleProductUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUncheckedUpdateWithoutPurchaseProductsInput = {
@@ -1442,7 +1442,7 @@ export type UnitUncheckedUpdateWithoutPurchaseProductsInput = {
   baseProducts?: Prisma.ProductUncheckedUpdateManyWithoutUnitNestedInput
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
-  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitCreateWithoutSaleProductsInput = {
@@ -1576,7 +1576,7 @@ export type UnitUpdateWithoutCreatorInput = {
   purchaseProductsUnit?: Prisma.ProductUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUncheckedUpdateWithoutCreatorInput = {
@@ -1595,7 +1595,7 @@ export type UnitUncheckedUpdateWithoutCreatorInput = {
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUncheckedUpdateManyWithoutCreatorInput = {
@@ -1626,7 +1626,7 @@ export type UnitUpdateWithoutUpdaterInput = {
   purchaseProductsUnit?: Prisma.ProductUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUncheckedUpdateWithoutUpdaterInput = {
@@ -1645,7 +1645,7 @@ export type UnitUncheckedUpdateWithoutUpdaterInput = {
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUncheckedUpdateManyWithoutUpdaterInput = {
@@ -1689,7 +1689,7 @@ export type UnitUpdateWithoutBaseUnitInput = {
   purchaseProductsUnit?: Prisma.ProductUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUncheckedUpdateWithoutBaseUnitInput = {
@@ -1708,7 +1708,7 @@ export type UnitUncheckedUpdateWithoutBaseUnitInput = {
   purchaseProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutPurchaseUnitNestedInput
   saleProductsUnit?: Prisma.ProductUncheckedUpdateManyWithoutSaleUnitNestedInput
   purchaseProducts?: Prisma.PurchaseProductUncheckedUpdateManyWithoutUnitNestedInput
-  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutSaleUnitNestedInput
+  saleProducts?: Prisma.SaleProductUncheckedUpdateManyWithoutUnitNestedInput
 }
 
 export type UnitUncheckedUpdateManyWithoutBaseUnitInput = {
