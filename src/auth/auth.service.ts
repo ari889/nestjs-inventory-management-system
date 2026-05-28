@@ -1,10 +1,20 @@
 import { ConfigService } from '@nestjs/config';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/generated/prisma/client';
 import { UserType } from 'src/users/user.types';
+import { ProfileDto } from './schemas/profile.schema';
+import { MemoryStorageFile } from '@blazity/nest-file-fastify';
+import { replaceFile } from 'src/common/fileUpload/fileHelper';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
@@ -12,8 +22,15 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly prisma: PrismaService,
   ) {}
 
+  /**
+   * Validate user
+   * @param email
+   * @param pass
+   * @returns {Promise<any>}
+   */
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.usersService.findByEmail(email, true);
     if (!user) throw new UnauthorizedException('Invalid credentials provided!');
@@ -55,6 +72,11 @@ export class AuthService {
     };
   }
 
+  /**
+   * Refresh token rotation
+   * @param email
+   * @returns {Promise<{success: boolean; message: string; data: {accessToken: string; expiresIn: number}}>}
+   */
   async refreshToken(email: string) {
     const user = (await this.usersService.findByEmail(email)) as UserType;
     if (!user) throw new UnauthorizedException('Invalid credentials provided!');
@@ -69,5 +91,59 @@ export class AuthService {
         expiresIn: decode.exp * 1000,
       },
     };
+  }
+
+  /**
+   * Get user by email
+   * @param email
+   * @returns {Promise<User>}
+   */
+  async getUser(email: string) {
+    const user = await this.usersService.findByEmail(email);
+    if (!user) throw new UnauthorizedException('Invalid credentials provided!');
+    return this.usersService.findByEmail(email);
+  }
+
+  /**
+   * Update user profile
+   * @param profileDto
+   * @param updatorEmail
+   * @param avatar
+   * @returns User
+   */
+  async updateProfile(
+    profileDto: ProfileDto,
+    updatorEmail: string,
+    avatar?: MemoryStorageFile,
+  ) {
+    try {
+      const user = await this.usersService.findByEmail(updatorEmail);
+
+      if (!user) throw new NotFoundException('User not found!');
+
+      let avatarUrl: string | null = user?.avatar ?? null;
+
+      if (avatar) {
+        avatarUrl = await replaceFile(avatar, 'users', user?.avatar ?? null);
+      }
+
+      return this.prisma.user.update({
+        where: { email: updatorEmail },
+        data: {
+          ...profileDto,
+          updatedBy: user?.id,
+          avatar: avatarUrl,
+        },
+        select: {
+          name: true,
+          avatar: true,
+          phoneNo: true,
+          gender: true,
+        },
+      });
+    } catch (error) {
+      if (error instanceof BadRequestException) throw error;
+      throw new InternalServerErrorException('Failed to save Brand!');
+    }
   }
 }

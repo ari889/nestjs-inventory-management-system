@@ -7,7 +7,7 @@ export class LoginDto {
     default: 'admin@gmail.com',
     type: String,
   })
-  email: string;
+  email!: string;
 
   @ApiProperty({
     description: 'Password is required!',
@@ -15,5 +15,5 @@ export class LoginDto {
     default: 'asdfg1234',
     type: String,
   })
-  password: string;
+  password!: string;
 }

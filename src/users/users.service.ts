@@ -71,6 +71,8 @@ export class UsersService {
         id: true,
         name: true,
         email: true,
+        avatar: true,
+        phoneNo: true,
         password: isPassword,
         status: true,
         role: {
