@@ -35,6 +35,7 @@ import { ProductsModule } from './products/products.module';
 import { PurchasesModule } from './purchases/purchases.module';
 import { PaymentsModule } from './payments/payments.module';
 import { SalesModule } from './sales/sales.module';
+import { BalanceSheetsModule } from './balance-sheets/balance-sheets.module';
 
 @Module({
   imports: [
@@ -97,6 +98,7 @@ import { SalesModule } from './sales/sales.module';
     PurchasesModule,
     PaymentsModule,
     SalesModule,
+    BalanceSheetsModule,
   ],
   providers: [
     {

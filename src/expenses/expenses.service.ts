@@ -1,10 +1,6 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
-import { Expense, Prisma } from 'src/generated/prisma/client';
+import { Expense } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ExpenseDto } from './schemas/expense.schema';
 
@@ -125,62 +121,34 @@ export class ExpensesService {
 
     if (!creator) throw new NotFoundException('Creator user not found!');
 
-    if (!expenseDto.accountId)
-      throw new BadRequestException('Account is required!');
-
-    const account = await this.prisma.account.findUnique({
-      where: { id: expenseDto.accountId },
-      select: { id: true, initialBalance: true },
-    });
-
-    if (!account) throw new NotFoundException('Account not found!');
-
-    const balance = new Prisma.Decimal(account.initialBalance.toString());
-    const amount = new Prisma.Decimal(expenseDto.amount.toString());
-
-    if (balance.minus(amount).isNegative()) {
-      throw new BadRequestException('Account balance not enough!');
-    }
-
-    return this.prisma.$transaction(async (tx) => {
-      const expense = await tx.expense.create({
-        data: { ...expenseDto, createdBy: creator.id },
-        include: {
-          creator: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          expenseCategory: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          warehouse: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          account: {
-            select: {
-              id: true,
-              name: true,
-            },
+    return this.prisma.expense.create({
+      data: { ...expenseDto, createdBy: creator.id },
+      include: {
+        creator: {
+          select: {
+            id: true,
+            name: true,
           },
         },
-      });
-
-      await tx.account.update({
-        where: { id: expenseDto.accountId },
-        data: {
-          initialBalance: balance.minus(amount),
+        expenseCategory: {
+          select: {
+            id: true,
+            name: true,
+          },
         },
-      });
-
-      return expense;
+        warehouse: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        account: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
   }
 
@@ -208,100 +176,40 @@ export class ExpensesService {
 
     const existingExpense = await this.prisma.expense.findUnique({
       where: { id },
-      select: { amount: true, accountId: true },
+      select: { id: true },
     });
 
     if (!existingExpense) throw new NotFoundException('Expense not found!');
 
-    if (!expenseDto.accountId)
-      throw new BadRequestException('Account is required!');
-
-    const account = await this.prisma.account.findUnique({
-      where: { id: expenseDto.accountId },
-      select: { id: true, initialBalance: true },
-    });
-
-    if (!account) throw new NotFoundException('Account not found!');
-
-    const currentBalance = new Prisma.Decimal(
-      account.initialBalance.toString(),
-    );
-    const oldAmount = new Prisma.Decimal(existingExpense.amount.toString());
-    const newAmount = new Prisma.Decimal(expenseDto.amount.toString());
-
-    const restoredBalance = currentBalance.plus(oldAmount);
-    const finalBalance = restoredBalance.minus(newAmount);
-
-    if (finalBalance.isNegative()) {
-      throw new BadRequestException('Account balance not enough!');
-    }
-
-    return this.prisma.$transaction(async (tx) => {
-      const expense = await tx.expense.update({
-        where: { id },
-        data: { ...expenseDto, updatedBy: updator.id },
-        include: {
-          creator: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          expenseCategory: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          warehouse: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          account: {
-            select: {
-              id: true,
-              name: true,
-            },
+    return await this.prisma.expense.update({
+      where: { id },
+      data: { ...expenseDto, updatedBy: updator.id },
+      include: {
+        creator: {
+          select: {
+            id: true,
+            name: true,
           },
         },
-      });
-
-      if (existingExpense.accountId !== expenseDto.accountId) {
-        // Restore old amount back to the previous account
-        if (existingExpense.accountId) {
-          const oldAccount = await tx.account.findUnique({
-            where: { id: existingExpense.accountId },
-            select: { id: true, initialBalance: true },
-          });
-
-          if (oldAccount) {
-            await tx.account.update({
-              where: { id: existingExpense.accountId },
-              data: {
-                initialBalance: new Prisma.Decimal(
-                  oldAccount.initialBalance.toString(),
-                ).plus(oldAmount),
-              },
-            });
-          }
-        }
-
-        // Deduct new amount from the new account
-        await tx.account.update({
-          where: { id: expenseDto.accountId },
-          data: { initialBalance: currentBalance.minus(newAmount) },
-        });
-      } else {
-        // Same account: restore old, deduct new
-        await tx.account.update({
-          where: { id: expenseDto.accountId },
-          data: { initialBalance: finalBalance },
-        });
-      }
-
-      return expense;
+        expenseCategory: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        warehouse: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        account: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
   }
 
@@ -318,22 +226,7 @@ export class ExpensesService {
 
     if (!expense) throw new NotFoundException('Expense not found.');
 
-    return this.prisma.$transaction(async (tx) => {
-      const deleted = await tx.expense.delete({ where: { id } });
-
-      if (expense.accountId) {
-        await tx.account.update({
-          where: { id: expense.accountId },
-          data: {
-            initialBalance: {
-              increment: new Prisma.Decimal(expense.amount.toString()),
-            },
-          },
-        });
-      }
-
-      return deleted;
-    });
+    return this.prisma.expense.delete({ where: { id } });
   }
 
   /**
@@ -344,41 +237,13 @@ export class ExpensesService {
   async bulkDelete(ids: BlukDeleteIdsDto['ids']): Promise<{ count: number }> {
     const expenses = await this.prisma.expense.findMany({
       where: { id: { in: ids } },
-      select: { id: true, amount: true, accountId: true },
+      select: { id: true },
     });
 
     if (!expenses.length) throw new NotFoundException('No expenses found.');
 
-    const accountRestoreMap = new Map<number, Prisma.Decimal>();
-
-    for (const expense of expenses) {
-      if (!expense.accountId) continue;
-
-      const prev =
-        accountRestoreMap.get(expense.accountId) ?? new Prisma.Decimal(0);
-      accountRestoreMap.set(
-        expense.accountId,
-        prev.plus(new Prisma.Decimal(expense.amount.toString())),
-      );
-    }
-
-    return this.prisma.$transaction(async (tx) => {
-      const { count } = await tx.expense.deleteMany({
-        where: { id: { in: ids } },
-      });
-
-      for (const [accountId, restoreAmount] of accountRestoreMap) {
-        await tx.account.update({
-          where: { id: accountId },
-          data: {
-            initialBalance: {
-              increment: restoreAmount,
-            },
-          },
-        });
-      }
-
-      return { count };
+    return this.prisma.expense.deleteMany({
+      where: { id: { in: ids } },
     });
   }
 }

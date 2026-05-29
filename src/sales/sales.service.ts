@@ -328,7 +328,6 @@ export class SalesService {
             throw new UnprocessableEntityException('Account is inactive.');
           }
 
-          const accountBalance = new Prisma.Decimal(account.initialBalance);
           const incomingAmount = new Prisma.Decimal(paidAmount);
 
           const lastPayment = await tx.payment.findFirst({
@@ -338,13 +337,6 @@ export class SalesService {
 
           const nextId = (lastPayment?.id ?? 0) + 1;
           const paymentNo = `PAY-${String(nextId).padStart(6, '0')}`;
-
-          await tx.account.update({
-            where: { id: dto.accountId as number },
-            data: {
-              initialBalance: accountBalance.add(incomingAmount),
-            },
-          });
 
           await tx.payment.create({
             data: {
@@ -704,22 +696,6 @@ export class SalesService {
     const deleted = await this.prisma.$transaction(async (tx) => {
       await Promise.all(
         sale.payments.map(async (payment) => {
-          const account = await tx.account.findUnique({
-            where: { id: payment.accountId },
-            select: { id: true, initialBalance: true },
-          });
-
-          if (account) {
-            await tx.account.update({
-              where: { id: account.id },
-              data: {
-                initialBalance: new Prisma.Decimal(account.initialBalance).sub(
-                  new Prisma.Decimal(payment.amount),
-                ),
-              },
-            });
-          }
-
           await tx.payment.delete({ where: { id: payment.id } });
         }),
       );
@@ -803,22 +779,6 @@ export class SalesService {
       await Promise.all(
         sales.flatMap((sale) =>
           sale.payments.map(async (payment) => {
-            const account = await tx.account.findUnique({
-              where: { id: payment.accountId },
-              select: { id: true, initialBalance: true },
-            });
-
-            if (account) {
-              await tx.account.update({
-                where: { id: account.id },
-                data: {
-                  initialBalance: new Prisma.Decimal(
-                    account.initialBalance,
-                  ).sub(new Prisma.Decimal(payment.amount)),
-                },
-              });
-            }
-
             await tx.payment.delete({ where: { id: payment.id } });
           }),
         ),
