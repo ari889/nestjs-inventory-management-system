@@ -32,6 +32,10 @@ import {
   UploadedFiles,
 } from '@blazity/nest-file-fastify';
 import type { FastifyRequest } from 'fastify';
+import {
+  type ChangePasswordDto,
+  ChangePasswordSchema,
+} from './schemas/password.schema';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -295,6 +299,59 @@ export class AuthController {
     return {
       success: true,
       message: 'Your profile updated successfully!',
+      data: user,
+    };
+  }
+
+  /**
+   * Update user password
+   * @param request
+   * @returns {Promise<User>}
+   */
+  @UseGuards(JwtAuthGuard)
+  @Patch('password')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'User password update successful response!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: {
+          type: 'boolean',
+          example: true,
+        },
+        message: {
+          type: 'string',
+          example: 'Your password updated successfully!',
+        },
+        data: {
+          type: 'object',
+          properties: {
+            name: { type: 'string', example: 'John Doe' },
+            phoneNo: { type: 'string', example: '+1234567890' },
+            gender: { type: 'boolean', example: true },
+            avatar: {
+              type: 'string',
+              example: 'https://example.com/avatar.jpg',
+            },
+          },
+        },
+      },
+    },
+  })
+  async updatePassword(
+    @Body(new ZodValidationPipe(ChangePasswordSchema)) body: ChangePasswordDto,
+    @Req() req: FastifyRequest,
+  ) {
+    const user = await this.authService.updatePassword(
+      req?.user?.email,
+      body.newPassword,
+      body.oldPassword,
+    );
+    return {
+      success: true,
+      message: 'Your password updated successfully!',
       data: user,
     };
   }

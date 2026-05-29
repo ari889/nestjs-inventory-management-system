@@ -15,6 +15,7 @@ import { ProfileDto } from './schemas/profile.schema';
 import { MemoryStorageFile } from '@blazity/nest-file-fastify';
 import { replaceFile } from 'src/common/fileUpload/fileHelper';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { hashPassword } from 'src/common/hash';
 
 @Injectable()
 export class AuthService {
@@ -145,5 +146,42 @@ export class AuthService {
       if (error instanceof BadRequestException) throw error;
       throw new InternalServerErrorException('Failed to save Brand!');
     }
+  }
+
+  /**
+   * Update user password
+   * @param email
+   * @param password
+   * @returns User
+   */
+  async updatePassword(email: string, password: string, oldPassword: string) {
+    const user = await this.usersService.findByEmail(email, true);
+
+    if (!user) {
+      throw new NotFoundException('User not found!');
+    }
+
+    if (!user.password) {
+      throw new BadRequestException('Password not found!');
+    }
+
+    const isValidPassword = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isValidPassword) {
+      throw new BadRequestException("Old password doesn't match!");
+    }
+
+    const hashedPassword = await hashPassword(password);
+
+    return this.prisma.user.update({
+      where: { email },
+      select: {
+        email: true,
+        name: true,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
   }
 }
