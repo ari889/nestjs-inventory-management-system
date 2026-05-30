@@ -3,6 +3,11 @@ import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ReportsService } from './reports.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
+import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
+import {
+  type DailySaleQueryDto,
+  DailySaleQuerySchema,
+} from './schema/daily-sale.schema';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -28,26 +33,85 @@ export class ReportsController {
         data: {
           type: 'object',
           properties: {
-            id: { type: 'number', example: 1 },
-            customerGroupId: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Customer 1' },
-            companyName: { type: 'string', example: 'Company 1' },
-            vatNumber: { type: 'string', example: '1234567890' },
-            email: { type: 'string', example: 'supplier1@example.com' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: '123 Main St' },
-            city: { type: 'string', example: 'New York' },
-            state: { type: 'string', example: 'NY' },
-            postalCode: { type: 'string', example: '10001' },
-            country: { type: 'string', example: 'USA' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
+            expense: {
+              type: 'object',
+              properties: {
+                amount: { type: 'number', example: 100.0 },
+                totalExpense: { type: 'number', example: 100.0 },
+              },
             },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
+            paymentPaid: {
+              type: 'object',
+              properties: {
+                count: { type: 'number', example: 1 },
+                amount: { type: 'number', example: 100.0 },
+                cash: { type: 'number', example: 100.0 },
+                cheque: { type: 'number', example: 100.0 },
+                mobile: { type: 'number', example: 100.0 },
+              },
+            },
+            paymentReceived: {
+              type: 'object',
+              properties: {
+                count: { type: 'number', example: 1 },
+                amount: { type: 'number', example: 100.0 },
+                cash: { type: 'number', example: 100.0 },
+                cheque: { type: 'number', example: 100.0 },
+                mobile: { type: 'number', example: 100.0 },
+              },
+            },
+            payroll: {
+              type: 'object',
+              properties: {
+                amount: { type: 'number', example: 100.0 },
+                totalPayroll: { type: 'number', example: 100.0 },
+              },
+            },
+            purchase: {
+              type: 'object',
+              properties: {
+                grandTotal: { type: 'number', example: 100.0 },
+                paidAmount: { type: 'number', example: 100.0 },
+                tax: { type: 'number', example: 100.0 },
+                totalPurchase: { type: 'number', example: 100.0 },
+              },
+            },
+            sale: {
+              type: 'object',
+              properties: {
+                grandTotal: { type: 'number', example: 100.0 },
+                paidAmount: { type: 'number', example: 100.0 },
+                tax: { type: 'number', example: 100.0 },
+                totalSale: { type: 'number', example: 100.0 },
+              },
+            },
+            totalItem: { type: 'number', example: 100.0 },
+            warehouses: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  warehouseId: { type: 'number', example: 1 },
+                  warehouseName: { type: 'string', example: 'Warehouse 1' },
+                  expense: { type: 'number', example: 100.0 },
+                  purchase: {
+                    type: 'object',
+                    properties: {
+                      grandTotal: { type: 'number', example: 100.0 },
+                      paidAmount: { type: 'number', example: 100.0 },
+                      tax: { type: 'number', example: 100.0 },
+                    },
+                  },
+                  sale: {
+                    type: 'object',
+                    properties: {
+                      grandTotal: { type: 'number', example: 100.0 },
+                      paidAmount: { type: 'number', example: 100.0 },
+                      tax: { type: 'number', example: 100.0 },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -56,7 +120,7 @@ export class ReportsController {
   })
   @Permission('summary-report-view')
   @Get('summary-report')
-  async find(@Query('from') from?: string, @Query('to') to?: string) {
+  async summaryReport(@Query('from') from?: string, @Query('to') to?: string) {
     const summaryReport = await this.reportsService.summaryReport(
       from ? new Date(from) : undefined,
       to ? new Date(to) : undefined,
@@ -65,6 +129,59 @@ export class ReportsController {
       success: true,
       message: 'Symmary report fetched successfully!',
       data: summaryReport,
+    };
+  }
+
+  /**
+   * Get summary report
+   * @param id
+   * @returns Customer
+   */
+  @ApiOkResponse({
+    description: 'Daily sale report successful response!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: {
+          type: 'string',
+          example: 'Daily Sale report fetched successfully!',
+        },
+        data: {
+          type: 'object',
+          properties: {
+            '2026-01-01': {
+              type: 'object',
+              properties: {
+                totalDiscount: { type: 'number', example: 100.0 },
+                orderDiscount: { type: 'number', example: 100.0 },
+                totalTax: { type: 'number', example: 100.0 },
+                orderTax: { type: 'number', example: 100.0 },
+                shippingCost: { type: 'number', example: 100.0 },
+                grandTotal: { type: 'number', example: 100.0 },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  @Permission('daily-sale-access')
+  @Get('daily-sale-report')
+  async dailySales(
+    @Query(new ZodValidationPipe(DailySaleQuerySchema))
+    query: DailySaleQueryDto,
+  ) {
+    const report = await this.reportsService.dailySaleReport(
+      query.warehouseId,
+      query.from,
+      query.to,
+    );
+
+    return {
+      success: true,
+      message: 'Daily sale report fetched successfully!',
+      data: report,
     };
   }
 }

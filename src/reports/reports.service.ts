@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { DailySaleMap } from 'src/@types/daily-sales.types';
 import { toNumber } from 'src/common/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -6,6 +7,12 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ReportsService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * Symmary report
+   * @param from
+   * @param to
+   * @returns any
+   */
   async summaryReport(from?: Date, to?: Date) {
     const startDate =
       from ?? new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -370,5 +377,66 @@ export class ReportsService {
 
       warehouses: warehouseReports,
     };
+  }
+
+  async dailySaleReport(
+    warehouseId: number | undefined,
+    from: Date | undefined,
+    to: Date | undefined,
+  ) {
+    const startDate = new Date(
+      from ?? new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    );
+    const endDate = new Date(to ?? new Date());
+
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    const sales = await this.prisma.sale.findMany({
+      where: {
+        ...(warehouseId ? { warehouseId } : {}),
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      select: {
+        createdAt: true,
+        totalDiscount: true,
+        orderDiscount: true,
+        totalTax: true,
+        orderTax: true,
+        shippingCost: true,
+        grandTotal: true,
+      },
+    });
+
+    const grouped = sales.reduce((acc, sale) => {
+      // Use local date parts instead of ISO string to avoid UTC shift
+      const d = sale.createdAt;
+      const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+      if (!acc[dateKey]) {
+        acc[dateKey] = {
+          totalDiscount: 0,
+          orderDiscount: 0,
+          totalTax: 0,
+          orderTax: 0,
+          shippingCost: 0,
+          grandTotal: 0,
+        };
+      }
+
+      acc[dateKey].totalDiscount += Number(sale.totalDiscount || 0);
+      acc[dateKey].orderDiscount += Number(sale.orderDiscount || 0);
+      acc[dateKey].totalTax += Number(sale.totalTax || 0);
+      acc[dateKey].orderTax += Number(sale.orderTax || 0);
+      acc[dateKey].shippingCost += Number(sale.shippingCost || 0);
+      acc[dateKey].grandTotal += Number(sale.grandTotal || 0);
+
+      return acc;
+    }, {} as DailySaleMap);
+
+    return grouped;
   }
 }
