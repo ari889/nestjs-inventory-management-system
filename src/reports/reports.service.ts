@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DailyMap, MonthlyMap } from 'src/@types/report.types';
 import { toNumber } from 'src/common/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
+import type { SupplierReportQueryDto } from './schema/supplier-report.schema';
 
 @Injectable()
 export class ReportsService {
@@ -601,5 +602,68 @@ export class ReportsService {
     }
 
     return result;
+  }
+
+  async supplierReport({
+    page,
+    limit,
+    order,
+    direction,
+    from,
+    to,
+    purchaseNo,
+    supplierId,
+  }: SupplierReportQueryDto) {
+    const startDate = new Date(
+      from ?? new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    );
+    const endDate = new Date(to ?? new Date());
+
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    const [items, totalItems] = await Promise.all([
+      this.prisma.purchase.findMany({
+        skip: page * limit,
+        take: limit,
+        orderBy: {
+          [order]: direction,
+        },
+        where: {
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+          ...(purchaseNo ? { purchaseNo } : {}),
+          ...(supplierId ? { supplierId } : {}),
+        },
+        include: {
+          creator: {
+            select: {
+              name: true,
+            },
+          },
+          supplier: {
+            select: {
+              name: true,
+              phone: true,
+            },
+          },
+        },
+      }),
+      this.prisma.purchase.count({
+        where: {
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      }),
+    ]);
+
+    return {
+      items,
+      totalItems,
+    };
   }
 }
