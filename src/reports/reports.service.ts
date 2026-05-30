@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DailySaleMap } from 'src/@types/daily-sales.types';
+import { DailySaleMap, MonthlySaleMap } from 'src/@types/report.types';
 import { toNumber } from 'src/common/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -379,6 +379,13 @@ export class ReportsService {
     };
   }
 
+  /**
+   * Daily sales report
+   * @param warehouseId
+   * @param from
+   * @param to
+   * @returns any
+   */
   async dailySaleReport(
     warehouseId: number | undefined,
     from: Date | undefined,
@@ -438,5 +445,49 @@ export class ReportsService {
     }, {} as DailySaleMap);
 
     return grouped;
+  }
+
+  /**
+   * Monthly sales report
+   * @param warehouseId
+   * @param year
+   * @returns any
+   */
+  async monthlySaleReport(warehouseId: number | undefined, year: number) {
+    const result: MonthlySaleMap = {};
+
+    for (let month = 1; month <= 12; month++) {
+      const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0, 0));
+      const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999));
+
+      const aggregate = await this.prisma.sale.aggregate({
+        where: {
+          ...(warehouseId ? { warehouseId } : {}),
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+        _sum: {
+          totalDiscount: true,
+          orderDiscount: true,
+          totalTax: true,
+          orderTax: true,
+          shippingCost: true,
+          grandTotal: true,
+        },
+      });
+
+      result[month] = {
+        totalDiscount: Number(aggregate._sum.totalDiscount || 0),
+        orderDiscount: Number(aggregate._sum.orderDiscount || 0),
+        totalTax: Number(aggregate._sum.totalTax || 0),
+        orderTax: Number(aggregate._sum.orderTax || 0),
+        shippingCost: Number(aggregate._sum.shippingCost || 0),
+        grandTotal: Number(aggregate._sum.grandTotal || 0),
+      };
+    }
+
+    return result;
   }
 }
