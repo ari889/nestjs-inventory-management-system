@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const MonthlySaleQuerySchema = z.object({
+export const MonthlyQuerySchema = z.object({
   warehouseId: z
     .string()
     .transform((val) => Number(val))
@@ -14,4 +14,4 @@ export const MonthlySaleQuerySchema = z.object({
     .optional(),
 });
 
-export type MonthlySaleQueryDto = z.infer<typeof MonthlySaleQuerySchema>;
+export type MonthlyQueryDto = z.infer<typeof MonthlyQuerySchema>;

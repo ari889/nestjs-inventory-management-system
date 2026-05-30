@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const DailySaleQuerySchema = z.object({
+export const DailyQuerySchema = z.object({
   warehouseId: z.coerce
     .string()
     .transform((val) => Number(val))
@@ -20,4 +20,4 @@ export const DailySaleQuerySchema = z.object({
     .optional(),
 });
 
-export type DailySaleQueryDto = z.infer<typeof DailySaleQuerySchema>;
+export type DailyQueryDto = z.infer<typeof DailyQuerySchema>;

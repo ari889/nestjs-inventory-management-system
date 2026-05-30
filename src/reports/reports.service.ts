@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DailySaleMap, MonthlySaleMap } from 'src/@types/report.types';
+import { DailyMap, MonthlyMap } from 'src/@types/report.types';
 import { toNumber } from 'src/common/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -442,7 +442,7 @@ export class ReportsService {
       acc[dateKey].grandTotal += Number(sale.grandTotal || 0);
 
       return acc;
-    }, {} as DailySaleMap);
+    }, {} as DailyMap);
 
     return grouped;
   }
@@ -454,13 +454,125 @@ export class ReportsService {
    * @returns any
    */
   async monthlySaleReport(warehouseId: number | undefined, year: number) {
-    const result: MonthlySaleMap = {};
+    const result: MonthlyMap = {};
 
     for (let month = 1; month <= 12; month++) {
       const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0, 0));
       const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999));
 
       const aggregate = await this.prisma.sale.aggregate({
+        where: {
+          ...(warehouseId ? { warehouseId } : {}),
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+        _sum: {
+          totalDiscount: true,
+          orderDiscount: true,
+          totalTax: true,
+          orderTax: true,
+          shippingCost: true,
+          grandTotal: true,
+        },
+      });
+
+      result[month] = {
+        totalDiscount: Number(aggregate._sum.totalDiscount || 0),
+        orderDiscount: Number(aggregate._sum.orderDiscount || 0),
+        totalTax: Number(aggregate._sum.totalTax || 0),
+        orderTax: Number(aggregate._sum.orderTax || 0),
+        shippingCost: Number(aggregate._sum.shippingCost || 0),
+        grandTotal: Number(aggregate._sum.grandTotal || 0),
+      };
+    }
+
+    return result;
+  }
+
+  /**
+   * Daily purcshase report
+   * @param warehouseId
+   * @param from
+   * @param to
+   * @returns any
+   */
+  async dailyPurchaseReport(
+    warehouseId: number | undefined,
+    from: Date | undefined,
+    to: Date | undefined,
+  ) {
+    const startDate = new Date(
+      from ?? new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    );
+    const endDate = new Date(to ?? new Date());
+
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    const purchases = await this.prisma.purchase.findMany({
+      where: {
+        ...(warehouseId ? { warehouseId } : {}),
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      select: {
+        createdAt: true,
+        totalDiscount: true,
+        orderDiscount: true,
+        totalTax: true,
+        orderTax: true,
+        shippingCost: true,
+        grandTotal: true,
+      },
+    });
+
+    const grouped = purchases.reduce((acc, purchase) => {
+      // Use local date parts instead of ISO string to avoid UTC shift
+      const d = purchase.createdAt;
+      const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+      if (!acc[dateKey]) {
+        acc[dateKey] = {
+          totalDiscount: 0,
+          orderDiscount: 0,
+          totalTax: 0,
+          orderTax: 0,
+          shippingCost: 0,
+          grandTotal: 0,
+        };
+      }
+
+      acc[dateKey].totalDiscount += Number(purchase.totalDiscount || 0);
+      acc[dateKey].orderDiscount += Number(purchase.orderDiscount || 0);
+      acc[dateKey].totalTax += Number(purchase.totalTax || 0);
+      acc[dateKey].orderTax += Number(purchase.orderTax || 0);
+      acc[dateKey].shippingCost += Number(purchase.shippingCost || 0);
+      acc[dateKey].grandTotal += Number(purchase.grandTotal || 0);
+
+      return acc;
+    }, {} as DailyMap);
+
+    return grouped;
+  }
+
+  /**
+   * Monthly purchase report
+   * @param warehouseId
+   * @param year
+   * @returns any
+   */
+  async monthlyPurchaseReport(warehouseId: number | undefined, year: number) {
+    const result: MonthlyMap = {};
+
+    for (let month = 1; month <= 12; month++) {
+      const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0, 0));
+      const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999));
+
+      const aggregate = await this.prisma.purchase.aggregate({
         where: {
           ...(warehouseId ? { warehouseId } : {}),
           createdAt: {

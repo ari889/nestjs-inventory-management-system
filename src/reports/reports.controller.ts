@@ -4,14 +4,11 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ReportsService } from './reports.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
+import { type DailyQueryDto, DailyQuerySchema } from './schema/daily.schema';
 import {
-  type DailySaleQueryDto,
-  DailySaleQuerySchema,
-} from './schema/daily-sale.schema';
-import {
-  type MonthlySaleQueryDto,
-  MonthlySaleQuerySchema,
-} from './schema/monthly-sale.schema';
+  type MonthlyQueryDto,
+  MonthlyQuerySchema,
+} from './schema/monthly.schema';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -173,8 +170,8 @@ export class ReportsController {
   @Permission('daily-sale-access')
   @Get('daily-sale-report')
   async dailySales(
-    @Query(new ZodValidationPipe(DailySaleQuerySchema))
-    query: DailySaleQueryDto,
+    @Query(new ZodValidationPipe(DailyQuerySchema))
+    query: DailyQueryDto,
   ) {
     const report = await this.reportsService.dailySaleReport(
       query.warehouseId,
@@ -226,8 +223,8 @@ export class ReportsController {
   @Permission('monthly-sale-access')
   @Get('monthly-sale-report')
   async monthlySales(
-    @Query(new ZodValidationPipe(MonthlySaleQuerySchema))
-    query: MonthlySaleQueryDto,
+    @Query(new ZodValidationPipe(MonthlyQuerySchema))
+    query: MonthlyQueryDto,
   ) {
     const year = query.year ?? new Date().getFullYear();
 
@@ -239,6 +236,113 @@ export class ReportsController {
     return {
       success: true,
       message: 'Monthly sale report fetched successfully!',
+      data,
+    };
+  }
+
+  /**
+   * Get daily purchase
+   * @param id
+   * @returns any
+   */
+  @ApiOkResponse({
+    description: 'Daily purchase report successful response!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: {
+          type: 'string',
+          example: 'Daily purchase report fetched successfully!',
+        },
+        data: {
+          type: 'object',
+          properties: {
+            '2026-01-01': {
+              type: 'object',
+              properties: {
+                totalDiscount: { type: 'number', example: 100.0 },
+                orderDiscount: { type: 'number', example: 100.0 },
+                totalTax: { type: 'number', example: 100.0 },
+                orderTax: { type: 'number', example: 100.0 },
+                shippingCost: { type: 'number', example: 100.0 },
+                grandTotal: { type: 'number', example: 100.0 },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  @Permission('daily-purchase-access')
+  @Get('daily-purchase-report')
+  async dailyPurchase(
+    @Query(new ZodValidationPipe(DailyQuerySchema))
+    query: DailyQueryDto,
+  ) {
+    const report = await this.reportsService.dailyPurchaseReport(
+      query.warehouseId,
+      query.from,
+      query.to,
+    );
+
+    return {
+      success: true,
+      message: 'Daily purchase report fetched successfully!',
+      data: report,
+    };
+  }
+
+  /**
+   * Monthly purchase report
+   * @param query
+   * @returns
+   */
+  @ApiOkResponse({
+    description: 'Monthly purchase report successful response!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: {
+          type: 'string',
+          example: 'Monthly purchase report fetched successfully!',
+        },
+        data: {
+          type: 'object',
+          properties: {
+            '2026-01-01': {
+              type: 'object',
+              properties: {
+                totalDiscount: { type: 'number', example: 100.0 },
+                orderDiscount: { type: 'number', example: 100.0 },
+                totalTax: { type: 'number', example: 100.0 },
+                orderTax: { type: 'number', example: 100.0 },
+                shippingCost: { type: 'number', example: 100.0 },
+                grandTotal: { type: 'number', example: 100.0 },
+              },
+            },
+          },
+        },
+      },
+    },
+  })
+  @Permission('monthly-purchase-access')
+  @Get('monthly-purchase-report')
+  async monthlyPurchase(
+    @Query(new ZodValidationPipe(MonthlyQuerySchema))
+    query: MonthlyQueryDto,
+  ) {
+    const year = query.year ?? new Date().getFullYear();
+
+    const data = await this.reportsService.monthlyPurchaseReport(
+      query.warehouseId,
+      year,
+    );
+
+    return {
+      success: true,
+      message: 'Monthly purchase report fetched successfully!',
       data,
     };
   }
