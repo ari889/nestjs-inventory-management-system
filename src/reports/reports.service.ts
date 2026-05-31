@@ -5,6 +5,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import type { SupplierReportQueryDto } from './schema/supplier-report.schema';
 import { CustomerReportQueryDto } from './schema/customer-report.schema';
 import { ProrductReportQueryDto } from './schema/product-report.schema';
+import { ProductQuantityAlertQueryDto } from './schema/product-quantity-alert.schema';
+import { Prisma } from 'src/generated/prisma/client';
 
 @Injectable()
 export class ReportsService {
@@ -736,6 +738,11 @@ export class ReportsService {
     };
   }
 
+  /**
+   * Show product report
+   * @param
+   * @returns Product
+   */
   async productReport({
     page,
     limit,
@@ -846,6 +853,71 @@ export class ReportsService {
         },
       }),
       this.prisma.product.count(),
+    ]);
+
+    return {
+      items,
+      totalCount,
+    };
+  }
+
+  async productQuantityAlert({
+    page,
+    limit,
+    order,
+    direction,
+    name,
+    code,
+    brandId,
+    categoryId,
+  }: ProductQuantityAlertQueryDto) {
+    const lowStockIds = await this.prisma.$queryRaw<{ id: number }[]>`
+              SELECT id FROM product
+              WHERE status = true
+              AND "alertQty" IS NOT NULL
+              AND qty IS NOT NULL
+              AND qty < "alertQty"
+              ${name ? Prisma.sql`AND name = ${name}` : Prisma.empty}
+              ${code ? Prisma.sql`AND code = ${code}` : Prisma.empty}
+              ${brandId ? Prisma.sql`AND "brandId" = ${brandId}` : Prisma.empty}
+              ${categoryId ? Prisma.sql`AND "categoryId" = ${categoryId}` : Prisma.empty}
+          `;
+
+    const ids = lowStockIds.map((p) => p.id);
+
+    const [items, totalCount] = await this.prisma.$transaction([
+      this.prisma.product.findMany({
+        skip: page * limit,
+        take: limit,
+        orderBy: {
+          [order]: direction,
+        },
+        where: {
+          id: { in: ids },
+        },
+        select: {
+          id: true,
+          name: true,
+          code: true,
+          qty: true,
+          alertQty: true,
+          brand: {
+            select: {
+              title: true,
+            },
+          },
+          category: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      }),
+      this.prisma.product.count({
+        where: {
+          id: { in: ids },
+        },
+      }),
     ]);
 
     return {

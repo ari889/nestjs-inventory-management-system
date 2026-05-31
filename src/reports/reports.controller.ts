@@ -21,6 +21,10 @@ import {
   type ProrductReportQueryDto,
   ProrductReportQuerySchema,
 } from './schema/product-report.schema';
+import {
+  type ProductQuantityAlertQueryDto,
+  ProductQuantityAlertQuerySchema,
+} from './schema/product-quantity-alert.schema';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -783,6 +787,128 @@ export class ReportsController {
     return {
       success: true,
       message: 'Product report fetched successfully!',
+      data,
+    };
+  }
+
+  /**
+   * Get low stock product
+   * @param page
+   * @param limit
+   * @param order
+   * @param direction
+   * @param name
+   * @param code
+   * @param brandId
+   * @param categoryId
+   * @returns Product
+   */
+  @ApiQuery({
+    name: 'order',
+    required: false,
+    example: 'id',
+  })
+  @ApiQuery({
+    name: 'direction',
+    required: false,
+    enum: ['asc', 'desc'],
+    example: 'asc',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    example: 0,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'name',
+    required: false,
+    type: String,
+    example: 'Product 1',
+  })
+  @ApiQuery({
+    name: 'code',
+    required: false,
+    type: String,
+    example: 'P1',
+  })
+  @ApiQuery({
+    name: 'brandId',
+    required: false,
+    type: Number,
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'categoryId',
+    required: false,
+    type: Number,
+    example: 1,
+  })
+  @ApiOkResponse({
+    description: 'Low stock products fetchced successful response!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: {
+          type: 'string',
+          example: 'Low stock products report fetched successfully!',
+        },
+        data: {
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'number', example: 1 },
+                  name: { type: 'string', example: 'Product 1' },
+                  code: { type: 'string', example: 'P1' },
+                  qty: { type: 'number', example: 10 },
+                  alertQty: { type: 'number', example: 5 },
+                  brandId: { type: 'number', example: 1 },
+                  categoryId: { type: 'number', example: 1 },
+                  creator: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'number', example: 1 },
+                      name: { type: 'string', example: 'John Doe' },
+                    },
+                  },
+                  createdAt: {
+                    type: 'string',
+                    example: '2024-01-01T00:00:00.000Z',
+                  },
+                  updatedAt: {
+                    type: 'string',
+                    example: '2024-01-01T00:00:00.000Z',
+                  },
+                },
+              },
+            },
+            totalItems: { type: 'number' },
+          },
+        },
+      },
+    },
+  })
+  @Permission('product-quantity-alert-access')
+  @Get('product-quantity-alert')
+  async getLowStockProducts(
+    @Query(new ZodValidationPipe(ProductQuantityAlertQuerySchema))
+    query: ProductQuantityAlertQueryDto,
+  ) {
+    const data = await this.reportsService.productQuantityAlert(query);
+    return {
+      success: true,
+      message: 'Low stock products fetched successfully!',
       data,
     };
   }
