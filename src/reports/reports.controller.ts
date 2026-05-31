@@ -13,6 +13,14 @@ import {
   type SupplierReportQueryDto,
   SupplierReportQuerySchema,
 } from './schema/supplier-report.schema';
+import {
+  type CustomerReportQueryDto,
+  CustomerReportQuerySchema,
+} from './schema/customer-report.schema';
+import {
+  type ProrductReportQueryDto,
+  ProrductReportQuerySchema,
+} from './schema/product-report.schema';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -490,6 +498,291 @@ export class ReportsController {
     return {
       success: true,
       message: 'Supplier report fetched successfully!',
+      data,
+    };
+  }
+
+  /**
+   * Get customer report
+   * @param page
+   * @param limit
+   * @param order
+   * @param direction
+   * @param from
+   * @param to
+   * @param saleNo
+   * @param customerId
+   * @returns Customer
+   */
+  @ApiQuery({
+    name: 'order',
+    required: false,
+    example: 'id',
+  })
+  @ApiQuery({
+    name: 'direction',
+    required: false,
+    enum: ['asc', 'desc'],
+    example: 'asc',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    example: 0,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'from',
+    required: false,
+    type: Date,
+    example: '2021-01-01T00:00:00.000Z',
+  })
+  @ApiQuery({
+    name: 'to',
+    required: false,
+    type: Date,
+    example: '2021-01-01T00:00:00.000Z',
+  })
+  @ApiQuery({
+    name: 'saleNo',
+    required: false,
+    type: String,
+    example: 'SNV-2021-01-01-0001',
+  })
+  @ApiQuery({
+    name: 'customerId',
+    required: false,
+    type: Number,
+    example: 1,
+  })
+  @ApiOkResponse({
+    description: 'Customer report fetchced successful response!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: {
+          type: 'string',
+          example: 'Customer report fetched successfully!',
+        },
+        data: {
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'number', example: 1 },
+                  saleNo: { type: 'string', example: 'PUR-1710000000000' },
+                  customerId: { type: 'number', example: 1 },
+                  warehouseId: { type: 'number', example: 1 },
+                  item: { type: 'number', example: 3 },
+                  totalQty: { type: 'number', example: 10 },
+                  totalDiscount: { type: 'string', example: '10.00' },
+                  totalTax: { type: 'string', example: '5.00' },
+                  totalPrice: { type: 'string', example: '100.00' },
+                  orderTaxRate: { type: 'string', example: '5.00' },
+                  orderTax: { type: 'string', example: '5.00' },
+                  orderDiscount: { type: 'string', example: '10.00' },
+                  shippingCost: { type: 'string', example: '20.00' },
+                  grandTotal: { type: 'string', example: '115.00' },
+                  taxId: { type: 'number', example: 1 },
+                  paidAmount: { type: 'string', example: '50.00' },
+                  saleStatus: { type: 'boolean', example: true },
+                  paymentStatus: { type: 'string', example: 'PAID' },
+                  document: {
+                    type: 'string',
+                    example: '/uploads/sales/file.jpg',
+                    nullable: true,
+                  },
+                  note: {
+                    type: 'string',
+                    example: 'Some note',
+                    nullable: true,
+                  },
+                  status: { type: 'boolean', example: true },
+                  creator: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'number', example: 1 },
+                      name: { type: 'string', example: 'John Doe' },
+                    },
+                  },
+                  createdAt: {
+                    type: 'string',
+                    example: '2024-01-01T00:00:00.000Z',
+                  },
+                  updatedAt: {
+                    type: 'string',
+                    example: '2024-01-01T00:00:00.000Z',
+                  },
+                },
+              },
+            },
+            totalItems: { type: 'number' },
+          },
+        },
+      },
+    },
+  })
+  @Permission('customer-report-access')
+  @Get('customer-report')
+  async getCustomerReport(
+    @Query(new ZodValidationPipe(CustomerReportQuerySchema))
+    query: CustomerReportQueryDto,
+  ) {
+    const data = await this.reportsService.customerReport(query);
+    return {
+      success: true,
+      message: 'Customer report fetched successfully!',
+      data,
+    };
+  }
+
+  /**
+   * Get product report
+   * @param page
+   * @param limit
+   * @param order
+   * @param direction
+   * @param from
+   * @param to
+   * @param warehouseId
+   * @returns Product
+   */
+  @ApiQuery({
+    name: 'order',
+    required: false,
+    example: 'id',
+  })
+  @ApiQuery({
+    name: 'direction',
+    required: false,
+    enum: ['asc', 'desc'],
+    example: 'asc',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    example: 0,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'from',
+    required: false,
+    type: Date,
+    example: '2021-01-01T00:00:00.000Z',
+  })
+  @ApiQuery({
+    name: 'to',
+    required: false,
+    type: Date,
+    example: '2021-01-01T00:00:00.000Z',
+  })
+  @ApiQuery({
+    name: 'warehouseId',
+    required: false,
+    type: Number,
+    example: 1,
+  })
+  @ApiOkResponse({
+    description: 'Product report fetchced successful response!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean' },
+        message: {
+          type: 'string',
+          example: 'Product report fetched successfully!',
+        },
+        data: {
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  id: { type: 'number', example: 1 },
+                  name: { type: 'string', example: 'Product 1' },
+                  code: { type: 'string', example: 'P1' },
+                  price: { type: 'string', example: '100.00' },
+                  cost: { type: 'string', example: '50.00' },
+                  qty: { type: 'number', example: 10 },
+                  purchaseProducts: {
+                    type: 'array',
+                    items: {
+                      properties: {
+                        grandTotal: { type: 'string', example: '100.00' },
+                        qty: { type: 'number', example: 10 },
+                      },
+                    },
+                  },
+                  saleProducts: {
+                    type: 'array',
+                    items: {
+                      properties: {
+                        grandTotal: { type: 'string', example: '100.00' },
+                        qty: { type: 'number', example: 10 },
+                      },
+                    },
+                  },
+                  warehouseProducts: {
+                    type: 'array',
+                    items: {
+                      properties: {
+                        warehouseId: { type: 'number', example: 1 },
+                      },
+                    },
+                  },
+                  status: { type: 'boolean', example: true },
+                  creator: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'number', example: 1 },
+                      name: { type: 'string', example: 'John Doe' },
+                    },
+                  },
+                  createdAt: {
+                    type: 'string',
+                    example: '2024-01-01T00:00:00.000Z',
+                  },
+                  updatedAt: {
+                    type: 'string',
+                    example: '2024-01-01T00:00:00.000Z',
+                  },
+                },
+              },
+            },
+            totalItems: { type: 'number' },
+          },
+        },
+      },
+    },
+  })
+  @Permission('product-report-access')
+  @Get('product-report')
+  async getProductReport(
+    @Query(new ZodValidationPipe(ProrductReportQuerySchema))
+    query: ProrductReportQueryDto,
+  ) {
+    const data = await this.reportsService.productReport(query);
+    return {
+      success: true,
+      message: 'Product report fetched successfully!',
       data,
     };
   }

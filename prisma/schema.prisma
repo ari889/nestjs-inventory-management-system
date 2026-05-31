@@ -488,7 +488,7 @@ model Product {
   updatedAt DateTime @updatedAt
 
   warehouseProducts WarehouseProduct[]
-  pruchaseProducts PurchaseProduct[]
+  purchaseProducts PurchaseProduct[]
   
   saleProducts SaleProduct[]
 }

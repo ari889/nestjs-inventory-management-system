@@ -277,7 +277,6 @@ export class SalesController {
       status: body.status === 'true' || body.status === true,
       document: files.document?.[0],
     }) as UpdateSaleDto;
-    console.log(validated);
 
     const sale = await this.salesService.update(
       id,

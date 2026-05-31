@@ -354,7 +354,6 @@ export class SalesService {
         return sale;
       });
     } catch (error: unknown) {
-      console.log({ error });
       if (error instanceof NotFoundException) throw error;
       if (error instanceof BadRequestException) throw error;
       throw new InternalServerErrorException('Failed to save Sale!');

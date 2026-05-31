@@ -436,7 +436,7 @@ export type PurchaseProductCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   purchase?: Prisma.PurchaseCreateNestedOneWithoutPurchaseProductsInput
-  product?: Prisma.ProductCreateNestedOneWithoutPruchaseProductsInput
+  product?: Prisma.ProductCreateNestedOneWithoutPurchaseProductsInput
   unit: Prisma.UnitCreateNestedOneWithoutPurchaseProductsInput
   productTax?: Prisma.TaxCreateNestedOneWithoutPurchaseProductTaxesInput
 }
@@ -469,7 +469,7 @@ export type PurchaseProductUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   purchase?: Prisma.PurchaseUpdateOneWithoutPurchaseProductsNestedInput
-  product?: Prisma.ProductUpdateOneWithoutPruchaseProductsNestedInput
+  product?: Prisma.ProductUpdateOneWithoutPurchaseProductsNestedInput
   unit?: Prisma.UnitUpdateOneRequiredWithoutPurchaseProductsNestedInput
   productTax?: Prisma.TaxUpdateOneWithoutPurchaseProductTaxesNestedInput
 }
@@ -807,7 +807,7 @@ export type PurchaseProductCreateWithoutProductTaxInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   purchase?: Prisma.PurchaseCreateNestedOneWithoutPurchaseProductsInput
-  product?: Prisma.ProductCreateNestedOneWithoutPruchaseProductsInput
+  product?: Prisma.ProductCreateNestedOneWithoutPurchaseProductsInput
   unit: Prisma.UnitCreateNestedOneWithoutPurchaseProductsInput
 }
 
@@ -884,7 +884,7 @@ export type PurchaseProductCreateWithoutUnitInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   purchase?: Prisma.PurchaseCreateNestedOneWithoutPurchaseProductsInput
-  product?: Prisma.ProductCreateNestedOneWithoutPruchaseProductsInput
+  product?: Prisma.ProductCreateNestedOneWithoutPurchaseProductsInput
   productTax?: Prisma.TaxCreateNestedOneWithoutPurchaseProductTaxesInput
 }
 
@@ -997,7 +997,7 @@ export type PurchaseProductCreateWithoutPurchaseInput = {
   total: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  product?: Prisma.ProductCreateNestedOneWithoutPruchaseProductsInput
+  product?: Prisma.ProductCreateNestedOneWithoutPurchaseProductsInput
   unit: Prisma.UnitCreateNestedOneWithoutPurchaseProductsInput
   productTax?: Prisma.TaxCreateNestedOneWithoutPurchaseProductTaxesInput
 }
@@ -1071,7 +1071,7 @@ export type PurchaseProductUpdateWithoutProductTaxInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   purchase?: Prisma.PurchaseUpdateOneWithoutPurchaseProductsNestedInput
-  product?: Prisma.ProductUpdateOneWithoutPruchaseProductsNestedInput
+  product?: Prisma.ProductUpdateOneWithoutPurchaseProductsNestedInput
   unit?: Prisma.UnitUpdateOneRequiredWithoutPurchaseProductsNestedInput
 }
 
@@ -1134,7 +1134,7 @@ export type PurchaseProductUpdateWithoutUnitInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   purchase?: Prisma.PurchaseUpdateOneWithoutPurchaseProductsNestedInput
-  product?: Prisma.ProductUpdateOneWithoutPruchaseProductsNestedInput
+  product?: Prisma.ProductUpdateOneWithoutPurchaseProductsNestedInput
   productTax?: Prisma.TaxUpdateOneWithoutPurchaseProductTaxesNestedInput
 }
 
@@ -1259,7 +1259,7 @@ export type PurchaseProductUpdateWithoutPurchaseInput = {
   total?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  product?: Prisma.ProductUpdateOneWithoutPruchaseProductsNestedInput
+  product?: Prisma.ProductUpdateOneWithoutPurchaseProductsNestedInput
   unit?: Prisma.UnitUpdateOneRequiredWithoutPurchaseProductsNestedInput
   productTax?: Prisma.TaxUpdateOneWithoutPurchaseProductTaxesNestedInput
 }

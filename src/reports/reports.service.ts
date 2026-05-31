@@ -3,6 +3,8 @@ import { DailyMap, MonthlyMap } from 'src/@types/report.types';
 import { toNumber } from 'src/common/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
 import type { SupplierReportQueryDto } from './schema/supplier-report.schema';
+import { CustomerReportQueryDto } from './schema/customer-report.schema';
+import { ProrductReportQueryDto } from './schema/product-report.schema';
 
 @Injectable()
 export class ReportsService {
@@ -664,6 +666,191 @@ export class ReportsService {
     return {
       items,
       totalItems,
+    };
+  }
+
+  /**
+   * Customer Report
+   * @returns Sale
+   */
+  async customerReport({
+    page,
+    limit,
+    order,
+    direction,
+    from,
+    to,
+    saleNo,
+    customerId,
+  }: CustomerReportQueryDto) {
+    const startDate = new Date(
+      from ?? new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    );
+    const endDate = new Date(to ?? new Date());
+
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    const [items, totalItems] = await Promise.all([
+      this.prisma.sale.findMany({
+        skip: page * limit,
+        take: limit,
+        orderBy: {
+          [order]: direction,
+        },
+        where: {
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+          ...(saleNo ? { saleNo } : {}),
+          ...(customerId ? { customerId } : {}),
+        },
+        include: {
+          creator: {
+            select: {
+              name: true,
+            },
+          },
+          customer: {
+            select: {
+              name: true,
+              phone: true,
+            },
+          },
+        },
+      }),
+      this.prisma.sale.count({
+        where: {
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      }),
+    ]);
+
+    return {
+      items,
+      totalItems,
+    };
+  }
+
+  async productReport({
+    page,
+    limit,
+    order,
+    direction,
+    from,
+    to,
+    warehouseId,
+  }: ProrductReportQueryDto) {
+    const startDate = new Date(
+      from ?? new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    );
+    const endDate = new Date(to ?? new Date());
+
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    const dateFilter = {
+      ...(startDate || endDate
+        ? {
+            createdAt: {
+              ...(startDate ? { gte: startDate } : {}),
+              ...(endDate ? { lte: endDate } : {}),
+            },
+          }
+        : {}),
+    };
+
+    const [items, totalCount] = await this.prisma.$transaction([
+      this.prisma.product.findMany({
+        skip: page * limit,
+        take: limit,
+        orderBy: {
+          [order]: direction,
+        },
+        where: {
+          status: true,
+          purchaseProducts: {
+            some: {
+              purchase: {
+                status: true,
+                ...dateFilter,
+              },
+            },
+          },
+          saleProducts: {
+            some: {
+              sale: {
+                status: true,
+                ...dateFilter,
+              },
+            },
+          },
+        },
+        select: {
+          id: true,
+          name: true,
+          code: true,
+          price: true,
+          cost: true,
+          qty: true,
+
+          purchaseProducts: {
+            where: {
+              purchase: {
+                status: true,
+                warehouseId,
+                ...dateFilter,
+              },
+            },
+            select: {
+              qty: true,
+              purchase: {
+                select: {
+                  grandTotal: true,
+                },
+              },
+            },
+          },
+
+          saleProducts: {
+            where: {
+              sale: {
+                status: true,
+                warehouseId,
+                ...dateFilter,
+              },
+            },
+            select: {
+              qty: true,
+              sale: {
+                select: {
+                  grandTotal: true,
+                },
+              },
+            },
+          },
+
+          warehouseProducts: {
+            where: {
+              ...(warehouseId ? { warehouseId } : {}),
+            },
+            select: {
+              warehouseId: true,
+              qty: true,
+            },
+          },
+        },
+      }),
+      this.prisma.product.count(),
+    ]);
+
+    return {
+      items,
+      totalCount,
     };
   }
 }
