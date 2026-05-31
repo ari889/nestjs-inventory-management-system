@@ -264,60 +264,62 @@ export class PurchasesService {
           },
         });
 
-        await Promise.all(
-          dto.products.map(async (p) => {
-            const unit = await tx.unit.findUnique({
-              where: { id: p.unitId },
-              select: { operationValue: true },
-            });
+        if (dto.purchaseStatus === 'PARTIAL') {
+          await Promise.all(
+            dto.products.map(async (p) => {
+              const unit = await tx.unit.findUnique({
+                where: { id: p.unitId },
+                select: { operationValue: true },
+              });
 
-            if (!unit) {
-              throw new NotFoundException(`Unit ${p.unitId} not found!`);
-            }
+              if (!unit) {
+                throw new NotFoundException(`Unit ${p.unitId} not found!`);
+              }
 
-            const receivedQty = new Prisma.Decimal(p.received || 0).div(
-              new Prisma.Decimal(unit.operationValue),
-            );
+              const receivedQty = new Prisma.Decimal(p.received || 0).div(
+                new Prisma.Decimal(unit.operationValue),
+              );
 
-            const qtyValue = receivedQty.toNumber();
+              const qtyValue = receivedQty.toNumber();
 
-            await tx.product.update({
-              where: { id: p.productId },
-              data: {
-                qty: {
-                  increment: qtyValue,
-                },
-              },
-            });
-
-            const warehouseProduct = await tx.warehouseProduct.findFirst({
-              where: {
-                warehouseId: dto.warehouseId,
-                productId: p.productId,
-              },
-              select: { id: true },
-            });
-
-            if (warehouseProduct) {
-              await tx.warehouseProduct.update({
-                where: { id: warehouseProduct.id },
+              await tx.product.update({
+                where: { id: p.productId },
                 data: {
                   qty: {
                     increment: qtyValue,
                   },
                 },
               });
-            } else {
-              await tx.warehouseProduct.create({
-                data: {
+
+              const warehouseProduct = await tx.warehouseProduct.findFirst({
+                where: {
                   warehouseId: dto.warehouseId,
                   productId: p.productId,
-                  qty: qtyValue,
                 },
+                select: { id: true },
               });
-            }
-          }),
-        );
+
+              if (warehouseProduct) {
+                await tx.warehouseProduct.update({
+                  where: { id: warehouseProduct.id },
+                  data: {
+                    qty: {
+                      increment: qtyValue,
+                    },
+                  },
+                });
+              } else {
+                await tx.warehouseProduct.create({
+                  data: {
+                    warehouseId: dto.warehouseId,
+                    productId: p.productId,
+                    qty: qtyValue,
+                  },
+                });
+              }
+            }),
+          );
+        }
 
         return purchase;
       });
@@ -343,6 +345,7 @@ export class PurchasesService {
             id: true,
             document: true,
             warehouseId: true,
+            purchaseStatus: true,
             purchaseProducts: {
               select: {
                 id: true,
@@ -568,56 +571,58 @@ export class PurchasesService {
           },
         });
 
-        await Promise.all(
-          dto.products.map(async (p) => {
-            const unit = await tx.unit.findUnique({
-              where: { id: p.unitId },
-              select: { operator: true, operationValue: true },
-            });
+        if (dto.purchaseStatus === 'PARTIAL') {
+          await Promise.all(
+            dto.products.map(async (p) => {
+              const unit = await tx.unit.findUnique({
+                where: { id: p.unitId },
+                select: { operator: true, operationValue: true },
+              });
 
-            if (!unit)
-              throw new NotFoundException(`Unit ${p.unitId} not found!`);
+              if (!unit)
+                throw new NotFoundException(`Unit ${p.unitId} not found!`);
 
-            const newReceivedQty =
-              unit.operator === '*'
-                ? new Prisma.Decimal(p.received).mul(
-                    new Prisma.Decimal(unit.operationValue),
-                  )
-                : new Prisma.Decimal(p.received).div(
-                    new Prisma.Decimal(unit.operationValue),
-                  );
+              const newReceivedQty =
+                unit.operator === '*'
+                  ? new Prisma.Decimal(p.received).mul(
+                      new Prisma.Decimal(unit.operationValue),
+                    )
+                  : new Prisma.Decimal(p.received).div(
+                      new Prisma.Decimal(unit.operationValue),
+                    );
 
-            const newQtyValue = newReceivedQty.toNumber();
+              const newQtyValue = newReceivedQty.toNumber();
 
-            await tx.product.update({
-              where: { id: p.productId },
-              data: { qty: { increment: newQtyValue } },
-            });
-
-            const warehouseProduct = await tx.warehouseProduct.findFirst({
-              where: {
-                warehouseId: dto.warehouseId,
-                productId: p.productId,
-              },
-              select: { id: true },
-            });
-
-            if (warehouseProduct) {
-              await tx.warehouseProduct.update({
-                where: { id: warehouseProduct.id },
+              await tx.product.update({
+                where: { id: p.productId },
                 data: { qty: { increment: newQtyValue } },
               });
-            } else {
-              await tx.warehouseProduct.create({
-                data: {
+
+              const warehouseProduct = await tx.warehouseProduct.findFirst({
+                where: {
                   warehouseId: dto.warehouseId,
                   productId: p.productId,
-                  qty: newQtyValue,
                 },
+                select: { id: true },
               });
-            }
-          }),
-        );
+
+              if (warehouseProduct) {
+                await tx.warehouseProduct.update({
+                  where: { id: warehouseProduct.id },
+                  data: { qty: { increment: newQtyValue } },
+                });
+              } else {
+                await tx.warehouseProduct.create({
+                  data: {
+                    warehouseId: dto.warehouseId,
+                    productId: p.productId,
+                    qty: newQtyValue,
+                  },
+                });
+              }
+            }),
+          );
+        }
 
         return updated;
       });
