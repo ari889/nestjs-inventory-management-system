@@ -693,10 +693,6 @@ const permissionsData = [
 
   // Stock
   { moduleId: 7, name: 'Stock Access', slug: 'stock-access' },
-  { moduleId: 7, name: 'Stock Add', slug: 'stock-add' },
-  { moduleId: 7, name: 'Stock Edit', slug: 'stock-edit' },
-  { moduleId: 7, name: 'Stock Delete', slug: 'stock-delete' },
-  { moduleId: 7, name: 'Stock Bulk Delete', slug: 'stock-bulk-delete' },
 
   // Purchase
   { moduleId: 10, name: 'Purchase Access', slug: 'purchase-access' },

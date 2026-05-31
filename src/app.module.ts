@@ -37,6 +37,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { SalesModule } from './sales/sales.module';
 import { BalanceSheetsModule } from './balance-sheets/balance-sheets.module';
 import { ReportsModule } from './reports/reports.module';
+import { StockModule } from './stock/stock.module';
 
 @Module({
   imports: [
@@ -101,6 +102,7 @@ import { ReportsModule } from './reports/reports.module';
     SalesModule,
     BalanceSheetsModule,
     ReportsModule,
+    StockModule,
   ],
   providers: [
     {

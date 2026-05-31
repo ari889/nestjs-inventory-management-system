@@ -861,6 +861,10 @@ export class ReportsService {
     };
   }
 
+  /**
+   * Show low stock product
+   * @returns Product
+   */
   async productQuantityAlert({
     page,
     limit,
