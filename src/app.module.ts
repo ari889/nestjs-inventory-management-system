@@ -38,6 +38,7 @@ import { SalesModule } from './sales/sales.module';
 import { BalanceSheetsModule } from './balance-sheets/balance-sheets.module';
 import { ReportsModule } from './reports/reports.module';
 import { StockModule } from './stock/stock.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -103,6 +104,7 @@ import { StockModule } from './stock/stock.module';
     BalanceSheetsModule,
     ReportsModule,
     StockModule,
+    DashboardModule,
   ],
   providers: [
     {
