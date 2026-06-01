@@ -21,12 +21,14 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiBody,
+  ApiConsumes,
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { ProfileDto, ProfileSchema } from './schemas/profile.schema';
 import {
+  AnyFilesInterceptor,
   FileFieldsInterceptor,
   MemoryStorageFile,
   UploadedFiles,
@@ -50,7 +52,25 @@ export class AuthController {
   @UsePipes(new ZodValidationPipe(LoginSchema))
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @ApiBody({ type: LoginDto })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(AnyFilesInterceptor())
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['email', 'password'],
+      properties: {
+        email: {
+          type: 'string',
+          example: 'admin@gmail.com',
+        },
+        password: {
+          type: 'string',
+          format: 'password',
+          example: 'asdfg1234',
+        },
+      },
+    },
+  })
   @ApiOkResponse({
     description: 'Login Successful Response!',
     schema: {
@@ -187,11 +207,12 @@ export class AuthController {
             id: { type: 'number', example: 1 },
             name: { type: 'string', example: 'John Doe' },
             email: { type: 'string', example: 'john.doe@example.com' },
-            phoneNo: { type: 'string', example: '+1234567890' },
-            emailVerifiedAt: {
+            avatar: {
               type: 'string',
-              example: '2022-01-01T00:00:00.000Z',
+              example:
+                '/uploads/users/3c3a7f08-80ff-419d-b70d-f23393a0beb1.png',
             },
+            phoneNo: { type: 'string', example: '+1234567890' },
             role: {
               type: 'object',
               properties: {
@@ -199,34 +220,7 @@ export class AuthController {
                 name: { type: 'string', example: 'Admin' },
               },
             },
-            avatar: {
-              type: 'string',
-              example: 'https://example.com/avatar.jpg',
-            },
-            gender: { type: 'boolean', example: true },
             status: { type: 'boolean', example: true },
-            creator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            updator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2022-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2022-01-01T00:00:00.000Z',
-            },
           },
         },
       },
@@ -248,6 +242,33 @@ export class AuthController {
    */
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileFieldsInterceptor([{ name: 'avatar', maxCount: 1 }]))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['name', 'avatar', 'gender'],
+      properties: {
+        name: {
+          type: 'string',
+          example: 'John Doe',
+        },
+        avatar: {
+          type: 'string',
+          format: 'binary',
+        },
+        phone: {
+          type: 'string',
+          example: '+1234567890',
+        },
+        gender: {
+          type: 'boolean',
+          enum: [true, false],
+          example: true,
+          description: 'Gender (true = Male, false = Female)',
+        },
+      },
+    },
+  })
   @Patch('profile')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
@@ -268,12 +289,13 @@ export class AuthController {
           type: 'object',
           properties: {
             name: { type: 'string', example: 'John Doe' },
-            phoneNo: { type: 'string', example: '+1234567890' },
-            gender: { type: 'boolean', example: true },
             avatar: {
               type: 'string',
-              example: 'https://example.com/avatar.jpg',
+              example:
+                '/uploads/users/4272fa38-8a2e-4998-aad7-5e1e4bdce542.png',
             },
+            phoneNo: { type: 'string', example: '+1234567890' },
+            gender: { type: 'boolean', example: true },
           },
         },
       },
@@ -312,6 +334,31 @@ export class AuthController {
   @Patch('password')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(AnyFilesInterceptor())
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['oldPassword', 'newPassword', 'reEnterPassword'],
+      properties: {
+        oldPassword: {
+          type: 'string',
+          format: 'password',
+          example: 'asdfg1234',
+        },
+        newPassword: {
+          type: 'string',
+          format: 'password',
+          example: 'asdfg12345',
+        },
+        reEnterPassword: {
+          type: 'string',
+          example: 'asdfg12345',
+          format: 'password',
+        },
+      },
+    },
+  })
   @ApiOkResponse({
     description: 'User password update successful response!',
     schema: {
@@ -330,11 +377,6 @@ export class AuthController {
           properties: {
             name: { type: 'string', example: 'John Doe' },
             phoneNo: { type: 'string', example: '+1234567890' },
-            gender: { type: 'boolean', example: true },
-            avatar: {
-              type: 'string',
-              example: 'https://example.com/avatar.jpg',
-            },
           },
         },
       },
