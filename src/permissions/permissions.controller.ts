@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -30,6 +29,7 @@ import { CreatePermissionDto } from './dto/permission.dto';
 import { BlukDeletePermissionDto } from './dto/bulk-delete-permission.dto';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import type { FastifyRequest } from 'fastify';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -260,7 +260,7 @@ export class PermissionsController {
   @Permission('permission-create')
   @Post()
   async createPermission(
-    @Body(new ZodValidationPipe(PermissionSchema))
+    @FormBody(new ZodValidationPipe(PermissionSchema))
     permissionDto: CreatePermissionDto,
   ) {
     const permission =
@@ -319,7 +319,7 @@ export class PermissionsController {
   @Patch(':id')
   async updatePermission(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(PermissionItemSchema))
+    @FormBody(new ZodValidationPipe(PermissionItemSchema))
     permissionDto: PermissionItemDto,
   ) {
     const permission = await this.permissionsService.updatePermission(
@@ -429,7 +429,7 @@ export class PermissionsController {
   })
   @Permission('permission-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@Body() body: BlukDeletePermissionDto) {
+  async bulkDeletePermission(@FormBody() body: BlukDeletePermissionDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const permissions = await this.permissionsService.bulkDeletePermission(

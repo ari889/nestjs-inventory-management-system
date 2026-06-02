@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -29,6 +28,7 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { type SupplierDto, SupplierSchema } from './schemas/supplier.schema';
 import type { FastifyRequest } from 'fastify';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -268,7 +268,7 @@ export class SuppliersController {
   @Permission('supplier-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(SupplierSchema))
+    @FormBody(new ZodValidationPipe(SupplierSchema))
     supplierDto: SupplierDto,
     @Req() req: FastifyRequest,
   ) {
@@ -351,7 +351,7 @@ export class SuppliersController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(SupplierSchema))
+    @FormBody(new ZodValidationPipe(SupplierSchema))
     supplierDto: SupplierDto,
     @Req() req: FastifyRequest,
   ) {
@@ -439,7 +439,7 @@ export class SuppliersController {
   })
   @Permission('supplier-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@Body() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
     const data = await this.suppliersService.bulkDelete(body?.ids);
     return {
       success: true,

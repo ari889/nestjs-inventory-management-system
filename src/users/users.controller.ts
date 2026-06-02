@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   Delete,
   Get,
@@ -38,6 +37,7 @@ import { type UserQueryDto, UserQuerySchema } from './schema/user-query.schema';
 import { UserListItem } from './@types/user.types';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
 import { AnyFilesInterceptor } from '@blazity/nest-file-fastify';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 const userProperties = {
   id: { type: 'number', example: 1 },
@@ -300,7 +300,7 @@ export class UsersController {
   @Permission('user-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(createUserSchema)) userDto: CreateUserDto,
+    @FormBody(new ZodValidationPipe(createUserSchema)) userDto: CreateUserDto,
     @Req() req: FastifyRequest,
   ) {
     const creatorEmail = req.user?.email;
@@ -389,7 +389,7 @@ export class UsersController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(updateUserSchema)) userDto: UpdateUserDto,
+    @FormBody(new ZodValidationPipe(updateUserSchema)) userDto: UpdateUserDto,
     @Req() req: FastifyRequest,
   ) {
     const updatorEmail = req.user?.email;
@@ -455,7 +455,7 @@ export class UsersController {
   })
   @Permission('user-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@Body() body: BlukDeleteIdsDto) {
+  async bulkDelete(@FormBody() body: BlukDeleteIdsDto) {
     console.log(body);
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');

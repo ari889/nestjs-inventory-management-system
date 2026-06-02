@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -29,6 +28,7 @@ import { type CustomerDto, CustomerSchema } from './schemas/customer.schema';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import type { FastifyRequest } from 'fastify';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -271,7 +271,7 @@ export class CustomersController {
   @Permission('customer-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(CustomerSchema))
+    @FormBody(new ZodValidationPipe(CustomerSchema))
     customerDto: CustomerDto,
     @Req() req: FastifyRequest,
   ) {
@@ -356,7 +356,7 @@ export class CustomersController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(CustomerSchema))
+    @FormBody(new ZodValidationPipe(CustomerSchema))
     customerDto: CustomerDto,
     @Req() req: FastifyRequest,
   ) {
@@ -444,7 +444,7 @@ export class CustomersController {
   })
   @Permission('customer-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@Body() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
     const data = await this.customersService.bulkDelete(body?.ids);
     return {
       success: true,

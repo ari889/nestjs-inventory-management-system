@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -29,6 +28,7 @@ import { TaxSchema } from './schemas/taxes.schema';
 import { BlukDeleteTaxDto, TaxDto } from './dto/taxes.dto';
 import type { FastifyRequest } from 'fastify';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -251,7 +251,7 @@ export class TaxesController {
   @Permission('tax-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(TaxSchema))
+    @FormBody(new ZodValidationPipe(TaxSchema))
     taxDto: TaxDto,
     @Req() req: FastifyRequest,
   ) {
@@ -320,7 +320,7 @@ export class TaxesController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(TaxSchema))
+    @FormBody(new ZodValidationPipe(TaxSchema))
     taxDto: TaxDto,
     @Req() req: FastifyRequest,
   ) {
@@ -401,7 +401,7 @@ export class TaxesController {
   })
   @Permission('tax-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@Body() body: BlukDeleteTaxDto) {
+  async bulkDelete(@FormBody() body: BlukDeleteTaxDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const taxes = await this.taxesService.bulkDelete(body.ids);

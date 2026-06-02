@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   Delete,
   Get,
@@ -32,6 +31,7 @@ import {
 } from './schemas/menu-query.schema';
 import { AnyFilesInterceptor } from '@blazity/nest-file-fastify';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 const menuProperties = {
   id: { type: 'number', example: 1 },
@@ -202,7 +202,7 @@ export class MenusController {
   @Permission('menu-create')
   @Post()
   async createMenu(
-    @Body(new ZodValidationPipe(MenuSchema)) createMenuDto: CreateMenuDto,
+    @FormBody(new ZodValidationPipe(MenuSchema)) createMenuDto: CreateMenuDto,
   ) {
     const menu = await this.menusService.create(createMenuDto);
     return {
@@ -256,7 +256,7 @@ export class MenusController {
   @Patch(':id')
   async updateMenu(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(MenuSchema)) updateMenuDto: UpdateMenuDto,
+    @FormBody(new ZodValidationPipe(MenuSchema)) updateMenuDto: UpdateMenuDto,
   ) {
     const menu = await this.menusService.update(id, updateMenuDto);
     return {
@@ -322,7 +322,7 @@ export class MenusController {
   })
   @Permission('menu-bulk-delete')
   @Delete('bulk')
-  async bulkDeleteMenu(@Body() body: BlukDeleteIdsDto) {
+  async bulkDeleteMenu(@FormBody() body: BlukDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const menus = await this.menusService.bulkDelete(body?.ids);

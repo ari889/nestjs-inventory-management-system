@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -32,6 +31,7 @@ import {
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import type { FastifyRequest } from 'fastify';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -244,7 +244,7 @@ export class DepartmentsController {
   @Permission('department-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(DepartmentSchema))
+    @FormBody(new ZodValidationPipe(DepartmentSchema))
     departmentDto: DepartmentDto,
     @Req() req: FastifyRequest,
   ) {
@@ -315,7 +315,7 @@ export class DepartmentsController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(DepartmentSchema))
+    @FormBody(new ZodValidationPipe(DepartmentSchema))
     departmentDto: DepartmentDto,
     @Req() req: FastifyRequest,
   ) {
@@ -397,7 +397,7 @@ export class DepartmentsController {
   })
   @Permission('department-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@Body() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
     const data = await this.departmentsService.bulkDelete(body?.ids);
     return {
       success: true,

@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -35,6 +34,7 @@ import type { FastifyRequest } from 'fastify';
 import { EmployeeDto, EmployeeSchema } from './schemas/employee.schema';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -301,7 +301,7 @@ export class EmployeesController {
   @Post()
   @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
   async create(
-    @Body() body: Record<string, unknown>,
+    @FormBody() body: Record<string, unknown>,
     @UploadedFiles()
     files: {
       image?: MemoryStorageFile[];
@@ -404,7 +404,7 @@ export class EmployeesController {
   @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: Record<string, unknown>,
+    @FormBody() body: Record<string, unknown>,
     @UploadedFiles()
     files: {
       image?: MemoryStorageFile[];
@@ -502,7 +502,7 @@ export class EmployeesController {
   })
   @Permission('employee-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@Body() body: BlukDeleteIdsDto) {
+  async bulkDelete(@FormBody() body: BlukDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const empoyee = await this.employeesService.bulkDelete(body.ids);

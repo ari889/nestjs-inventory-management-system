@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -32,6 +31,7 @@ import {
 } from './schemas/attendance.schema';
 import type { FastifyRequest } from 'fastify';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -289,7 +289,7 @@ export class AttendancesController {
   @Permission('attendance-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(AttendanceSchema))
+    @FormBody(new ZodValidationPipe(AttendanceSchema))
     attendanceDto: AttendanceDto,
     @Req() req: FastifyRequest,
   ) {
@@ -384,7 +384,7 @@ export class AttendancesController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(AttendanceSchema))
+    @FormBody(new ZodValidationPipe(AttendanceSchema))
     attendanceDto: AttendanceDto,
     @Req() req: FastifyRequest,
   ) {
@@ -478,7 +478,7 @@ export class AttendancesController {
   })
   @Permission('attendance-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@Body() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
     const data = await this.attendancesService.bulkDelete(body?.ids);
     return {
       success: true,

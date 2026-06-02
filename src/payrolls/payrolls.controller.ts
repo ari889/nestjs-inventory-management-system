@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -29,6 +28,7 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { type PayrollDto, PayrollSchema } from './schemas/payroll.schema';
 import type { FastifyRequest } from 'fastify';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -265,7 +265,7 @@ export class PayrollsController {
   @Permission('payroll-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(PayrollSchema))
+    @FormBody(new ZodValidationPipe(PayrollSchema))
     payrollDto: PayrollDto,
     @Req() req: FastifyRequest,
   ) {
@@ -357,7 +357,7 @@ export class PayrollsController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(PayrollSchema))
+    @FormBody(new ZodValidationPipe(PayrollSchema))
     payrollDto: PayrollDto,
     @Req() req: FastifyRequest,
   ) {
@@ -439,7 +439,7 @@ export class PayrollsController {
   })
   @Permission('payroll-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@Body() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
     const data = await this.payrollsService.bulkDelete(body?.ids);
     return {
       success: true,

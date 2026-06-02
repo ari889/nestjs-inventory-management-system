@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   Post,
@@ -22,6 +21,7 @@ import {
 import { SettingsService } from './settings.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @Controller('settings')
 export class SettingsController {
@@ -126,7 +126,7 @@ export class SettingsController {
     ]),
   )
   async create(
-    @Body() body: Record<string, unknown>,
+    @FormBody() body: Record<string, unknown>,
     @UploadedFiles()
     files: {
       logo?: MemoryStorageFile[];

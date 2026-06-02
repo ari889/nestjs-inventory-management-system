@@ -176,8 +176,8 @@ export class AuthService {
     return this.prisma.user.update({
       where: { email },
       select: {
-        email: true,
         name: true,
+        phoneNo: true,
       },
       data: {
         password: hashedPassword,

@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -29,6 +28,7 @@ import { type AccountDto, AccountSchema } from './schemas/account.schema';
 import type { FastifyRequest } from 'fastify';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -259,7 +259,7 @@ export class AccountsController {
   @Permission('account-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(AccountSchema))
+    @FormBody(new ZodValidationPipe(AccountSchema))
     accountDto: AccountDto,
     @Req() req: FastifyRequest,
   ) {
@@ -345,7 +345,7 @@ export class AccountsController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(AccountSchema))
+    @FormBody(new ZodValidationPipe(AccountSchema))
     accountDto: AccountDto,
     @Req() req: FastifyRequest,
   ) {
@@ -427,7 +427,7 @@ export class AccountsController {
   })
   @Permission('account-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@Body() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
     const data = await this.accountsService.bulkDelete(body?.ids);
     return {
       success: true,

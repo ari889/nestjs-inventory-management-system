@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -32,6 +31,7 @@ import {
 } from './schemas/product-category.schema';
 import type { FastifyRequest } from 'fastify';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -247,7 +247,7 @@ export class ProductCategoriesController {
   @Permission('product-category-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(ProductCategorySchema))
+    @FormBody(new ZodValidationPipe(ProductCategorySchema))
     productCategoryDto: ProductCategoryDto,
     @Req() req: FastifyRequest,
   ) {
@@ -318,7 +318,7 @@ export class ProductCategoriesController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(ProductCategorySchema))
+    @FormBody(new ZodValidationPipe(ProductCategorySchema))
     productCategoryDto: ProductCategoryDto,
     @Req() req: FastifyRequest,
   ) {
@@ -400,7 +400,7 @@ export class ProductCategoriesController {
   })
   @Permission('product-category-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@Body() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
     const data = await this.productCategoriesService.bulkDelete(body?.ids);
     return {
       success: true,

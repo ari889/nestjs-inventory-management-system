@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -24,6 +23,7 @@ import { RoleSchema, UpdateRoleSchema } from './schemas/role.schema';
 import { RoleDto, UpdateRoleDto } from './dto/role.dto';
 import { BlukDeleteRoleDto } from './schemas/role-bulk-delete.dto';
 import { Permission } from 'src/common/decorators/permission.decorator';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -242,7 +242,7 @@ export class RolesController {
   })
   @Permission('role-create')
   @Post()
-  async create(@Body(new ZodValidationPipe(RoleSchema)) roleDto: RoleDto) {
+  async create(@FormBody(new ZodValidationPipe(RoleSchema)) roleDto: RoleDto) {
     const role = await this.rolesService.create(roleDto);
     return {
       success: true,
@@ -290,7 +290,7 @@ export class RolesController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(UpdateRoleSchema)) roleDto: UpdateRoleDto,
+    @FormBody(new ZodValidationPipe(UpdateRoleSchema)) roleDto: UpdateRoleDto,
   ) {
     const role = await this.rolesService.update(id, roleDto);
     return {
@@ -376,7 +376,7 @@ export class RolesController {
   })
   @Permission('role-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@Body() body: BlukDeleteRoleDto) {
+  async bulkDelete(@FormBody() body: BlukDeleteRoleDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const roles = await this.rolesService.bulkDelete(body.ids);

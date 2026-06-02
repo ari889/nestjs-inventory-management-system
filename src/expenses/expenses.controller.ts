@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -29,6 +28,7 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { type ExpenseDto, ExpenseSchema } from './schemas/expense.schema';
 import type { FastifyRequest } from 'fastify';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -272,7 +272,7 @@ export class ExpensesController {
   @Permission('expense-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(ExpenseSchema))
+    @FormBody(new ZodValidationPipe(ExpenseSchema))
     expenseDto: ExpenseDto,
     @Req() req: FastifyRequest,
   ) {
@@ -369,7 +369,7 @@ export class ExpensesController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(ExpenseSchema))
+    @FormBody(new ZodValidationPipe(ExpenseSchema))
     expenaseDto: ExpenseDto,
     @Req() req: FastifyRequest,
   ) {
@@ -452,7 +452,7 @@ export class ExpensesController {
   })
   @Permission('expense-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@Body() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
     const data = await this.expensesService.bulkDelete(body?.ids);
     return {
       success: true,

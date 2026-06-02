@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -36,6 +35,7 @@ import type { FastifyRequest } from 'fastify';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
 import { SaleCreateSchema, SaleUpdateSchema } from './schemas/sale.schema';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 const saleProductSchema = {
   type: 'object',
@@ -212,7 +212,7 @@ export class SalesController {
   @Post()
   @UseInterceptors(FileFieldsInterceptor([{ name: 'document', maxCount: 1 }]))
   async create(
-    @Body() body: Record<string, unknown>,
+    @FormBody() body: Record<string, unknown>,
     @UploadedFiles() files: { document?: MemoryStorageFile[] },
     @Req() req: FastifyRequest,
   ) {
@@ -264,7 +264,7 @@ export class SalesController {
   @UseInterceptors(FileFieldsInterceptor([{ name: 'document', maxCount: 1 }]))
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: Record<string, unknown>,
+    @FormBody() body: Record<string, unknown>,
     @UploadedFiles() files: { document?: MemoryStorageFile[] },
     @Req() req: FastifyRequest,
   ) {
@@ -351,7 +351,7 @@ export class SalesController {
   })
   @Permission('sale-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@Body() body: BlukDeleteIdsDto) {
+  async bulkDelete(@FormBody() body: BlukDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const sales = await this.salesService.bulkDelete(body.ids);

@@ -3,6 +3,7 @@ import { Module } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UsersService } from 'src/users/users.service';
 import { CreateModuleDto } from './dto/create-module.dto';
+import { ModuleChildrenType } from './@types/module.types';
 import { ModuleItemDto } from './dto/module-item.dto';
 
 @Injectable()
@@ -28,7 +29,7 @@ export class ModulesService {
       result.push({
         id: item.id,
         order: item.order,
-        parentId, // use the passed-in parentId, not item.parentId
+        parentId,
       });
 
       if (item.children?.length) {
@@ -40,92 +41,64 @@ export class ModulesService {
   }
 
   /**
-   * Build tree
-   * @param modules
-   * @param parentId
-   * @returns
-   */
-  private buildTree(
-    modules: Module[],
-    parentId: number | null = null,
-  ): ModuleItemDto[] {
-    return modules
-      .filter((m) => m.parentId === parentId)
-      .map((m) => ({
-        id: m.id,
-        menuId: m.menuId,
-        type: m.type,
-        moduleName: m.moduleName ?? undefined,
-        dividerTitle: m.dividerTitle ?? undefined,
-        iconClass: m.iconClass ?? undefined,
-        url: m.url ?? undefined,
-        order: m.order,
-        parentId: m.parentId ?? undefined,
-        target: m.target as '_self' | '_blank',
-        deletable: m.deletable,
-        children: this.buildTree(modules, m.id),
-      }));
-  }
-
-  /**
-   * Build tree with permissions
-   * @param modules
-   * @param parentId
-   * @returns
-   */
-  private buildTreeWithPermissions(
-    modules: (Module & {
-      permissions: { id: number; name: string; slug: string }[];
-    })[],
-    parentId: number | null = null,
-  ): ModuleItemDto[] {
-    return modules
-      .filter((m) => m.parentId === parentId)
-      .map((m) => ({
-        id: m.id,
-        menuId: m.menuId,
-        type: m.type,
-        moduleName: m.moduleName ?? undefined,
-        dividerTitle: m.dividerTitle ?? undefined,
-        iconClass: m.iconClass ?? undefined,
-        url: m.url ?? undefined,
-        order: m.order,
-        parentId: m.parentId ?? undefined,
-        target: m.target as '_self' | '_blank',
-        deletable: m.deletable,
-        permissions: m.permissions ?? [],
-        children: this.buildTreeWithPermissions(
-          m.permissions ? modules : [],
-          m.id,
-        ),
-      }));
-  }
-
-  /**
    * Get modules by menu id
    * @param menuId
    * @returns Modules
    */
-  async getModules(menuId: number): Promise<ModuleItemDto[]> {
-    const modules = await this.prisma.module.findMany({
-      where: { menuId },
-      orderBy: { order: 'asc' },
+  async getModules(menuId: number): Promise<ModuleChildrenType[]> {
+    return this.prisma.module.findMany({
+      where: {
+        menuId,
+        parentId: null,
+      },
+      orderBy: {
+        order: 'asc',
+      },
+      select: {
+        id: true,
+        menuId: true,
+        type: true,
+        moduleName: true,
+        dividerTitle: true,
+        iconClass: true,
+        url: true,
+        order: true,
+        parentId: true,
+        target: true,
+        deletable: true,
+        children: {
+          orderBy: {
+            order: 'asc',
+          },
+        },
+      },
     });
-
-    return this.buildTree(modules);
   }
 
   /**
    * Get all modules with permissions
    * @returns
    */
-  async getModulePermissions(): Promise<Module[]> {
-    const modules = await this.prisma.module.findMany({
+  async getModulePermissions(): Promise<
+    Array<Omit<Module, 'createdAt' | 'updatedAt'>>
+  > {
+    return this.prisma.module.findMany({
       where: {
         type: false,
       },
       orderBy: { order: 'asc' },
-      include: {
+      select: {
+        id: true,
+        menuId: true,
+        type: true,
+        moduleName: true,
+        dividerTitle: true,
+        iconClass: true,
+        url: true,
+        order: true,
+        parentId: true,
+        target: true,
+        deletable: true,
         permissions: {
           select: {
             id: true,
@@ -136,7 +109,6 @@ export class ModulesService {
         },
       },
     });
-    return modules;
   }
 
   /**
@@ -144,13 +116,13 @@ export class ModulesService {
    * @param email
    * @returns Module
    */
-  async getModuleByRole(email: string): Promise<any[]> {
+  async getModuleByRole(email: string): Promise<ModuleChildrenType[]> {
     const user = await this.userService.findByEmail(email);
     if (!user) throw new NotFoundException('User not found!');
 
     const isSuperAdmin = user.role?.id === 1;
 
-    const modules = await this.prisma.module.findMany({
+    return this.prisma.module.findMany({
       where: {
         parentId: null,
         ...(!isSuperAdmin && {
@@ -158,7 +130,18 @@ export class ModulesService {
         }),
       },
       orderBy: { order: 'asc' },
-      include: {
+      select: {
+        id: true,
+        menuId: true,
+        type: true,
+        moduleName: true,
+        dividerTitle: true,
+        iconClass: true,
+        url: true,
+        order: true,
+        parentId: true,
+        target: true,
+        deletable: true,
         children: {
           where: !isSuperAdmin
             ? { moduleRole: { some: { roleId: user.role?.id } } }
@@ -167,8 +150,6 @@ export class ModulesService {
         },
       },
     });
-
-    return modules;
   }
 
   /**
@@ -176,11 +157,26 @@ export class ModulesService {
    * @param createModuleDto
    * @returns Module
    */
-  async createModule(createModuleDto: CreateModuleDto): Promise<Module> {
+  async createModule(
+    createModuleDto: CreateModuleDto,
+  ): Promise<Omit<Module, 'createdAt' | 'updatedAt'>> {
     return this.prisma.module.create({
       data: {
         ...createModuleDto,
         target: createModuleDto?.target === '_self' ? 'SELF' : 'BLANK',
+      },
+      select: {
+        id: true,
+        menuId: true,
+        type: true,
+        moduleName: true,
+        dividerTitle: true,
+        iconClass: true,
+        url: true,
+        order: true,
+        parentId: true,
+        target: true,
+        deletable: true,
       },
     });
   }
@@ -190,8 +186,11 @@ export class ModulesService {
    * @param id
    * @returns Module
    */
-  async deleteModule(id: number): Promise<Module> {
-    return this.prisma.module.delete({ where: { id } });
+  async deleteModule(id: number): Promise<Pick<Module, 'id' | 'moduleName'>> {
+    return this.prisma.module.delete({
+      where: { id },
+      select: { id: true, moduleName: true },
+    });
   }
 
   /**
@@ -199,8 +198,25 @@ export class ModulesService {
    * @param id
    * @returns Module
    */
-  async findModule(id: number): Promise<Module | null> {
-    return this.prisma.module.findUnique({ where: { id } });
+  async findModule(
+    id: number,
+  ): Promise<Omit<Module, 'createdAt' | 'updatedAt'> | null> {
+    return this.prisma.module.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        menuId: true,
+        type: true,
+        moduleName: true,
+        dividerTitle: true,
+        iconClass: true,
+        url: true,
+        order: true,
+        parentId: true,
+        target: true,
+        deletable: true,
+      },
+    });
   }
 
   /**
@@ -211,6 +227,8 @@ export class ModulesService {
    */
   async updateModule(id: number, createModuleDto: CreateModuleDto) {
     const current = await this.prisma.module.findUnique({ where: { id } });
+
+    if (!current) throw new NotFoundException('Module not found!');
 
     return this.prisma.module.update({
       where: { id },
@@ -228,6 +246,19 @@ export class ModulesService {
             url: null,
           }),
       },
+      select: {
+        id: true,
+        menuId: true,
+        type: true,
+        moduleName: true,
+        dividerTitle: true,
+        iconClass: true,
+        url: true,
+        order: true,
+        parentId: true,
+        target: true,
+        deletable: true,
+      },
     });
   }
 
@@ -235,7 +266,9 @@ export class ModulesService {
    * Update module order and parent id from recorder
    * @param items
    */
-  async reorderMenuItems(items: ModuleItemDto[]): Promise<ModuleItemDto[]> {
+  async reorderMenuItems(
+    items: ModuleItemDto[],
+  ): Promise<ModuleChildrenType[]> {
     const flatItems = this.flattenItems(items);
 
     await this.prisma.$transaction(
@@ -250,11 +283,32 @@ export class ModulesService {
       ),
     );
 
-    const modules = await this.prisma.module.findMany({
-      where: { menuId: items[0].menuId },
-      orderBy: { order: 'asc' },
+    return this.prisma.module.findMany({
+      where: {
+        menuId: items[0].menuId,
+        parentId: null,
+      },
+      orderBy: {
+        order: 'asc',
+      },
+      select: {
+        id: true,
+        menuId: true,
+        type: true,
+        moduleName: true,
+        dividerTitle: true,
+        iconClass: true,
+        url: true,
+        order: true,
+        parentId: true,
+        target: true,
+        deletable: true,
+        children: {
+          orderBy: {
+            order: 'asc',
+          },
+        },
+      },
     });
-
-    return this.buildTree(modules);
   }
 }

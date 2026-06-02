@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -23,6 +22,7 @@ import { BlukDeleteWarehouseDto, WarehouseDto } from './dto/warehouse.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { WarehouseSchema } from './schemas/warehouse.schema';
 import type { FastifyRequest } from 'fastify';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 @Controller('warehouses')
@@ -233,7 +233,7 @@ export class WarehousesController {
   @Permission('warehouse-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(WarehouseSchema))
+    @FormBody(new ZodValidationPipe(WarehouseSchema))
     warehouseDto: WarehouseDto,
     @Req() req: FastifyRequest,
   ) {
@@ -295,7 +295,8 @@ export class WarehousesController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(WarehouseSchema)) warehouseDto: WarehouseDto,
+    @FormBody(new ZodValidationPipe(WarehouseSchema))
+    warehouseDto: WarehouseDto,
     @Req() req: FastifyRequest,
   ) {
     const updatorEmail = req.user?.email;
@@ -380,7 +381,7 @@ export class WarehousesController {
   })
   @Permission('warehouse-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@Body() body: BlukDeleteWarehouseDto) {
+  async bulkDelete(@FormBody() body: BlukDeleteWarehouseDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const warehouses = await this.warehousesService.bulkDelete(body.ids);

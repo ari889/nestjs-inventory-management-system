@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
@@ -20,6 +19,41 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { createModuleSchema } from './schemas/create-module.schema';
 import { ModuleItemDto } from './dto/module-item.dto';
 import { Permission } from 'src/common/decorators/permission.decorator';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
+
+const moduleProperties = {
+  id: { type: 'number', example: 1 },
+  menuId: { type: 'number', example: 1 },
+  type: { type: 'boolean', example: true },
+  moduleName: { type: 'string', example: 'Menus' },
+  dividerTitle: { type: 'string', example: 'Menus' },
+  iconClass: { type: 'string', example: 'fa fa-home' },
+  url: { type: 'string', example: '/' },
+  order: { type: 'number', example: 1 },
+  parentId: { type: 'number', example: 1 },
+  target: { type: 'string', example: 'SELF' },
+  deletable: { type: 'boolean', example: true },
+  permissions: {
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        id: { type: 'number', example: 1 },
+        name: { type: 'string', example: 'Menus' },
+        slug: { type: 'string', example: 'menus' },
+        deletable: { type: 'boolean', example: true },
+      },
+    },
+  },
+};
+
+const moduleChildrenProperties = {
+  ...moduleProperties,
+  children: {
+    type: 'object',
+    properties: moduleProperties,
+  },
+};
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -43,54 +77,7 @@ export class ModulesController {
           type: 'array',
           items: {
             type: 'object',
-            properties: {
-              id: { type: 'number', example: 1 },
-              menuId: { type: 'number', example: 1 },
-              type: { type: 'boolean', example: true },
-              moduleName: { type: 'string', example: 'Menus' },
-              dividerTitle: { type: 'string', example: 'Menus' },
-              iconClass: { type: 'string', example: 'fa fa-home' },
-              url: { type: 'string', example: '/' },
-              order: { type: 'number', example: 1 },
-              parentId: { type: 'number', example: 1 },
-              target: { type: 'string', example: 'SELF' },
-              deletable: { type: 'boolean', example: true },
-              createdAt: {
-                type: 'string',
-                example: '2021-01-01T00:00:00.000Z',
-              },
-              updatedAt: {
-                type: 'string',
-                example: '2021-01-01T00:00:00.000Z',
-              },
-              children: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  properties: {
-                    id: { type: 'number', example: 1 },
-                    menuId: { type: 'number', example: 1 },
-                    type: { type: 'boolean', example: true },
-                    moduleName: { type: 'string', example: 'Menus' },
-                    dividerTitle: { type: 'string', example: 'Menus' },
-                    iconClass: { type: 'string', example: 'fa fa-home' },
-                    url: { type: 'string', example: '/' },
-                    order: { type: 'number', example: 1 },
-                    parentId: { type: 'number', example: 1 },
-                    target: { type: 'string', example: 'SELF' },
-                    deletable: { type: 'boolean', example: true },
-                    createdAt: {
-                      type: 'string',
-                      example: '2021-01-01T00:00:00.000Z',
-                    },
-                    updatedAt: {
-                      type: 'string',
-                      example: '2021-01-01T00:00:00.000Z',
-                    },
-                  },
-                },
-              },
-            },
+            properties: moduleChildrenProperties,
           },
         },
       },
@@ -122,39 +109,7 @@ export class ModulesController {
           type: 'array',
           items: {
             type: 'object',
-            properties: {
-              id: { type: 'number', example: 1 },
-              menuId: { type: 'number', example: 1 },
-              type: { type: 'boolean', example: true },
-              moduleName: { type: 'string', example: 'Menus' },
-              dividerTitle: { type: 'string', example: 'Menus' },
-              iconClass: { type: 'string', example: 'fa fa-home' },
-              url: { type: 'string', example: '/' },
-              order: { type: 'number', example: 1 },
-              parentId: { type: 'number', example: 1 },
-              target: { type: 'string', example: 'SELF' },
-              deletable: { type: 'boolean', example: true },
-              permissions: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  properties: {
-                    id: { type: 'number', example: 1 },
-                    name: { type: 'string', example: 'Create User' },
-                    slug: { type: 'string', example: 'create-user' },
-                    deletable: { type: 'boolean', example: true },
-                  },
-                },
-              },
-              createdAt: {
-                type: 'string',
-                example: '2021-01-01T00:00:00.000Z',
-              },
-              updatedAt: {
-                type: 'string',
-                example: '2021-01-01T00:00:00.000Z',
-              },
-            },
+            properties: moduleProperties,
           },
         },
       },
@@ -187,54 +142,7 @@ export class ModulesController {
           type: 'array',
           items: {
             type: 'object',
-            properties: {
-              id: { type: 'number', example: 1 },
-              menuId: { type: 'number', example: 1 },
-              type: { type: 'boolean', example: true },
-              moduleName: { type: 'string', example: 'Menus' },
-              dividerTitle: { type: 'string', example: 'Menus' },
-              iconClass: { type: 'string', example: 'fa fa-home' },
-              url: { type: 'string', example: '/' },
-              order: { type: 'number', example: 1 },
-              parentId: { type: 'number', example: 1 },
-              target: { type: 'string', example: 'SELF' },
-              deletable: { type: 'boolean', example: true },
-              createdAt: {
-                type: 'string',
-                example: '2021-01-01T00:00:00.000Z',
-              },
-              updatedAt: {
-                type: 'string',
-                example: '2021-01-01T00:00:00.000Z',
-              },
-              children: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  properties: {
-                    id: { type: 'number', example: 1 },
-                    menuId: { type: 'number', example: 1 },
-                    type: { type: 'boolean', example: true },
-                    moduleName: { type: 'string', example: 'Menus' },
-                    dividerTitle: { type: 'string', example: 'Menus' },
-                    iconClass: { type: 'string', example: 'fa fa-home' },
-                    url: { type: 'string', example: '/' },
-                    order: { type: 'number', example: 1 },
-                    parentId: { type: 'number', example: 1 },
-                    target: { type: 'string', example: 'SELF' },
-                    deletable: { type: 'boolean', example: true },
-                    createdAt: {
-                      type: 'string',
-                      example: '2021-01-01T00:00:00.000Z',
-                    },
-                    updatedAt: {
-                      type: 'string',
-                      example: '2021-01-01T00:00:00.000Z',
-                    },
-                  },
-                },
-              },
-            },
+            properties: moduleChildrenProperties,
           },
         },
       },
@@ -258,35 +166,15 @@ export class ModulesController {
    * @returns Module
    */
   @ApiOkResponse({
-    description: 'Module created successfully!',
+    description: 'Module created successfull response!',
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: { type: 'string', example: 'Module created successfully!' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            menuId: { type: 'number', example: 1 },
-            type: { type: 'boolean', example: true },
-            moduleName: { type: 'string', example: 'Menus' },
-            dividerTitle: { type: 'string', example: 'Menus' },
-            iconClass: { type: 'string', example: 'fa fa-home' },
-            url: { type: 'string', example: '/' },
-            order: { type: 'number', example: 1 },
-            parentId: { type: 'number', example: 1 },
-            target: { type: 'string', example: 'SELF' },
-            deletable: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: moduleProperties,
         },
       },
     },
@@ -295,7 +183,7 @@ export class ModulesController {
   @Post(':menuId')
   async createModule(
     @Param('menuId', ParseIntPipe) menuId: number,
-    @Body(new ZodValidationPipe(createModuleSchema))
+    @FormBody(new ZodValidationPipe(createModuleSchema))
     createModuleDto: CreateModuleDto,
   ) {
     const module = await this.modulesService.createModule({
@@ -325,24 +213,7 @@ export class ModulesController {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
-            menuId: { type: 'number', example: 1 },
-            type: { type: 'boolean', example: true },
             moduleName: { type: 'string', example: 'Menus' },
-            dividerTitle: { type: 'string', example: 'Menus' },
-            iconClass: { type: 'string', example: 'fa fa-home' },
-            url: { type: 'string', example: '/' },
-            order: { type: 'number', example: 1 },
-            parentId: { type: 'number', example: 1 },
-            target: { type: 'string', example: 'SELF' },
-            deletable: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
           },
         },
       },
@@ -373,27 +244,7 @@ export class ModulesController {
         message: { type: 'string', example: 'Module fetched successfully!' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            menuId: { type: 'number', example: 1 },
-            type: { type: 'boolean', example: true },
-            moduleName: { type: 'string', example: 'Menus' },
-            dividerTitle: { type: 'string', example: 'Menus' },
-            iconClass: { type: 'string', example: 'fa fa-home' },
-            url: { type: 'string', example: '/' },
-            order: { type: 'number', example: 1 },
-            parentId: { type: 'number', example: 1 },
-            target: { type: 'string', example: 'SELF' },
-            deletable: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: moduleProperties,
         },
       },
     },
@@ -427,27 +278,7 @@ export class ModulesController {
         message: { type: 'string', example: 'Module updated successfully!' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            menuId: { type: 'number', example: 1 },
-            type: { type: 'boolean', example: true },
-            moduleName: { type: 'string', example: 'Menus' },
-            dividerTitle: { type: 'string', example: 'Menus' },
-            iconClass: { type: 'string', example: 'fa fa-home' },
-            url: { type: 'string', example: '/' },
-            order: { type: 'number', example: 1 },
-            parentId: { type: 'number', example: 1 },
-            target: { type: 'string', example: 'SELF' },
-            deletable: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: moduleProperties,
         },
       },
     },
@@ -455,7 +286,7 @@ export class ModulesController {
   @Permission('module-edit')
   @Patch(':id')
   async updateModule(
-    @Body(new ZodValidationPipe(createModuleSchema))
+    @FormBody(new ZodValidationPipe(createModuleSchema))
     createModuleDto: CreateModuleDto,
     @Param('id', ParseIntPipe) id: number,
   ) {
@@ -483,54 +314,7 @@ export class ModulesController {
           type: 'array',
           items: {
             type: 'object',
-            properties: {
-              id: { type: 'number', example: 1 },
-              menuId: { type: 'number', example: 1 },
-              type: { type: 'boolean', example: true },
-              moduleName: { type: 'string', example: 'Menus' },
-              dividerTitle: { type: 'string', example: 'Menus' },
-              iconClass: { type: 'string', example: 'fa fa-home' },
-              url: { type: 'string', example: '/' },
-              order: { type: 'number', example: 1 },
-              parentId: { type: 'number', example: 1 },
-              target: { type: 'string', example: 'SELF' },
-              deletable: { type: 'boolean', example: true },
-              createdAt: {
-                type: 'string',
-                example: '2021-01-01T00:00:00.000Z',
-              },
-              updatedAt: {
-                type: 'string',
-                example: '2021-01-01T00:00:00.000Z',
-              },
-              children: {
-                type: 'array',
-                items: {
-                  type: 'object',
-                  properties: {
-                    id: { type: 'number', example: 1 },
-                    menuId: { type: 'number', example: 1 },
-                    type: { type: 'boolean', example: true },
-                    moduleName: { type: 'string', example: 'Menus' },
-                    dividerTitle: { type: 'string', example: 'Menus' },
-                    iconClass: { type: 'string', example: 'fa fa-home' },
-                    url: { type: 'string', example: '/' },
-                    order: { type: 'number', example: 1 },
-                    parentId: { type: 'number', example: 1 },
-                    target: { type: 'string', example: 'SELF' },
-                    deletable: { type: 'boolean', example: true },
-                    createdAt: {
-                      type: 'string',
-                      example: '2021-01-01T00:00:00.000Z',
-                    },
-                    updatedAt: {
-                      type: 'string',
-                      example: '2021-01-01T00:00:00.000Z',
-                    },
-                  },
-                },
-              },
-            },
+            properties: moduleChildrenProperties,
           },
         },
       },
@@ -538,7 +322,7 @@ export class ModulesController {
   })
   @Permission('module-arrange')
   @Patch('recorder')
-  async reorderMenuItems(@Body() items: ModuleItemDto[]) {
+  async reorderMenuItems(@FormBody() items: ModuleItemDto[]) {
     const reorderedItems = await this.modulesService.reorderMenuItems(items);
 
     return {

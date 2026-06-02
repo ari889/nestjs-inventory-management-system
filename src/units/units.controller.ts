@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -29,6 +28,7 @@ import type { FastifyRequest } from 'fastify';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { UnitSchema } from './schemas/units.schemas';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -270,7 +270,7 @@ export class UnitsController {
   @Permission('unit-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(UnitSchema))
+    @FormBody(new ZodValidationPipe(UnitSchema))
     unitDto: UnitDto,
     @Req() req: FastifyRequest,
   ) {
@@ -352,7 +352,7 @@ export class UnitsController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(UnitSchema))
+    @FormBody(new ZodValidationPipe(UnitSchema))
     unitDto: UnitDto,
     @Req() req: FastifyRequest,
   ) {
@@ -436,7 +436,7 @@ export class UnitsController {
   })
   @Permission('unit-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@Body() body: BlukDeleteUnitDto) {
+  async bulkDelete(@FormBody() body: BlukDeleteUnitDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const units = await this.unitsService.bulkDelete(body.ids);

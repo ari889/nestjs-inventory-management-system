@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -35,6 +34,7 @@ import {
 } from '@blazity/nest-file-fastify';
 import type { FastifyRequest } from 'fastify/types/request';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -260,7 +260,7 @@ export class BrandsController {
   @Post()
   @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
   async create(
-    @Body() body: Record<string, unknown>,
+    @FormBody() body: Record<string, unknown>,
     @UploadedFiles()
     files: {
       image?: MemoryStorageFile[];
@@ -345,7 +345,7 @@ export class BrandsController {
   @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: Record<string, unknown>,
+    @FormBody() body: Record<string, unknown>,
     @UploadedFiles()
     files: {
       image?: MemoryStorageFile[];
@@ -435,7 +435,7 @@ export class BrandsController {
   })
   @Permission('brand-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@Body() body: BlukDeleteBrandDto) {
+  async bulkDelete(@FormBody() body: BlukDeleteBrandDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const brands = await this.brandsService.bulkDelete(body.ids);

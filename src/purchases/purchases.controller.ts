@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -36,6 +35,7 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { PurchaseSchema } from './schemas/purchase.schema';
 import { CreatePurchaseDto, UpdatePurchaseDto } from './dto/purchase.dto';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 const purchaseProductSchema = {
   type: 'object',
@@ -211,7 +211,7 @@ export class PurchasesController {
   @Post()
   @UseInterceptors(FileFieldsInterceptor([{ name: 'document', maxCount: 1 }]))
   async create(
-    @Body() body: Record<string, unknown>,
+    @FormBody() body: Record<string, unknown>,
     @UploadedFiles() files: { document?: MemoryStorageFile[] },
     @Req() req: FastifyRequest,
   ) {
@@ -263,7 +263,7 @@ export class PurchasesController {
   @UseInterceptors(FileFieldsInterceptor([{ name: 'document', maxCount: 1 }]))
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: Record<string, unknown>,
+    @FormBody() body: Record<string, unknown>,
     @UploadedFiles() files: { document?: MemoryStorageFile[] },
     @Req() req: FastifyRequest,
   ) {
@@ -350,7 +350,7 @@ export class PurchasesController {
   })
   @Permission('purchase-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@Body() body: BlukDeleteIdsDto) {
+  async bulkDelete(@FormBody() body: BlukDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const purchases = await this.purchasesService.bulkDelete(body.ids);

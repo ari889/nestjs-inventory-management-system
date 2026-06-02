@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -32,6 +31,7 @@ import {
   CustomerGroupDto,
 } from './dto/customer-group.dto';
 import type { FastifyRequest } from 'fastify';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -256,7 +256,7 @@ export class CustomerGroupsController {
   @Permission('customer-group-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(CustomerGroupSchema))
+    @FormBody(new ZodValidationPipe(CustomerGroupSchema))
     customerGroupDto: CustomerGroupDto,
     @Req() req: FastifyRequest,
   ) {
@@ -328,7 +328,7 @@ export class CustomerGroupsController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(CustomerGroupSchema))
+    @FormBody(new ZodValidationPipe(CustomerGroupSchema))
     customerGroupDto: CustomerGroupDto,
     @Req() req: FastifyRequest,
   ) {
@@ -413,7 +413,7 @@ export class CustomerGroupsController {
   })
   @Permission('customer-group-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@Body() body: BlukDeleteCustomerGroupDto) {
+  async bulkDelete(@FormBody() body: BlukDeleteCustomerGroupDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const customerGroups = await this.customerGroupService.bulkDelete(body.ids);

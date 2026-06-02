@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   DefaultValuePipe,
   Delete,
@@ -32,6 +31,7 @@ import {
 import type { FastifyRequest } from 'fastify';
 import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -247,7 +247,7 @@ export class ExpenseCategoriesController {
   @Permission('expense-category-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(ExpenseCategorySchema))
+    @FormBody(new ZodValidationPipe(ExpenseCategorySchema))
     expenseCategoryDto: ExpenseCategoryDto,
     @Req() req: FastifyRequest,
   ) {
@@ -318,7 +318,7 @@ export class ExpenseCategoriesController {
   @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body(new ZodValidationPipe(ExpenseCategorySchema))
+    @FormBody(new ZodValidationPipe(ExpenseCategorySchema))
     expenaseCategoryDto: ExpenseCategoryDto,
     @Req() req: FastifyRequest,
   ) {
@@ -400,7 +400,7 @@ export class ExpenseCategoriesController {
   })
   @Permission('expense-category-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@Body() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
     const data = await this.expenseCategoriesService.bulkDelete(body?.ids);
     return {
       success: true,

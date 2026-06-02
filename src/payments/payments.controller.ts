@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
@@ -22,6 +21,7 @@ import { Permission } from 'src/common/decorators/permission.decorator';
 import { type PaymentDto, PaymentSchema } from './schema/payment.schema';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import type { FastifyRequest } from 'fastify';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -142,7 +142,7 @@ export class PaymentsController {
   @Permission('payment-create')
   @Post()
   async create(
-    @Body(new ZodValidationPipe(PaymentSchema))
+    @FormBody(new ZodValidationPipe(PaymentSchema))
     dto: PaymentDto,
     @Req() req: FastifyRequest,
   ) {

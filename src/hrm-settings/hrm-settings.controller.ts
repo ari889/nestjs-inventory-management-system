@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Permission } from 'src/common/decorators/permission.decorator';
@@ -9,6 +9,7 @@ import {
 } from './schemas/hrm-setting.schema';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import type { FastifyRequest } from 'fastify';
+import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -109,7 +110,8 @@ export class HrmSettingsController {
   @Permission('hrm-setting-create')
   @Post()
   async createMenu(
-    @Body(new ZodValidationPipe(HRMSettingSchema)) hrmSettingDto: HRMSettingDto,
+    @FormBody(new ZodValidationPipe(HRMSettingSchema))
+    hrmSettingDto: HRMSettingDto,
     @Req() req: FastifyRequest,
   ) {
     const creatorEmail = req?.user?.email;
