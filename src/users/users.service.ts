@@ -3,11 +3,12 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { User } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { BlukDeleteUserDto } from './dto/bulk-delete-user.dto';
-import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { hashPassword } from 'src/common/hash';
+import { UserQueryDto } from './schema/user-query.schema';
+import { UserListItem } from './@types/user.types';
+import { CreateUserDto, UpdateUserDto } from './schema/user.schema';
+import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
 
 @Injectable()
 export class UsersService {
@@ -26,20 +27,36 @@ export class UsersService {
     limit,
     order,
     direction,
-  }: {
-    page: number;
-    limit: number;
-    order: string;
-    direction: string;
-  }): Promise<{ items: User[]; totalItems: number }> {
+    search,
+    gender,
+    status,
+  }: UserQueryDto): Promise<{
+    items: UserListItem[];
+    totalItems: number;
+  }> {
     const [items, totalItems] = await Promise.all([
       this.prisma.user.findMany({
+        where: {
+          name: {
+            contains: search,
+          },
+          gender,
+          status,
+        },
         skip: page * limit,
         take: limit,
         orderBy: {
           [order]: direction,
         },
-        include: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phoneNo: true,
+          avatar: true,
+          gender: true,
+          status: true,
+          createdAt: true,
           role: {
             select: {
               id: true,
@@ -122,7 +139,10 @@ export class UsersService {
    * @param creatorEmail
    * @returns User
    */
-  async create(userDto: CreateUserDto, creatorEmail: string): Promise<User> {
+  async create(
+    userDto: CreateUserDto,
+    creatorEmail: string,
+  ): Promise<UserListItem> {
     const creator = await this.prisma.user.findUnique({
       where: { email: creatorEmail },
       select: {
@@ -146,7 +166,15 @@ export class UsersService {
         updatedBy: creator?.id,
         password: hashedPassword,
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phoneNo: true,
+        avatar: true,
+        gender: true,
+        status: true,
+        createdAt: true,
         role: {
           select: {
             id: true,
@@ -174,7 +202,7 @@ export class UsersService {
     id: number,
     updatorEmail: string,
     userDto: UpdateUserDto,
-  ): Promise<User> {
+  ): Promise<UserListItem> {
     const updator = await this.prisma.user.findUnique({
       where: { email: updatorEmail },
       select: {
@@ -192,7 +220,15 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id },
       data: { ...userDto, updatedBy: updator.id },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phoneNo: true,
+        avatar: true,
+        gender: true,
+        status: true,
+        createdAt: true,
         role: {
           select: {
             id: true,
@@ -239,6 +275,23 @@ export class UsersService {
         id: true,
         name: true,
         email: true,
+        phoneNo: true,
+        avatar: true,
+        gender: true,
+        status: true,
+        createdAt: true,
+        role: {
+          select: {
+            id: true,
+            roleName: true,
+          },
+        },
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
   }
@@ -246,9 +299,9 @@ export class UsersService {
   /**
    * Bulk delete users by ids
    * @param ids
-   * @returns User
+   * @returns { count: number }
    */
-  async bulkDelete(ids: BlukDeleteUserDto['ids']): Promise<{ count: number }> {
+  async bulkDelete(ids: BlukDeleteIdsDto['ids']): Promise<{ count: number }> {
     const deletableUsers = await this.prisma.user.findMany({
       where: {
         id: { in: ids },

@@ -2,34 +2,73 @@ import {
   BadRequestException,
   Body,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   NotFoundException,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
   Query,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import {
   ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
   ApiOkResponse,
+  ApiParam,
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { SortDirection } from 'src/@types/default.types';
-import { BlukDeleteUserDto } from './dto/bulk-delete-user.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { createUserSchema, updateUserSchema } from './schema/user.schema';
+import {
+  type CreateUserDto,
+  createUserSchema,
+  type UpdateUserDto,
+  updateUserSchema,
+} from './schema/user.schema';
 import type { FastifyRequest } from 'fastify';
-import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { Permission } from 'src/common/decorators/permission.decorator';
+import { type UserQueryDto, UserQuerySchema } from './schema/user-query.schema';
+import { UserListItem } from './@types/user.types';
+import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { AnyFilesInterceptor } from '@blazity/nest-file-fastify';
+
+const userProperties = {
+  id: { type: 'number', example: 1 },
+  name: { type: 'string', example: 'John Doe' },
+  email: { type: 'string', example: 'john.doe@example.com' },
+  phoneNo: { type: 'string', example: '+1234567890' },
+  avatar: {
+    type: 'string',
+    example: 'https://example.com/avatar.jpg',
+  },
+  gender: { type: 'boolean', example: true },
+  status: { type: 'boolean', example: true },
+  role: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      roleName: { type: 'string', example: 'Admin' },
+    },
+  },
+  creator: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+  createdAt: {
+    type: 'string',
+    example: '2024-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -71,6 +110,26 @@ export class UsersController {
     type: Number,
     example: 10,
   })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    example: 'John Doe',
+  })
+  @ApiQuery({
+    name: 'gender',
+    required: false,
+    type: Boolean,
+    example: true,
+    description: 'Gender: true = Male, false = Female',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: Boolean,
+    example: true,
+    description: 'Status: true = Active, false = Inactive',
+  })
   @ApiOkResponse({
     description: 'User fetched generated response!',
     schema: {
@@ -82,35 +141,7 @@ export class UsersController {
           type: 'array',
           items: {
             type: 'object',
-            properties: {
-              id: { type: 'number', example: 1 },
-              name: { type: 'string', example: 'John Doe' },
-              email: { type: 'string', example: 'john.doe@example.com' },
-              phoneNo: { type: 'string', example: '+1234567890' },
-              avatar: {
-                type: 'string',
-                example: 'https://example.com/avatar.jpg',
-              },
-              status: { type: 'boolean', example: true },
-              role: {
-                type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  roleName: { type: 'string', example: 'Admin' },
-                },
-              },
-              creator: {
-                type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  name: { type: 'string', example: 'John Doe' },
-                },
-              },
-              createdAt: {
-                type: 'string',
-                example: '2024-01-01T00:00:00.000Z',
-              },
-            },
+            properties: userProperties,
           },
         },
       },
@@ -119,22 +150,16 @@ export class UsersController {
   @Permission('user-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
-  ) {
-    const users = await this.usersService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-    });
+    @Query(new ZodValidationPipe(UserQuerySchema)) query: UserQueryDto,
+  ): Promise<{
+    success: boolean;
+    message: string;
+    data: {
+      items: UserListItem[];
+      totalItems: number;
+    };
+  }> {
+    const users = await this.usersService.findAll(query);
     return {
       success: true,
       message: 'Users fetched successfully',
@@ -152,53 +177,36 @@ export class UsersController {
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
-        message: { type: 'string' },
+        success: { type: 'boolean', example: true },
+        message: { type: 'string', example: 'User fetched successfully' },
         data: {
           type: 'object',
           properties: {
             id: { type: 'number', example: 1 },
             name: { type: 'string', example: 'John Doe' },
             email: { type: 'string', example: 'john.doe@example.com' },
-            phoneNo: { type: 'string', example: '+1234567890' },
-            avatar: {
-              type: 'string',
-              example: 'https://example.com/avatar.jpg',
-            },
             status: { type: 'boolean', example: true },
-            creator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            updator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
             role: {
               type: 'object',
               properties: {
                 id: { type: 'number', example: 1 },
                 roleName: { type: 'string', example: 'Admin' },
+                deletable: { type: 'boolean', example: true },
               },
             },
+            phoneNo: { type: 'string', example: '+1234567890' },
+            gender: { type: 'boolean', example: true },
           },
         },
       },
     },
+  })
+  @ApiParam({
+    name: 'id',
+    type: Number,
+    required: true,
+    example: 1,
+    description: 'User ID',
   })
   @Permission('user-view')
   @Get(':id')
@@ -229,25 +237,56 @@ export class UsersController {
         message: { type: 'string' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            email: { type: 'string', example: 'john.doe@example.com' },
-            phoneNo: { type: 'string', example: '+1234567890' },
-            avatar: {
-              type: 'string',
-              example: 'https://example.com/avatar.jpg',
-            },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-          },
+          properties: userProperties,
+        },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(AnyFilesInterceptor())
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['name', 'email', 'password', 'roleId', 'gender', 'status'],
+      properties: {
+        name: {
+          type: 'string',
+          example: 'John Doe',
+        },
+        email: {
+          type: 'string',
+          example: 'john@example.com',
+        },
+        phoneNo: {
+          type: 'string',
+          example: '+1234567890',
+          nullable: true,
+        },
+        password: {
+          type: 'string',
+          example: 'secret123',
+          minLength: 6,
+        },
+        roleId: {
+          type: 'number',
+          example: 1,
+        },
+        avatar: {
+          type: 'string',
+          format: 'binary',
+          nullable: true,
+        },
+        gender: {
+          type: 'boolean',
+          enum: [true, false],
+          example: true,
+          description: 'true = Male, false = Female',
+        },
+        status: {
+          type: 'boolean',
+          enum: [true, false],
+          example: true,
+          description: 'true = Active, false = Inactive',
         },
       },
     },
@@ -286,25 +325,56 @@ export class UsersController {
         message: { type: 'string' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            email: { type: 'string', example: 'john.doe@example.com' },
-            phoneNo: { type: 'string', example: '+1234567890' },
-            avatar: {
-              type: 'string',
-              example: 'https://example.com/avatar.jpg',
-            },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-          },
+          properties: userProperties,
+        },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(AnyFilesInterceptor())
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['name', 'email', 'password', 'roleId', 'gender', 'status'],
+      properties: {
+        name: {
+          type: 'string',
+          example: 'John Doe',
+        },
+        email: {
+          type: 'string',
+          example: 'john@example.com',
+        },
+        phoneNo: {
+          type: 'string',
+          example: '+1234567890',
+          nullable: true,
+        },
+        password: {
+          type: 'string',
+          example: 'secret123',
+          minLength: 6,
+        },
+        roleId: {
+          type: 'number',
+          example: 1,
+        },
+        avatar: {
+          type: 'string',
+          format: 'binary',
+          nullable: true,
+        },
+        gender: {
+          type: 'boolean',
+          enum: [true, false],
+          example: true,
+          description: 'true = Male, false = Female',
+        },
+        status: {
+          type: 'boolean',
+          enum: [true, false],
+          example: true,
+          description: 'true = Active, false = Inactive',
         },
       },
     },
@@ -342,17 +412,7 @@ export class UsersController {
         message: { type: 'string', example: 'User removed successfully' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            email: { type: 'string', example: 'john.doe@example.com' },
-            phoneNo: { type: 'string', example: '+1234567890' },
-            avatar: {
-              type: 'string',
-              example: 'https://example.com/avatar.jpg',
-            },
-            status: { type: 'boolean', example: true },
-          },
+          properties: userProperties,
         },
       },
     },
@@ -380,13 +440,17 @@ export class UsersController {
       properties: {
         success: { type: 'boolean' },
         message: { type: 'string', example: 'Users deleted successfully!' },
-        data: { type: 'number', example: 4 },
+        data: {
+          type: 'object',
+          properties: { count: { type: 'number', example: 1 } },
+        },
       },
     },
   })
   @Permission('user-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@Body() body: BlukDeleteUserDto) {
+  async bulkDelete(@Body() body: BlukDeleteIdsDto) {
+    console.log(body);
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const users = await this.usersService.bulkDelete(body.ids);

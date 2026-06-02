@@ -837,11 +837,11 @@ const permissionsData = [
   },
 
   // Users
-  { moduleId: 37, name: 'Users Access', slug: 'users-access' },
-  { moduleId: 37, name: 'Users Add', slug: 'users-add' },
-  { moduleId: 37, name: 'Users Edit', slug: 'users-edit' },
-  { moduleId: 37, name: 'Users Delete', slug: 'users-delete' },
-  { moduleId: 37, name: 'Users Bulk Delete', slug: 'users-bulk-delete' },
+  { moduleId: 37, name: 'User Access', slug: 'user-access' },
+  { moduleId: 37, name: 'User Add', slug: 'user-add' },
+  { moduleId: 37, name: 'User Edit', slug: 'user-edit' },
+  { moduleId: 37, name: 'User Delete', slug: 'user-delete' },
+  { moduleId: 37, name: 'User Bulk Delete', slug: 'user-bulk-delete' },
 
   // Roles
   { moduleId: 38, name: 'Roles Access', slug: 'roles-access' },
