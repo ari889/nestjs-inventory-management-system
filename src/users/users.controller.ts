@@ -135,13 +135,19 @@ export class UsersController {
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
-        message: { type: 'string' },
+        success: { type: 'boolean', example: true },
+        message: { type: 'string', example: 'Users fetched successfully' },
         data: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: userProperties,
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: userProperties,
+              },
+            },
+            totalItems: { type: 'number', example: 1 },
           },
         },
       },

@@ -7,6 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { Menu } from 'src/generated/prisma/client';
+import { MenuQueryDto } from './schemas/menu-query.schema';
 
 @Injectable()
 export class MenusService {
@@ -16,21 +17,17 @@ export class MenusService {
    * Get Menus
    * @returns Menu
    */
-  async getMenus({
-    page,
-    limit,
-    order,
-    direction,
-    search,
-    deletable,
-  }: {
-    page: number;
-    limit: number;
-    order: string;
-    direction: string;
-    search?: string;
-    deletable?: boolean;
-  }): Promise<{ items: Menu[]; totalItems: number }> {
+  async findAll({
+    page = 0,
+    limit = 10,
+    order = 'createdAt',
+    direction = 'desc',
+    search = '',
+    deletable = undefined,
+  }: MenuQueryDto): Promise<{
+    items: Omit<Menu, 'updatedAt'>[];
+    totalItems: number;
+  }> {
     const where = {
       ...(search ? { menuName: { contains: search } } : {}),
       ...(deletable !== undefined ? { deletable } : {}),
@@ -42,6 +39,12 @@ export class MenusService {
         take: limit,
         orderBy: {
           [order]: direction,
+        },
+        select: {
+          id: true,
+          menuName: true,
+          deletable: true,
+          createdAt: true,
         },
       }),
       this.prisma.menu.count({ where }),
@@ -57,13 +60,14 @@ export class MenusService {
    * @param id
    * @returns Menu
    */
-  async findMenu(id: number): Promise<Omit<Menu, 'createdAt' | 'updatedAt'>> {
+  async find(id: number): Promise<Omit<Menu, 'updatedAt'>> {
     const menu = await this.prisma.menu.findUnique({
       where: { id },
       select: {
         id: true,
         menuName: true,
         deletable: true,
+        createdAt: true,
       },
     });
     if (!menu) throw new NotFoundException('Menu not found.');
@@ -75,8 +79,11 @@ export class MenusService {
    * @param createMenuDto
    * @returns Menu
    */
-  async createMenu(createMenuDto: CreateMenuDto) {
-    return this.prisma.menu.create({ data: createMenuDto });
+  async create(createMenuDto: CreateMenuDto): Promise<Omit<Menu, 'updatedAt'>> {
+    return this.prisma.menu.create({
+      data: createMenuDto,
+      select: { id: true, menuName: true, deletable: true, createdAt: true },
+    });
   }
 
   /**
@@ -85,8 +92,15 @@ export class MenusService {
    * @param updateMenuDto
    * @returns Menu
    */
-  async updateMenu(id: number, updateMenuDto: UpdateMenuDto): Promise<Menu> {
-    return this.prisma.menu.update({ where: { id }, data: updateMenuDto });
+  async update(
+    id: number,
+    updateMenuDto: UpdateMenuDto,
+  ): Promise<Omit<Menu, 'updatedAt'>> {
+    return this.prisma.menu.update({
+      where: { id },
+      data: updateMenuDto,
+      select: { id: true, menuName: true, deletable: true, createdAt: true },
+    });
   }
 
   /**
@@ -94,7 +108,7 @@ export class MenusService {
    * @param id
    * @returns Menu
    */
-  async deleteMenu(id: number): Promise<Menu> {
+  async remove(id: number): Promise<Omit<Menu, 'updatedAt'>> {
     const menu = await this.prisma.menu.findUnique({
       where: { id },
       select: { id: true, deletable: true },
@@ -107,15 +121,23 @@ export class MenusService {
         'You have no enough permissions to do this.',
       );
 
-    return this.prisma.menu.delete({ where: { id } });
+    return this.prisma.menu.delete({
+      where: { id },
+      select: {
+        id: true,
+        menuName: true,
+        deletable: true,
+        createdAt: true,
+      },
+    });
   }
 
   /**
    * Bulk delete using ids
    * @param ids
-   * @returns number
+   * @returns { count: number }
    */
-  async bulkDeleteMenu(ids: number[]) {
+  async bulkDelete(ids: number[]) {
     return this.prisma.menu.deleteMany({
       where: { id: { in: ids }, deletable: true },
     });

@@ -2,28 +2,46 @@ import {
   BadRequestException,
   Body,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
   Query,
   UseGuards,
-  UsePipes,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { MenusService } from './menus.service';
-import { SortDirection } from 'src/@types/default.types';
 import { MenuSchema } from './schemas/menu.schema';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
-import { BlukDeleteMenuDto } from './dto/bulk-delete-menu.dto';
 import { Permission } from 'src/common/decorators/permission.decorator';
+import {
+  type MenuQueryDto,
+  MenuQuerySchema,
+} from './schemas/menu-query.schema';
+import { AnyFilesInterceptor } from '@blazity/nest-file-fastify';
+import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+
+const menuProperties = {
+  id: { type: 'number', example: 1 },
+  menuName: { type: 'string', example: 'Menu 1' },
+  deletable: { type: 'boolean', example: true },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -43,7 +61,7 @@ export class MenusController {
   @ApiQuery({
     name: 'order',
     required: false,
-    example: 'id',
+    example: 'createdAt',
   })
   @ApiQuery({
     name: 'direction',
@@ -73,14 +91,14 @@ export class MenusController {
     name: 'deletable',
     required: false,
     type: Boolean,
-    example: true,
+    example: undefined,
   })
   @ApiOkResponse({
-    description: 'Menus fetched successfully!',
+    description: 'Menus fetched successfull response!',
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: { type: 'string', example: 'Menus fetched successfully!' },
         data: {
           type: 'object',
@@ -89,22 +107,10 @@ export class MenusController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  menuName: { type: 'string', example: 'Menu 1' },
-                  deletable: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: menuProperties,
               },
             },
-            totalItems: { type: 'number' },
+            totalItems: { type: 'number', example: 1 },
           },
         },
       },
@@ -113,27 +119,10 @@ export class MenusController {
   @Permission('menu-access')
   @Get()
   async getMenus(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe)
-    page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query('deletable') deletable?: string,
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
-    @Query('search') search?: string,
+    @Query(new ZodValidationPipe(MenuQuerySchema))
+    query: MenuQueryDto,
   ) {
-    const data = await this.menusService.getMenus({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-      deletable: deletable === undefined ? undefined : deletable === 'true',
-    });
+    const data = await this.menusService.findAll(query);
     return {
       success: true,
       message: 'Menus fetched successfully!',
@@ -147,19 +136,15 @@ export class MenusController {
    * @returns Menu
    */
   @ApiOkResponse({
-    description: 'Menus fetched successfully!',
+    description: 'Menus fetched successfull reponse!',
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: { type: 'string', example: 'Menus fetched successfully!' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            menuName: { type: 'string', example: 'Menu 1' },
-            deletable: { type: 'boolean', example: true },
-          },
+          properties: menuProperties,
         },
       },
     },
@@ -167,7 +152,7 @@ export class MenusController {
   @Permission('menu-view')
   @Get(':id')
   async find(@Param('id', ParseIntPipe) id: number) {
-    const menu = await this.menusService.findMenu(id);
+    const menu = await this.menusService.find(id);
     return {
       success: true,
       message: 'Menu fetched successfully!',
@@ -175,37 +160,51 @@ export class MenusController {
     };
   }
 
-  @UsePipes(new ZodValidationPipe(MenuSchema))
+  /**
+   * Create new menu
+   * @param createMenuDto
+   * @returns Menu
+   */
   @ApiOkResponse({
-    description: 'Menus created successfully!',
+    description: 'Menus created successfull response!',
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: { type: 'string', example: 'Menus created successfully!' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            menuName: { type: 'string', example: 'Menu 1' },
-            deletable: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: menuProperties,
+        },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(AnyFilesInterceptor())
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['menuName', 'deletable'],
+      properties: {
+        menuName: {
+          type: 'string',
+          example: 'Menu 1',
+        },
+        deletable: {
+          type: 'boolean',
+          enum: [true, false],
+          example: false,
+          description: 'true = Deletable, false = Not Deletable',
         },
       },
     },
   })
   @Permission('menu-create')
   @Post()
-  async createMenu(@Body() createMenuDto: CreateMenuDto) {
-    const menu = await this.menusService.createMenu(createMenuDto);
+  async createMenu(
+    @Body(new ZodValidationPipe(MenuSchema)) createMenuDto: CreateMenuDto,
+  ) {
+    const menu = await this.menusService.create(createMenuDto);
     return {
       success: true,
       message: 'Menu created successfully!',
@@ -220,7 +219,7 @@ export class MenusController {
    * @returns Menu
    */
   @ApiOkResponse({
-    description: 'Menus updated successfully!',
+    description: 'Menus updated successfull response!',
     schema: {
       type: 'object',
       properties: {
@@ -228,19 +227,27 @@ export class MenusController {
         message: { type: 'string', example: 'Menus updated successfully!' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            menuName: { type: 'string', example: 'Menu 1' },
-            deletable: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: menuProperties,
+        },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(AnyFilesInterceptor())
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['menuName', 'deletable'],
+      properties: {
+        menuName: {
+          type: 'string',
+          example: 'Menu 1',
+        },
+        deletable: {
+          type: 'boolean',
+          enum: [true, false],
+          example: true,
+          description: 'true = Deletable, false = Not Deletable',
         },
       },
     },
@@ -251,7 +258,7 @@ export class MenusController {
     @Param('id', ParseIntPipe) id: number,
     @Body(new ZodValidationPipe(MenuSchema)) updateMenuDto: UpdateMenuDto,
   ) {
-    const menu = await this.menusService.updateMenu(id, updateMenuDto);
+    const menu = await this.menusService.update(id, updateMenuDto);
     return {
       success: true,
       message: 'Menu updated successfully!',
@@ -265,27 +272,15 @@ export class MenusController {
    * @returns Menu
    */
   @ApiOkResponse({
-    description: 'Menus deleted successfully!',
+    description: 'Menus deleted successfull response!',
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: { type: 'string', example: 'Menus deleted successfully!' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            menuName: { type: 'string', example: 'Menu 1' },
-            deletable: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: menuProperties,
         },
       },
     },
@@ -293,7 +288,7 @@ export class MenusController {
   @Permission('menu-delete')
   @Delete(':id')
   async deleteMenu(@Param('id', ParseIntPipe) id: number) {
-    const menu = await this.menusService.deleteMenu(id);
+    const menu = await this.menusService.remove(id);
     return {
       success: true,
       message: 'Menu deleted successfully!.',
@@ -307,7 +302,7 @@ export class MenusController {
    * @returns Menus
    */
   @ApiOkResponse({
-    description: 'Menus deleted successfully!',
+    description: 'Menus deleted successfull response!',
     schema: {
       type: 'object',
       properties: {
@@ -318,17 +313,7 @@ export class MenusController {
           items: {
             type: 'object',
             properties: {
-              id: { type: 'number', example: 1 },
-              menuName: { type: 'string', example: 'Menu 1' },
-              deletable: { type: 'boolean', example: true },
-              createdAt: {
-                type: 'string',
-                example: '2021-01-01T00:00:00.000Z',
-              },
-              updatedAt: {
-                type: 'string',
-                example: '2021-01-01T00:00:00.000Z',
-              },
+              count: { type: 'number' },
             },
           },
         },
@@ -337,10 +322,10 @@ export class MenusController {
   })
   @Permission('menu-bulk-delete')
   @Delete('bulk')
-  async bulkDeleteMenu(@Body() body: BlukDeleteMenuDto) {
+  async bulkDeleteMenu(@Body() body: BlukDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
-    const menus = await this.menusService.bulkDeleteMenu(body?.ids);
+    const menus = await this.menusService.bulkDelete(body?.ids);
     return {
       success: true,
       message: 'Menus deleted successfully!.',

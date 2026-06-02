@@ -23,13 +23,13 @@ export class UsersService {
    * @returns User
    */
   async findAll({
-    page,
-    limit,
-    order,
-    direction,
-    search,
-    gender,
-    status,
+    page = 0,
+    limit = 10,
+    order = 'createdAt',
+    direction = 'desc',
+    search = '',
+    gender = undefined,
+    status = undefined,
   }: UserQueryDto): Promise<{
     items: UserListItem[];
     totalItems: number;
