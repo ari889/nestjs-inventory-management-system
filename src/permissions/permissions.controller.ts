@@ -1,13 +1,11 @@
 import {
   BadRequestException,
   Controller,
-  DefaultValuePipe,
   Delete,
   ForbiddenException,
   Get,
   NotFoundException,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -15,10 +13,15 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { PermissionsService } from './permissions.service';
-import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import {
   PermissionItemSchema,
@@ -30,6 +33,28 @@ import { BlukDeletePermissionDto } from './dto/bulk-delete-permission.dto';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import type { FastifyRequest } from 'fastify';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type PermissionQueryDto,
+  PermissionQuerySchema,
+} from './schemas/permission-query.schema';
+
+const permissionProperties = {
+  id: { type: 'number', example: 1 },
+  module: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      moduleName: { type: 'string', example: 'Module 1' },
+    },
+  },
+  name: { type: 'string', example: 'Permission 1' },
+  slug: { type: 'string', example: 'permission-1' },
+  deletable: { type: 'boolean', example: true },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -43,6 +68,9 @@ export class PermissionsController {
    * @param limit
    * @param order
    * @param direction
+   * @param search
+   * @param moduleId
+   * @param deletable
    * @returns Permission
    */
   @ApiQuery({
@@ -69,16 +97,16 @@ export class PermissionsController {
     example: 10,
   })
   @ApiQuery({
-    name: 'name',
+    name: 'search',
     required: false,
     type: String,
     example: 'Permission 1',
   })
   @ApiQuery({
-    name: 'slug',
+    name: 'moduleId',
     required: false,
-    type: String,
-    example: 'permission-1',
+    type: Number,
+    example: 1,
   })
   @ApiQuery({
     name: 'deletable',
@@ -87,12 +115,15 @@ export class PermissionsController {
     example: true,
   })
   @ApiOkResponse({
-    description: 'Menus fetched successfully!',
+    description: 'Permission fetched successfull response!',
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
-        message: { type: 'string', example: 'Menus fetched successfully!' },
+        success: { type: 'boolean', example: true },
+        message: {
+          type: 'string',
+          example: 'Permission fetched successfully!',
+        },
         data: {
           type: 'object',
           properties: {
@@ -100,30 +131,10 @@ export class PermissionsController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  module: {
-                    type: 'object',
-                    properties: {
-                      id: { type: 'number', example: 1 },
-                      moduleName: { type: 'string', example: 'Module 1' },
-                    },
-                  },
-                  name: { type: 'string', example: 'Permission 1' },
-                  slug: { type: 'string', example: 'permission-1' },
-                  deletable: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: permissionProperties,
               },
             },
-            totalItems: { type: 'number' },
+            totalItems: { type: 'number', example: 5 },
           },
         },
       },
@@ -132,28 +143,10 @@ export class PermissionsController {
   @Permission('permission-access')
   @Get()
   async getPermissions(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query('name') name?: string,
-    @Query('slug') slug?: string,
-    @Query('deletable') deletable?: string,
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
+    @Query(new ZodValidationPipe(PermissionQuerySchema))
+    query: PermissionQueryDto,
   ) {
-    const permissions = await this.permissionsService.getPermissions({
-      page,
-      limit,
-      order,
-      direction,
-      name,
-      slug,
-      deletable: deletable === undefined ? undefined : deletable === 'true',
-    });
+    const permissions = await this.permissionsService.findAll(query);
     return {
       success: true,
       message: 'Permissions fetched successfully!',
@@ -178,27 +171,7 @@ export class PermissionsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            module: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                moduleName: { type: 'string', example: 'Module 1' },
-              },
-            },
-            name: { type: 'string', example: 'Permission 1' },
-            slug: { type: 'string', example: 'permission-1' },
-            deletable: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: permissionProperties,
         },
       },
     },
@@ -206,7 +179,7 @@ export class PermissionsController {
   @Permission('permission-view')
   @Get(':id')
   async findPermission(@Param('id', ParseIntPipe) id: number) {
-    const permission = await this.permissionsService.findPermission(id);
+    const permission = await this.permissionsService.findOne(id);
     if (!permission) throw new NotFoundException('Permission not found.');
     return {
       success: true,
@@ -221,36 +194,45 @@ export class PermissionsController {
    * @returns Permission
    */
   @ApiOkResponse({
-    description: 'Permission created successfully!',
+    description: 'Permission created successfull response!',
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: {
           type: 'string',
           example: 'Permission created successfully!',
         },
         data: {
           type: 'array',
-          properties: {
-            id: { type: 'number', example: 1 },
-            module: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                moduleName: { type: 'string', example: 'Module 1' },
-              },
-            },
-            name: { type: 'string', example: 'Permission 1' },
-            slug: { type: 'string', example: 'permission-1' },
-            deletable: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
+          items: {
+            type: 'object',
+            properties: permissionProperties,
+          },
+        },
+      },
+    },
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['moduleId', 'permissions'],
+      properties: {
+        moduleId: {
+          type: 'number',
+          example: 1,
+        },
+        permissions: {
+          type: 'array',
+          minItems: 1,
+          items: {
+            type: 'object',
+            required: ['name', 'slug'],
+            properties: {
+              name: { type: 'string', example: 'Create User' },
+              slug: { type: 'string', example: 'create-user' },
+              deletable: { type: 'boolean', example: true },
             },
           },
         },
@@ -263,8 +245,7 @@ export class PermissionsController {
     @FormBody(new ZodValidationPipe(PermissionSchema))
     permissionDto: CreatePermissionDto,
   ) {
-    const permission =
-      await this.permissionsService.createPermission(permissionDto);
+    const permission = await this.permissionsService.create(permissionDto);
     return {
       success: true,
       message: 'Permission created successfully!',
@@ -279,39 +260,31 @@ export class PermissionsController {
    * @returns Permission
    */
   @ApiOkResponse({
-    description: 'Permission updated successfully!',
+    description: 'Permission updated successfull response!',
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: {
           type: 'string',
           example: 'Permission updated successfully!',
         },
         data: {
           type: 'object ',
-          properties: {
-            id: { type: 'number', example: 1 },
-            module: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                moduleName: { type: 'string', example: 'Module 1' },
-              },
-            },
-            name: { type: 'string', example: 'Permission 1' },
-            slug: { type: 'string', example: 'permission-1' },
-            deletable: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: permissionProperties,
         },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['name', 'slug'],
+      properties: {
+        name: { type: 'string', example: 'Create User' },
+        slug: { type: 'string', example: 'create-user' },
+        deletable: { type: 'boolean', example: true },
       },
     },
   })
@@ -322,10 +295,7 @@ export class PermissionsController {
     @FormBody(new ZodValidationPipe(PermissionItemSchema))
     permissionDto: PermissionItemDto,
   ) {
-    const permission = await this.permissionsService.updatePermission(
-      id,
-      permissionDto,
-    );
+    const permission = await this.permissionsService.update(id, permissionDto);
     return {
       success: true,
       message: 'Permission updated successfully!',
@@ -350,27 +320,7 @@ export class PermissionsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            module: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                moduleName: { type: 'string', example: 'Module 1' },
-              },
-            },
-            name: { type: 'string', example: 'Permission 1' },
-            slug: { type: 'string', example: 'permission-1' },
-            deletable: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: permissionProperties,
         },
       },
     },
@@ -378,13 +328,7 @@ export class PermissionsController {
   @Permission('permission-delete')
   @Delete(':id')
   async removePermission(@Param('id', ParseIntPipe) id: number) {
-    const permission = await this.permissionsService.findPermission(id);
-    if (!permission) throw new NotFoundException('Permission not found.');
-    if (permission?.deletable === false)
-      throw new ForbiddenException(
-        'You have no enough permissions to do this.',
-      );
-    await this.permissionsService.deletePermission(id);
+    const permission = await this.permissionsService.remove(id);
     return {
       success: true,
       message: 'Permission deleted successfully!',
@@ -398,32 +342,12 @@ export class PermissionsController {
    * @returns Permissions
    */
   @ApiOkResponse({
-    description: 'Permissions deleted successfully!',
+    description: 'Permissions bulk deleted successfull response!',
     schema: {
       type: 'array',
       items: {
         type: 'object',
-        properties: {
-          id: { type: 'number', example: 1 },
-          module: {
-            type: 'object',
-            properties: {
-              id: { type: 'number', example: 1 },
-              moduleName: { type: 'string', example: 'Module 1' },
-            },
-          },
-          name: { type: 'string', example: 'Permission 1' },
-          slug: { type: 'string', example: 'permission-1' },
-          deletable: { type: 'boolean', example: true },
-          createdAt: {
-            type: 'string',
-            example: '2021-01-01T00:00:00.000Z',
-          },
-          updatedAt: {
-            type: 'string',
-            example: '2021-01-01T00:00:00.000Z',
-          },
-        },
+        properties: permissionProperties,
       },
     },
   })
@@ -432,9 +356,7 @@ export class PermissionsController {
   async bulkDeletePermission(@FormBody() body: BlukDeletePermissionDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
-    const permissions = await this.permissionsService.bulkDeletePermission(
-      body.ids,
-    );
+    const permissions = await this.permissionsService.bulkDelete(body.ids);
     return {
       success: true,
       message: 'Permissions deleted successfully!',

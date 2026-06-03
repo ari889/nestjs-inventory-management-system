@@ -180,7 +180,6 @@ export class MenusController {
     },
   })
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(AnyFilesInterceptor())
   @ApiBody({
     schema: {
       type: 'object',

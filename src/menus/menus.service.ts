@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -111,7 +112,11 @@ export class MenusService {
   async remove(id: number): Promise<Omit<Menu, 'updatedAt'>> {
     const menu = await this.prisma.menu.findUnique({
       where: { id },
-      select: { id: true, deletable: true },
+      select: {
+        id: true,
+        deletable: true,
+        _count: { select: { modules: true } },
+      },
     });
 
     if (!menu) throw new NotFoundException('Menu not found.');
@@ -120,6 +125,12 @@ export class MenusService {
       throw new ForbiddenException(
         'You have no enough permissions to do this.',
       );
+
+    if (menu?._count?.modules > 0) {
+      throw new BadRequestException(
+        'Cannot delete menu with existing modules.',
+      );
+    }
 
     return this.prisma.menu.delete({
       where: { id },
@@ -138,6 +149,22 @@ export class MenusService {
    * @returns { count: number }
    */
   async bulkDelete(ids: number[]) {
+    const menusWithModules = await this.prisma.menu.findMany({
+      where: {
+        id: { in: ids },
+        modules: { some: {} },
+      },
+      select: {
+        id: true,
+        menuName: true,
+      },
+    });
+
+    if (menusWithModules.length > 0)
+      throw new BadRequestException(
+        `Cannot delete menus with existing modules: ${menusWithModules.map((m) => m.menuName).join(', ')}`,
+      );
+
     return this.prisma.menu.deleteMany({
       where: { id: { in: ids }, deletable: true },
     });

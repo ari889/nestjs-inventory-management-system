@@ -1,8 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Permission } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePermissionDto } from './dto/permission.dto';
 import { PermissionItemDto } from './dto/permission-item.dto';
+import { PermissionQueryDto } from './schemas/permission-query.schema';
 
 @Injectable()
 export class PermissionsService {
@@ -13,43 +19,45 @@ export class PermissionsService {
    * @param {page, limit, order, direction}
    * @returns
    */
-  async getPermissions({
-    page,
-    limit,
-    order,
-    direction,
-    name,
-    slug,
-    deletable,
-  }: {
-    page: number;
-    limit: number;
-    order: string;
-    direction: string;
-    name?: string;
-    slug?: string;
-    deletable?: boolean;
-  }): Promise<{ items: Permission[]; totalItems: number }> {
+  async findAll({
+    page = 0,
+    limit = 10,
+    order = 'createdAt',
+    direction = 'desc',
+    search = '',
+    moduleId = undefined,
+    deletable = undefined,
+  }: PermissionQueryDto): Promise<{
+    items: Array<Omit<Permission, 'moduleId' | 'updatedAt'>>;
+    totalItems: number;
+  }> {
     const where = {
-      ...(name && { name: { contains: name } }),
-      ...(slug && { slug: { contains: slug } }),
+      ...(search && {
+        OR: [{ name: { contains: search } }, { slug: { contains: search } }],
+      }),
       ...(deletable !== undefined && { deletable }),
+      ...(moduleId && { moduleId }),
     };
     const [items, totalItems] = await Promise.all([
       this.prisma.permission.findMany({
         where,
-        include: {
+        skip: page * limit,
+        take: limit,
+        orderBy: {
+          [order]: direction,
+        },
+        select: {
+          id: true,
           module: {
             select: {
               id: true,
               moduleName: true,
             },
           },
-        },
-        skip: page * limit,
-        take: limit,
-        orderBy: {
-          [order]: direction,
+          name: true,
+          slug: true,
+          deletable: true,
+          createdAt: true,
         },
       }),
       this.prisma.permission.count({ where }),
@@ -66,9 +74,9 @@ export class PermissionsService {
    * @param permissionDto
    * @returns Permission
    */
-  async createPermission(
+  async create(
     permissionDto: CreatePermissionDto,
-  ): Promise<Permission[]> {
+  ): Promise<Array<Omit<Permission, 'moduleId' | 'updatedAt'>>> {
     const { moduleId, permissions } = permissionDto;
 
     const slugs = permissions.map((p) => p.slug);
@@ -84,7 +92,7 @@ export class PermissionsService {
       );
     }
 
-    const createdPermissions = await Promise.all(
+    return Promise.all(
       permissions.map((p) =>
         this.prisma.permission.create({
           data: {
@@ -93,19 +101,22 @@ export class PermissionsService {
             slug: p.slug,
             deletable: p.deletable ?? true,
           },
-          include: {
+          select: {
+            id: true,
             module: {
               select: {
                 id: true,
                 moduleName: true,
               },
             },
+            name: true,
+            slug: true,
+            deletable: true,
+            createdAt: true,
           },
         }),
       ),
     );
-
-    return createdPermissions;
   }
 
   /**
@@ -114,10 +125,10 @@ export class PermissionsService {
    * @param permissionDto
    * @returns Permission
    */
-  async updatePermission(
+  async update(
     id: number,
     permissionDto: PermissionItemDto,
-  ): Promise<Permission> {
+  ): Promise<Omit<Permission, 'moduleId' | 'updatedAt'>> {
     const exists = await this.prisma.permission.findUnique({
       where: { id },
     });
@@ -129,13 +140,18 @@ export class PermissionsService {
     return this.prisma.permission.update({
       where: { id },
       data: permissionDto,
-      include: {
+      select: {
+        id: true,
         module: {
           select: {
             id: true,
             moduleName: true,
           },
         },
+        name: true,
+        slug: true,
+        deletable: true,
+        createdAt: true,
       },
     });
   }
@@ -145,35 +161,98 @@ export class PermissionsService {
    * @param id
    * @returns
    */
-  async findPermission(id: number): Promise<Permission | null> {
+  async findOne(
+    id: number,
+  ): Promise<Omit<Permission, 'moduleId' | 'updatedAt'> | null> {
     return this.prisma.permission.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true,
         module: {
           select: {
             id: true,
             moduleName: true,
           },
         },
+        name: true,
+        slug: true,
+        deletable: true,
+        createdAt: true,
       },
     });
   }
 
   /**
-   * Delete permission by id
+   * Remove permission by id
    * @param id
-   * @returns
+   * @returns Permission
    */
-  async deletePermission(id: number): Promise<Permission> {
-    return this.prisma.permission.delete({ where: { id } });
+  async remove(
+    id: number,
+  ): Promise<Omit<Permission, 'moduleId' | 'updatedAt'>> {
+    const permission = await this.prisma.permission.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        deletable: true,
+        _count: { select: { permissionRole: true } },
+      },
+    });
+
+    if (!permission) throw new NotFoundException('Permission not found.');
+
+    if (!permission.deletable)
+      throw new ForbiddenException(
+        'You have no enough permissions to do this.',
+      );
+
+    if (permission._count.permissionRole > 0)
+      throw new BadRequestException(
+        'Cannot delete permission that is assigned to roles.',
+      );
+
+    return this.prisma.permission.delete({
+      where: { id },
+      select: {
+        id: true,
+        module: { select: { id: true, moduleName: true } },
+        name: true,
+        slug: true,
+        deletable: true,
+        createdAt: true,
+      },
+    });
   }
 
   /**
-   * Bulk delete permissions by ids
+   * Bulk delete permissions
    * @param ids
-   * @returns Number
+   * @returns { count: number }
    */
-  async bulkDeletePermission(ids: number[]) {
+  async bulkDelete(ids: number[]): Promise<{ count: number }> {
+    const permissions = await this.prisma.permission.findMany({
+      where: { id: { in: ids }, deletable: true },
+      select: {
+        id: true,
+        name: true,
+        _count: { select: { permissionRole: true } },
+      },
+    });
+
+    if (!permissions.length)
+      throw new BadRequestException(
+        'No permissions found or none are deletable!',
+      );
+
+    const assignedPermissions = permissions.filter(
+      (p) => p._count.permissionRole > 0,
+    );
+
+    if (assignedPermissions.length > 0)
+      throw new BadRequestException(
+        `Cannot delete permissions assigned to roles: ${assignedPermissions.map((p) => p.name).join(', ')}`,
+      );
+
     return this.prisma.permission.deleteMany({
       where: { id: { in: ids }, deletable: true },
     });

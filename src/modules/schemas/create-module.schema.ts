@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const createModuleSchema = z
   .object({
-    type: z.boolean({
+    type: z.coerce.boolean({
       message: 'Please select a module type!',
     }),
 
@@ -18,17 +18,17 @@ export const createModuleSchema = z
       })
       .optional(),
 
-    order: z.number().min(1, {
+    order: z.coerce.number().min(1, {
       message: 'Enter a valid order!',
     }),
 
-    parentId: z.number().nullable().optional(),
+    parentId: z.coerce.number().nullable().optional(),
 
     target: z.enum(['_self', '_blank'], {
       message: 'Please select a target!',
     }),
 
-    deletable: z.boolean({
+    deletable: z.coerce.boolean({
       message: 'Please ensure that the module is deletable!',
     }),
   })

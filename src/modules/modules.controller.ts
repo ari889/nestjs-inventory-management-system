@@ -13,7 +13,12 @@ import {
 import { ModulesService } from './modules.service';
 import type { FastifyRequest } from 'fastify';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { createModuleSchema } from './schemas/create-module.schema';
@@ -33,6 +38,9 @@ const moduleProperties = {
   parentId: { type: 'number', example: 1 },
   target: { type: 'string', example: 'SELF' },
   deletable: { type: 'boolean', example: true },
+};
+
+const moduleWithPermission = {
   permissions: {
     type: 'array',
     items: {
@@ -109,7 +117,10 @@ export class ModulesController {
           type: 'array',
           items: {
             type: 'object',
-            properties: moduleProperties,
+            properties: {
+              ...moduleProperties,
+              ...moduleWithPermission,
+            },
           },
         },
       },
@@ -175,6 +186,67 @@ export class ModulesController {
         data: {
           type: 'object',
           properties: moduleProperties,
+        },
+      },
+    },
+  })
+  @ApiConsumes('application/json', 'multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['type', 'order', 'target', 'deletable'],
+
+      properties: {
+        type: {
+          type: 'boolean',
+          example: true,
+          description: 'true = Divider, false = Module',
+        },
+
+        moduleName: {
+          type: 'string',
+          example: 'Dashboard',
+          nullable: true,
+        },
+
+        dividerTitle: {
+          type: 'string',
+          example: 'Main Menu',
+          nullable: true,
+        },
+
+        iconClass: {
+          type: 'string',
+          example: 'List',
+          nullable: true,
+        },
+
+        url: {
+          type: 'string',
+          example: '/dashboard',
+          nullable: true,
+        },
+
+        order: {
+          type: 'number',
+          example: 1,
+        },
+
+        parentId: {
+          type: 'number',
+          example: 1,
+          nullable: true,
+        },
+
+        target: {
+          type: 'string',
+          enum: ['_self', '_blank'],
+          example: '_self',
+        },
+
+        deletable: {
+          type: 'boolean',
+          example: true,
         },
       },
     },

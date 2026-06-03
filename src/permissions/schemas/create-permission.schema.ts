@@ -15,11 +15,11 @@ export const PermissionItemSchema = z.object({
       message: 'Slug can contain only lowercase letters and hyphens',
     }),
 
-  deletable: z.boolean().optional(),
+  deletable: z.coerce.boolean().optional(),
 });
 
 export const PermissionSchema = z.object({
-  moduleId: z
+  moduleId: z.coerce
     .number()
     .nullable()
     .refine((val) => val !== null && val > 0, {
