@@ -1,12 +1,13 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { Brand } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { BrandSchemaType } from './schemas/brand.schema';
+import { BrandDto } from './schemas/brand.schema';
 import { MemoryStorageFile } from '@blazity/nest-file-fastify';
 import {
   deleteOldFile,
@@ -14,6 +15,7 @@ import {
   saveFile,
 } from 'src/common/fileUpload/fileHelper';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BrandQueryDto } from './schemas/brand-query.schema';
 
 @Injectable()
 export class BrandsService {
@@ -30,20 +32,17 @@ export class BrandsService {
     order,
     direction,
     search = '',
-  }: {
-    page: number;
-    limit: number;
-    order: string;
-    direction: string;
-    search?: string;
-  }): Promise<{ items: Brand[]; totalItems: number }> {
-    const where = search
-      ? {
-          title: {
-            contains: search,
-          },
-        }
-      : {};
+    status = undefined,
+  }: BrandQueryDto): Promise<{
+    items: Array<Omit<Brand, 'createdBy' | 'updatedBy' | 'updatedAt'>>;
+    totalItems: number;
+  }> {
+    const where = {
+      ...(search && {
+        title: { contains: search },
+      }),
+      ...(status !== undefined && { status }),
+    };
     const [items, totalItems] = await Promise.all([
       this.prisma.brand.findMany({
         where,
@@ -52,13 +51,18 @@ export class BrandsService {
         orderBy: {
           [order]: direction,
         },
-        include: {
+        select: {
+          id: true,
+          title: true,
+          image: true,
+          status: true,
           creator: {
             select: {
               id: true,
               name: true,
             },
           },
+          createdAt: true,
         },
       }),
       this.prisma.brand.count({ where }),
@@ -74,7 +78,9 @@ export class BrandsService {
    * @param id
    * @returns Brand
    */
-  async findOne(id: number): Promise<Omit<Brand, 'createdBy' | 'updatedBy'>> {
+  async findOne(
+    id: number,
+  ): Promise<Omit<Brand, 'createdBy' | 'updatedBy' | 'updatedAt'>> {
     const brand = await this.prisma.brand.findUnique({
       where: { id },
       select: {
@@ -88,14 +94,7 @@ export class BrandsService {
             name: true,
           },
         },
-        updater: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
         createdAt: true,
-        updatedAt: true,
       },
     });
     if (!brand) throw new NotFoundException('Brand not found.');
@@ -109,10 +108,10 @@ export class BrandsService {
    * @returns Brand
    */
   async create(
-    dto: BrandSchemaType,
+    dto: BrandDto,
     creatorEmail: string,
     image?: MemoryStorageFile,
-  ) {
+  ): Promise<Omit<Brand, 'createdBy' | 'updatedBy' | 'updatedAt'>> {
     try {
       const creator = await this.prisma.user.findUnique({
         where: { email: creatorEmail },
@@ -135,13 +134,18 @@ export class BrandsService {
 
       return this.prisma.brand.create({
         data: payload,
-        include: {
+        select: {
+          id: true,
+          title: true,
+          image: true,
+          status: true,
           creator: {
             select: {
               id: true,
               name: true,
             },
           },
+          createdAt: true,
         },
       });
     } catch (error) {
@@ -152,10 +156,10 @@ export class BrandsService {
 
   async update(
     id: number,
-    dto: BrandSchemaType,
+    dto: BrandDto,
     updatorEmail: string,
     image?: MemoryStorageFile,
-  ) {
+  ): Promise<Omit<Brand, 'createdBy' | 'updatedBy' | 'updatedAt'>> {
     try {
       const [brand, updator] = await Promise.all([
         this.prisma.brand.findUnique({
@@ -191,13 +195,18 @@ export class BrandsService {
       return this.prisma.brand.update({
         where: { id },
         data: payload,
-        include: {
+        select: {
+          id: true,
+          title: true,
+          image: true,
+          status: true,
           creator: {
             select: {
               id: true,
               name: true,
             },
           },
+          createdAt: true,
         },
       });
     } catch (error) {
@@ -212,16 +221,27 @@ export class BrandsService {
    * @returns Brand
    */
   async remove(id: number): Promise<Brand> {
-    const brand = await this.prisma.brand.findUnique({
-      where: { id },
-      select: { id: true, image: true },
+    return this.prisma.$transaction(async (prisma) => {
+      const brand = await prisma.brand.findUnique({
+        where: { id },
+        select: { id: true, image: true },
+      });
+
+      if (!brand) throw new NotFoundException('Brand not found.');
+
+      const productCount = await prisma.product.count({
+        where: { brandId: id },
+      });
+
+      if (productCount > 0)
+        throw new ConflictException(
+          `Cannot delete brand. It is assigned to ${productCount} product(s).`,
+        );
+
+      await deleteOldFile(brand.image ?? null);
+
+      return prisma.brand.delete({ where: { id } });
     });
-
-    if (!brand) throw new NotFoundException('Brand not found.');
-
-    await deleteOldFile(brand?.image ?? null);
-
-    return this.prisma.brand.delete({ where: { id } });
   }
 
   /**
@@ -229,22 +249,64 @@ export class BrandsService {
    * @param ids
    * @returns { count: number }
    */
-  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{ count: number }> {
-    const brands = await this.prisma.brand.findMany({
-      where: { id: { in: ids } },
-      select: { id: true, image: true },
+  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{
+    count: number;
+    deletedIds: number[];
+    skippedIds: { id: number; reasons: string[] }[];
+  }> {
+    return this.prisma.$transaction(async (prisma) => {
+      const brands = await prisma.brand.findMany({
+        where: { id: { in: ids } },
+        select: { id: true, image: true },
+      });
+
+      const foundIds = brands.map((b) => b.id);
+      const notFoundIds = ids.filter((id) => !foundIds.includes(id));
+
+      if (foundIds.length === 0)
+        throw new NotFoundException('No brands found for the given IDs.');
+
+      const products = await prisma.product.groupBy({
+        by: ['brandId'],
+        where: { brandId: { in: foundIds } },
+        _count: true,
+      });
+
+      const conflictMap = new Map<number, string[]>();
+      products.forEach((p) =>
+        conflictMap.set(p.brandId!, [`${p._count} product(s)`]),
+      );
+
+      const deletableIds = foundIds.filter((id) => !conflictMap.has(id));
+      const deletableBrands = brands.filter((b) => deletableIds.includes(b.id));
+
+      const skippedIds = [
+        ...notFoundIds.map((id) => ({ id, reasons: ['Not found'] })),
+        ...Array.from(conflictMap.entries()).map(([id, reasons]) => ({
+          id,
+          reasons,
+        })),
+      ];
+
+      if (deletableIds.length === 0)
+        throw new ConflictException({
+          message: 'No brands could be deleted.',
+          skipped: skippedIds,
+        });
+
+      await Promise.all(
+        deletableBrands.map((b) => deleteOldFile(b.image ?? null)),
+      );
+
+      const result = await prisma.brand.deleteMany({
+        where: { id: { in: deletableIds } },
+      });
+
+      return {
+        count: result.count,
+        deletedIds: deletableIds,
+        skippedIds,
+      };
     });
-
-    if (!brands.length) {
-      throw new NotFoundException('Brands not found.');
-    }
-
-    await Promise.all(brands.map((b) => deleteOldFile(b.image ?? null)));
-
-    const result = await this.prisma.brand.deleteMany({
-      where: { id: { in: ids } },
-    });
-
-    return result;
   }
 }

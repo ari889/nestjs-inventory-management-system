@@ -20,4 +20,4 @@ export const BrandSchema = z.object({
   }),
 });
 
-export type BrandSchemaType = z.infer<typeof BrandSchema>;
+export type BrandDto = z.infer<typeof BrandSchema>;

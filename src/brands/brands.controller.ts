@@ -1,11 +1,9 @@
 import {
   BadRequestException,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -23,10 +21,8 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { BrandSchema, BrandSchemaType } from './schemas/brand.schema';
-import { BlukDeleteBrandDto } from './dto/brand.dto';
+import { BrandDto, BrandSchema } from './schemas/brand.schema';
 import {
   FileFieldsInterceptor,
   MemoryStorageFile,
@@ -35,6 +31,26 @@ import {
 import type { FastifyRequest } from 'fastify/types/request';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type BrandQueryDto,
+  BrandQuerySchema,
+} from './schemas/brand-query.schema';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
+
+const brandProperties = {
+  id: { type: 'number', example: 1 },
+  title: { type: 'string', example: 'Customer Group 1' },
+  image: { type: 'string', example: '/uploads/brand/1.jpg' },
+  status: { type: 'boolean', example: true },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+  updatedAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -80,6 +96,11 @@ export class BrandsController {
     type: String,
     example: "Brand's name",
   })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: Boolean,
+  })
   @ApiOkResponse({
     description: 'Brands fetched success response!',
     schema: {
@@ -97,20 +118,7 @@ export class BrandsController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  title: { type: 'string', example: 'Customer Group 1' },
-                  image: { type: 'string', example: '/uploads/brand/1.jpg' },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: brandProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -122,25 +130,10 @@ export class BrandsController {
   @Permission('brand-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe)
-    page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
-    @Query('search') search?: string,
+    @Query(new ZodValidationPipe(BrandQuerySchema))
+    query: BrandQueryDto,
   ) {
-    const data = await this.brandsService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-    });
+    const data = await this.brandsService.findAll(query);
     return {
       success: true,
       message: 'Brands fetched successfully!',
@@ -165,34 +158,7 @@ export class BrandsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            title: { type: 'string', example: 'Customer Group 1' },
-            image: { type: 'string', example: '/uploads/brand/1.jpg' },
-            status: { type: 'boolean', example: true },
-            creator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            updator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: brandProperties,
         },
       },
     },
@@ -238,20 +204,7 @@ export class BrandsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            title: { type: 'string', example: 'Brand 1' },
-            image: { type: 'string', example: '/uploads/brand/1.jpg' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: brandProperties,
         },
       },
     },
@@ -272,7 +225,7 @@ export class BrandsController {
       ...body,
       status: body.status === 'true' || body.status === true,
       image: files.image?.[0],
-    }) as BrandSchemaType;
+    }) as BrandDto;
 
     const brand = await this.brandsService.create(
       validated,
@@ -303,27 +256,7 @@ export class BrandsController {
         message: { type: 'string' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            groupName: { type: 'string', example: 'Customer Group 1' },
-            percentage: { type: 'number', example: 10 },
-            status: { type: 'boolean', example: true },
-            creator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-          },
+          properties: brandProperties,
         },
       },
     },
@@ -356,7 +289,7 @@ export class BrandsController {
       ...body,
       status: body.status === 'true' || body.status === true,
       image: files.image?.[0],
-    }) as BrandSchemaType;
+    }) as BrandDto;
     const brand = await this.brandsService.update(
       id,
       validated,
@@ -387,20 +320,7 @@ export class BrandsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            title: { type: 'string', example: 'Brand 1' },
-            image: { type: 'string', example: 'https://example.com/image.jpg' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: brandProperties,
         },
       },
     },
@@ -435,7 +355,7 @@ export class BrandsController {
   })
   @Permission('brand-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@FormBody() body: BlukDeleteBrandDto) {
+  async bulkDelete(@FormBody() body: BulkDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const brands = await this.brandsService.bulkDelete(body.ids);
