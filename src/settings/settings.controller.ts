@@ -111,7 +111,16 @@ export class SettingsController {
       properties: {
         success: { type: 'boolean' },
         message: { type: 'string', example: 'Settings updated successfully!' },
-        data: { type: 'array', items: { type: 'object' } },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              name: { type: 'string', example: 'title' },
+              value: { type: 'string', example: 'Inventory Management System' },
+            },
+          },
+        },
       },
     },
   })

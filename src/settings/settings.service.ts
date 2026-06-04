@@ -18,8 +18,14 @@ export class SettingsService {
    * This allows for flexible retrieval and updating of individual settings without needing to manage a complex JSON structure.
    * The controller can transform this array into a more convenient format if needed, but the service focuses on direct database interactions.
    */
-  async findAll(): Promise<Setting[]> {
-    const settings = await this.prisma.setting.findMany();
+  async findAll(): Promise<Array<Omit<Setting, 'createdAt' | 'updatedAt'>>> {
+    const settings = await this.prisma.setting.findMany({
+      select: {
+        id: true,
+        name: true,
+        value: true,
+      },
+    });
     return settings;
   }
 
@@ -35,7 +41,7 @@ export class SettingsService {
     dto: SettingsSchemaType,
     logo?: MemoryStorageFile,
     favicon?: MemoryStorageFile,
-  ) {
+  ): Promise<Array<Omit<Setting, 'createdAt' | 'updatedAt'>>> {
     try {
       const [existingLogo, existingFavicon] = await Promise.all([
         this.prisma.setting.findUnique({ where: { name: 'logo' } }),
@@ -73,6 +79,11 @@ export class SettingsService {
             where: { name },
             update: { value },
             create: { name, value },
+            select: {
+              id: true,
+              name: true,
+              value: true,
+            },
           }),
         ),
       );
