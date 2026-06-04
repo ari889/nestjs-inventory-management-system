@@ -5,6 +5,7 @@ import { UsersService } from 'src/users/users.service';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { ModuleChildrenType } from './@types/module.types';
 import { ModuleItemDto } from './dto/module-item.dto';
+import { ModuleQueryDto } from './schemas/module-query.schema';
 
 @Injectable()
 export class ModulesService {
@@ -38,6 +39,66 @@ export class ModulesService {
     }
 
     return result;
+  }
+
+  /**
+   * Get modules
+   * @returns modules
+   */
+  async findAll({
+    page = 0,
+    limit = 10,
+    order = 'createdAt',
+    direction = 'desc',
+    search = '',
+    deletable = undefined,
+  }: ModuleQueryDto): Promise<{
+    items: Omit<Module, 'menuId' | 'updatedAt'>[];
+    totalItems: number;
+  }> {
+    const where = {
+      ...(search && {
+        OR: [
+          { moduleName: { contains: search } },
+          { dividerTitle: { contains: search } },
+        ],
+      }),
+      ...(deletable !== undefined && { deletable }),
+    };
+    const [items, totalItems] = await Promise.all([
+      this.prisma.module.findMany({
+        where,
+        skip: page * limit,
+        take: limit,
+        orderBy: {
+          [order]: direction,
+        },
+        select: {
+          id: true,
+          menu: {
+            select: {
+              id: true,
+              menuName: true,
+            },
+          },
+          type: true,
+          moduleName: true,
+          dividerTitle: true,
+          iconClass: true,
+          url: true,
+          order: true,
+          parentId: true,
+          target: true,
+          deletable: true,
+          createdAt: true,
+        },
+      }),
+      this.prisma.module.count({ where }),
+    ]);
+    return {
+      items,
+      totalItems,
+    };
   }
 
   /**

@@ -456,7 +456,6 @@ export class UsersController {
   @Permission('user-bulk-delete')
   @Delete('bulk')
   async bulkDelete(@FormBody() body: BlukDeleteIdsDto) {
-    console.log(body);
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const users = await this.usersService.bulkDelete(body.ids);

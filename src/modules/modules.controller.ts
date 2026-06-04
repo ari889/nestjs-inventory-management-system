@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -18,6 +19,7 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOkResponse,
+  ApiQuery,
 } from '@nestjs/swagger';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
@@ -25,6 +27,10 @@ import { createModuleSchema } from './schemas/create-module.schema';
 import { ModuleItemDto } from './dto/module-item.dto';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type ModuleQueryDto,
+  ModuleQuerySchema,
+} from './schemas/module-query.schema';
 
 const moduleProperties = {
   id: { type: 'number', example: 1 },
@@ -68,6 +74,88 @@ const moduleChildrenProperties = {
 @Controller('modules')
 export class ModulesController {
   constructor(private readonly modulesService: ModulesService) {}
+
+  /**
+   * Get Modules
+   * @param page
+   * @param limit
+   * @param order
+   * @param direction
+   * @param search
+   * @param deletable
+   * @returns Module
+   */
+  @ApiQuery({
+    name: 'order',
+    required: false,
+    example: 'createdAt',
+  })
+  @ApiQuery({
+    name: 'direction',
+    required: false,
+    enum: ['asc', 'desc'],
+    example: 'asc',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    example: 0,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    type: String,
+    example: 'Menu 1',
+  })
+  @ApiQuery({
+    name: 'deletable',
+    required: false,
+    type: Boolean,
+    example: undefined,
+  })
+  @ApiOkResponse({
+    description: 'Module fetched successfull response!',
+    schema: {
+      type: 'object',
+      properties: {
+        success: { type: 'boolean', example: true },
+        message: { type: 'string', example: 'Module fetched successfully!' },
+        data: {
+          type: 'object',
+          properties: {
+            items: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: moduleProperties,
+              },
+            },
+            totalItems: { type: 'number', example: 1 },
+          },
+        },
+      },
+    },
+  })
+  @Permission('module-access')
+  @Get()
+  async getAllModules(
+    @Query(new ZodValidationPipe(ModuleQuerySchema))
+    query: ModuleQueryDto,
+  ) {
+    const data = await this.modulesService.findAll(query);
+    return {
+      success: true,
+      message: 'Modules fetched successfully!',
+      data,
+    };
+  }
 
   /**
    * Fetch module by menu id

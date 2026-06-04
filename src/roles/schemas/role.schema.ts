@@ -2,10 +2,26 @@ import z from 'zod';
 
 export const RoleSchema = z.object({
   roleName: z.string().min(1, { message: 'Type a menu name first!' }),
-  deletable: z.boolean().optional(),
+  deletable: z.coerce.boolean().optional(),
 });
 
 export const UpdateRoleSchema = RoleSchema.extend({
-  moduleIds: z.array(z.number()),
-  permissionIds: z.array(z.number()),
+  moduleIds: z.preprocess((val) => {
+    if (typeof val === 'string') {
+      return val.split(',').map(Number);
+    }
+    if (Array.isArray(val)) {
+      return val.map(Number);
+    }
+    return val;
+  }, z.array(z.number())),
+  permissionIds: z.preprocess((val) => {
+    if (typeof val === 'string') {
+      return val.split(',').map(Number);
+    }
+    if (Array.isArray(val)) {
+      return val.map(Number);
+    }
+    return val;
+  }, z.array(z.number())),
 });

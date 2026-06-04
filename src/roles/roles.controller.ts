@@ -1,29 +1,76 @@
 import {
   BadRequestException,
   Controller,
-  DefaultValuePipe,
   Delete,
-  ForbiddenException,
   Get,
-  NotFoundException,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesService } from './roles.service';
-import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { RoleSchema, UpdateRoleSchema } from './schemas/role.schema';
 import { RoleDto, UpdateRoleDto } from './dto/role.dto';
-import { BlukDeleteRoleDto } from './schemas/role-bulk-delete.dto';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import {
+  type RoleQueryDto,
+  RoleQuerySchema,
+} from './schemas/role-query.schema';
+
+const roleProperties = {
+  id: { type: 'number', example: 1 },
+  roleName: { type: 'string', example: 'Permission 1' },
+  deletable: { type: 'boolean', example: true },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
+
+const moduleRole = {
+  type: 'array',
+  items: {
+    type: 'object',
+    properties: {
+      module: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 1 },
+          moduleName: { type: 'string', example: 'Module 1' },
+        },
+      },
+    },
+  },
+};
+
+const permissionRole = {
+  type: 'array',
+  items: {
+    type: 'object',
+    properties: {
+      permission: {
+        type: 'object',
+        properties: {
+          id: { type: 'number', example: 1 },
+          permissionName: { type: 'string', example: 'Permission 1' },
+        },
+      },
+    },
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -77,12 +124,12 @@ export class RolesController {
     example: true,
   })
   @ApiOkResponse({
-    description: 'Roles fetched successfully!',
+    description: 'Roles fetched successfull response!',
     schema: {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
-        message: { type: 'string', example: 'Roles fetched successfully!' },
+        message: { type: 'string', example: 'Roles fetched successfull!' },
         data: {
           type: 'object',
           properties: {
@@ -90,19 +137,7 @@ export class RolesController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  roleName: { type: 'string', example: 'Permission 1' },
-                  deletable: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: roleProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -114,26 +149,9 @@ export class RolesController {
   @Permission('role-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query('search') search?: string,
-    @Query('deletable') deletable?: string,
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
+    @Query(new ZodValidationPipe(RoleQuerySchema)) query: RoleQueryDto,
   ) {
-    const roles = await this.rolesService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-      deletable: deletable === undefined ? undefined : deletable === 'true',
-    });
+    const roles = await this.rolesService.findAll(query);
     return {
       success: true,
       message: 'Roles fetched successfully!',
@@ -159,37 +177,9 @@ export class RolesController {
         data: {
           type: 'object',
           properties: {
-            id: { type: 'number', example: 1 },
-            roleName: { type: 'string', example: 'Role 1' },
-            deletable: { type: 'boolean', example: true },
-            moduleRole: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  moduleName: { type: 'string', example: 'Module 1' },
-                },
-              },
-            },
-            permissionRole: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  name: { type: 'string', example: 'Module 1' },
-                },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
+            ...roleProperties,
+            moduleRole,
+            permissionRole,
           },
         },
       },
@@ -212,7 +202,7 @@ export class RolesController {
    * @returns Role
    */
   @ApiOkResponse({
-    description: 'Role created successfully!',
+    description: 'Role created successfull response!',
     schema: {
       type: 'object',
       properties: {
@@ -223,19 +213,23 @@ export class RolesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            roleName: { type: 'string', example: 'Role 1' },
-            deletable: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: roleProperties,
+        },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['roleName', 'deletable'],
+      properties: {
+        roleName: { type: 'string', example: 'Role 1' },
+        deletable: {
+          type: 'boolean',
+          enum: [true, false],
+          example: false,
+          description: 'true = Deletable, false = Not Deletable',
         },
       },
     },
@@ -269,19 +263,41 @@ export class RolesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            roleName: { type: 'string', example: 'Role 1' },
-            deletable: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: roleProperties,
+        },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['roleName', 'moduleIds', 'permissionIds'],
+      properties: {
+        roleName: {
+          type: 'string',
+          minLength: 1,
+          example: 'Admin',
+          description: 'Type a menu name first!',
+        },
+        deletable: {
+          type: 'boolean',
+          enum: [true, false],
+          example: true,
+          description: 'true = Deletable, false = Not Deletable',
+        },
+        moduleIds: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+          description: 'List of module IDs assigned to the role',
+        },
+        permissionIds: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [10, 11, 12],
+          description: 'List of permission IDs assigned to the role',
         },
       },
     },
@@ -337,13 +353,7 @@ export class RolesController {
   @Permission('role-delete')
   @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number) {
-    const role = await this.rolesService.findOne(id);
-    if (!role) throw new NotFoundException('Role not found!');
-    if (role?.deletable === false)
-      throw new ForbiddenException(
-        'You have no enough permissions to do this!',
-      );
-    await this.rolesService.remove(id);
+    const role = await this.rolesService.remove(id);
     return {
       success: true,
       message: 'Role deleted successfully!',
@@ -365,18 +375,28 @@ export class RolesController {
         message: { type: 'string', example: 'Roles deleted successfully!' },
         data: {
           type: 'object',
-          properties: {
-            deletedRoleIds: { type: 'array', example: [1, 2, 3] },
-            skippedRoleIds: { type: 'array', example: [4, 5, 6] },
-            count: { type: 'number', example: 5 },
-          },
+          properties: { count: { type: 'number', example: 1 } },
+        },
+      },
+    },
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
         },
       },
     },
   })
   @Permission('role-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@FormBody() body: BlukDeleteRoleDto) {
+  async bulkDelete(@FormBody() body: BlukDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const roles = await this.rolesService.bulkDelete(body.ids);

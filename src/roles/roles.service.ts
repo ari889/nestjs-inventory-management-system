@@ -1,7 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Role } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RoleDto, UpdateRoleDto } from './dto/role.dto';
+import { RoleQueryDto } from './schemas/role-query.schema';
 
 @Injectable()
 export class RolesService {
@@ -13,20 +20,16 @@ export class RolesService {
    * @returns Role
    */
   async findAll({
-    page,
-    limit,
-    order,
-    direction,
-    search,
-    deletable,
-  }: {
-    page: number;
-    limit: number;
-    order: string;
-    direction: string;
-    search?: string;
-    deletable?: boolean;
-  }): Promise<{ items: Role[]; totalItems: number }> {
+    page = 0,
+    limit = 10,
+    order = 'createdAt',
+    direction = 'desc',
+    search = '',
+    deletable = undefined,
+  }: RoleQueryDto): Promise<{
+    items: Array<Omit<Role, 'updatedAt'>>;
+    totalItems: number;
+  }> {
     const where = {
       ...(search && { roleName: { contains: search } }),
       ...(deletable !== undefined && { deletable }),
@@ -38,6 +41,12 @@ export class RolesService {
         take: limit,
         orderBy: {
           [order]: direction,
+        },
+        select: {
+          id: true,
+          roleName: true,
+          deletable: true,
+          createdAt: true,
         },
       }),
       this.prisma.role.count({ where }),
@@ -54,10 +63,14 @@ export class RolesService {
    * @param id
    * @returns Role
    */
-  async findOne(id: number): Promise<Role | null> {
+  async findOne(id: number): Promise<Omit<Role, 'updatedAt'> | null> {
     return await this.prisma.role.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        roleName: true,
+        deletable: true,
+        createdAt: true,
         moduleRole: {
           select: {
             module: {
@@ -87,8 +100,16 @@ export class RolesService {
    * @param roleDto
    * @returns Role
    */
-  async create(roleDto: RoleDto): Promise<Role> {
-    return this.prisma.role.create({ data: roleDto });
+  async create(roleDto: RoleDto): Promise<Omit<Role, 'updatedAt'>> {
+    return this.prisma.role.create({
+      data: roleDto,
+      select: {
+        id: true,
+        roleName: true,
+        deletable: true,
+        createdAt: true,
+      },
+    });
   }
 
   /**
@@ -97,17 +118,30 @@ export class RolesService {
    * @param roleDto
    * @returns Role
    */
-  async update(id: number, roleDto: UpdateRoleDto): Promise<Role> {
+  async update(
+    id: number,
+    roleDto: UpdateRoleDto,
+  ): Promise<Omit<Role, 'updatedAt'>> {
     const { moduleIds = [], permissionIds = [], roleName, deletable } = roleDto;
 
     return this.prisma.$transaction(async (prisma) => {
-      // 1️⃣ Update Role basic info
+      /**
+       * Update Role basic info
+       */
       const role = await prisma.role.update({
         where: { id },
         data: { roleName, deletable },
+        select: {
+          id: true,
+          roleName: true,
+          deletable: true,
+          createdAt: true,
+        },
       });
 
-      // 2️⃣ Sync ModuleRole
+      /**
+       * Sync ModuleRole
+       */
       const existingModules = await prisma.moduleRole.findMany({
         where: { roleId: id },
         select: { moduleId: true },
@@ -139,7 +173,9 @@ export class RolesService {
         });
       }
 
-      // 3️⃣ Sync PermissionRole
+      /**
+       * Sync PermissionRole
+       */
       const existingPermissions = await prisma.permissionRole.findMany({
         where: { roleId: id },
         select: { permissionId: true },
@@ -182,50 +218,35 @@ export class RolesService {
    * @param id Role ID
    * @returns Deleted Role
    */
-  async remove(id: number): Promise<Role> {
+  async remove(id: number): Promise<Omit<Role, 'updatedAt'>> {
     return this.prisma.$transaction(async (prisma) => {
-      // 1. Fetch role info to check deletable
       const role = await prisma.role.findUnique({
         where: { id },
       });
 
-      if (!role) {
-        throw new BadRequestException(`Role not found`);
-      }
+      if (!role) throw new NotFoundException('Role not found!');
 
-      if (!role.deletable) {
-        throw new BadRequestException(
-          `You have no enough permission to delete this.`,
+      if (!role.deletable)
+        throw new ForbiddenException(
+          'You have no enough permission to delete this.',
         );
-      }
 
-      // 2. Check if assigned to any user
       const assignedCount = await prisma.user.count({
         where: { roleId: id },
       });
 
-      if (assignedCount > 0) {
-        throw new BadRequestException(
+      if (assignedCount > 0)
+        throw new ConflictException(
           `Cannot delete role. It is assigned to ${assignedCount} user(s).`,
         );
-      }
 
-      // 3. Delete related module_role entries
-      await prisma.moduleRole.deleteMany({
-        where: { roleId: id },
-      });
+      await prisma.moduleRole.deleteMany({ where: { roleId: id } });
+      await prisma.permissionRole.deleteMany({ where: { roleId: id } });
 
-      // 4. Delete related permission_role entries
-      await prisma.permissionRole.deleteMany({
-        where: { roleId: id },
-      });
-
-      // 5. Delete the role itself
-      const deletedRole = await prisma.role.delete({
+      return prisma.role.delete({
         where: { id },
+        select: { id: true, roleName: true, deletable: true, createdAt: true },
       });
-
-      return deletedRole;
     });
   }
 
@@ -236,7 +257,6 @@ export class RolesService {
    */
   async bulkDelete(ids: number[]) {
     return this.prisma.$transaction(async (prisma) => {
-      // 1. Fetch roles to check deletable
       const roles = await prisma.role.findMany({
         where: { id: { in: ids } },
         select: { id: true, deletable: true },
@@ -246,14 +266,12 @@ export class RolesService {
         .filter((r) => !r.deletable)
         .map((r) => r.id);
 
-      // 2. Find roles assigned to any user
       const assignedRoles = await prisma.user.findMany({
         where: { roleId: { in: ids } },
         select: { roleId: true },
       });
       const assignedRoleIds = assignedRoles.map((r) => r.roleId);
 
-      // 3. Filter roles that can be deleted
       const deletableIds = ids.filter(
         (id) => !assignedRoleIds.includes(id) && !nonDeletableIds.includes(id),
       );
@@ -264,26 +282,17 @@ export class RolesService {
         );
       }
 
-      // 4. Delete related module_role entries
       await prisma.moduleRole.deleteMany({
         where: { roleId: { in: deletableIds } },
       });
 
-      // 5. Delete related permission_role entries
       await prisma.permissionRole.deleteMany({
         where: { roleId: { in: deletableIds } },
       });
 
-      // 6. Delete roles themselves
-      const deletedRoles = await prisma.role.deleteMany({
+      return prisma.role.deleteMany({
         where: { id: { in: deletableIds } },
       });
-
-      return {
-        deletedRoleIds: deletableIds,
-        skippedRoleIds: [...assignedRoleIds, ...nonDeletableIds],
-        count: deletedRoles.count,
-      };
     });
   }
 }

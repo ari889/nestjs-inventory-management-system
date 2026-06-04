@@ -24,12 +24,11 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { PermissionsService } from './permissions.service';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import {
-  PermissionItemSchema,
+  type PermissionCreateDto,
+  PermissionCreateSchema,
+  type PermissionDto,
   PermissionSchema,
-} from './schemas/create-permission.schema';
-import { PermissionItemDto } from './dto/permission-item.dto';
-import { CreatePermissionDto } from './dto/permission.dto';
-import { BlukDeletePermissionDto } from './dto/bulk-delete-permission.dto';
+} from './schemas/permission.schema';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import type { FastifyRequest } from 'fastify';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
@@ -37,6 +36,7 @@ import {
   type PermissionQueryDto,
   PermissionQuerySchema,
 } from './schemas/permission-query.schema';
+import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
 
 const permissionProperties = {
   id: { type: 'number', example: 1 },
@@ -242,8 +242,8 @@ export class PermissionsController {
   @Permission('permission-create')
   @Post()
   async createPermission(
-    @FormBody(new ZodValidationPipe(PermissionSchema))
-    permissionDto: CreatePermissionDto,
+    @FormBody(new ZodValidationPipe(PermissionCreateSchema))
+    permissionDto: PermissionCreateDto,
   ) {
     const permission = await this.permissionsService.create(permissionDto);
     return {
@@ -292,8 +292,8 @@ export class PermissionsController {
   @Patch(':id')
   async updatePermission(
     @Param('id', ParseIntPipe) id: number,
-    @FormBody(new ZodValidationPipe(PermissionItemSchema))
-    permissionDto: PermissionItemDto,
+    @FormBody(new ZodValidationPipe(PermissionSchema))
+    permissionDto: PermissionDto,
   ) {
     const permission = await this.permissionsService.update(id, permissionDto);
     return {
@@ -353,7 +353,7 @@ export class PermissionsController {
   })
   @Permission('permission-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@FormBody() body: BlukDeletePermissionDto) {
+  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const permissions = await this.permissionsService.bulkDelete(body.ids);

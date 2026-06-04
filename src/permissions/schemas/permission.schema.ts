@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const PermissionItemSchema = z.object({
+export const PermissionSchema = z.object({
   name: z
     .string()
     .min(1, { message: 'Enter a permission name!' })
@@ -18,7 +18,7 @@ export const PermissionItemSchema = z.object({
   deletable: z.coerce.boolean().optional(),
 });
 
-export const PermissionSchema = z.object({
+export const PermissionCreateSchema = z.object({
   moduleId: z.coerce
     .number()
     .nullable()
@@ -26,6 +26,9 @@ export const PermissionSchema = z.object({
       message: 'Please select a module!',
     }),
   permissions: z
-    .array(PermissionItemSchema)
+    .array(PermissionSchema)
     .min(1, { message: 'Add at least one permission!' }),
 });
+
+export type PermissionDto = z.infer<typeof PermissionSchema>;
+export type PermissionCreateDto = z.infer<typeof PermissionCreateSchema>;

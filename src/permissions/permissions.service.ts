@@ -6,9 +6,11 @@ import {
 } from '@nestjs/common';
 import { Permission } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreatePermissionDto } from './dto/permission.dto';
-import { PermissionItemDto } from './dto/permission-item.dto';
 import { PermissionQueryDto } from './schemas/permission-query.schema';
+import {
+  PermissionCreateDto,
+  PermissionDto,
+} from './schemas/permission.schema';
 
 @Injectable()
 export class PermissionsService {
@@ -75,7 +77,7 @@ export class PermissionsService {
    * @returns Permission
    */
   async create(
-    permissionDto: CreatePermissionDto,
+    permissionDto: PermissionCreateDto,
   ): Promise<Array<Omit<Permission, 'moduleId' | 'updatedAt'>>> {
     const { moduleId, permissions } = permissionDto;
 
@@ -127,7 +129,7 @@ export class PermissionsService {
    */
   async update(
     id: number,
-    permissionDto: PermissionItemDto,
+    permissionDto: PermissionDto,
   ): Promise<Omit<Permission, 'moduleId' | 'updatedAt'>> {
     const exists = await this.prisma.permission.findUnique({
       where: { id },
