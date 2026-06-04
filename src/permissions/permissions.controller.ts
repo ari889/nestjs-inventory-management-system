@@ -36,7 +36,7 @@ import {
   type PermissionQueryDto,
   PermissionQuerySchema,
 } from './schemas/permission-query.schema';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 
 const permissionProperties = {
   id: { type: 'number', example: 1 },
@@ -351,9 +351,23 @@ export class PermissionsController {
       },
     },
   })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
+      },
+    },
+  })
   @Permission('permission-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BulkDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const permissions = await this.permissionsService.bulkDelete(body.ids);

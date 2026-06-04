@@ -13,7 +13,7 @@ import {
   replaceFile,
   saveFile,
 } from 'src/common/fileUpload/fileHelper';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { Decimal } from '@prisma/client/runtime/client';
 
 @Injectable()
@@ -400,7 +400,7 @@ export class ProductsService {
    * @param ids
    * @returns { count: number }
    */
-  async bulkDelete(ids: BlukDeleteIdsDto['ids']): Promise<{ count: number }> {
+  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{ count: number }> {
     const products = await this.prisma.product.findMany({
       where: { id: { in: ids } },
       select: { id: true, image: true },

@@ -33,7 +33,7 @@ import {
 import type { FastifyRequest } from 'fastify';
 import { EmployeeDto, EmployeeSchema } from './schemas/employee.schema';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
@@ -502,7 +502,7 @@ export class EmployeesController {
   })
   @Permission('employee-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@FormBody() body: BlukDeleteIdsDto) {
+  async bulkDelete(@FormBody() body: BulkDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const empoyee = await this.employeesService.bulkDelete(body.ids);

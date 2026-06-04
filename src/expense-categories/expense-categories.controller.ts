@@ -29,7 +29,7 @@ import {
   ExpenseCategorySchema,
 } from './schemas/expenase-category.schema';
 import type { FastifyRequest } from 'fastify';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
 
@@ -400,7 +400,7 @@ export class ExpenseCategoriesController {
   })
   @Permission('expense-category-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BulkDeleteIdsDto) {
     const data = await this.expenseCategoriesService.bulkDelete(body?.ids);
     return {
       success: true,

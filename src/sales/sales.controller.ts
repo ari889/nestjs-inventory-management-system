@@ -33,7 +33,7 @@ import {
 } from '@blazity/nest-file-fastify';
 import type { FastifyRequest } from 'fastify';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { SaleCreateSchema, SaleUpdateSchema } from './schemas/sale.schema';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
 
@@ -351,7 +351,7 @@ export class SalesController {
   })
   @Permission('sale-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@FormBody() body: BlukDeleteIdsDto) {
+  async bulkDelete(@FormBody() body: BulkDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const sales = await this.salesService.bulkDelete(body.ids);

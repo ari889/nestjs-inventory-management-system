@@ -30,7 +30,7 @@ import {
   ProductCategorySchema,
 } from './schemas/product-category.schema';
 import type { FastifyRequest } from 'fastify';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
@@ -400,7 +400,7 @@ export class ProductCategoriesController {
   })
   @Permission('product-category-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BulkDeleteIdsDto) {
     const data = await this.productCategoriesService.bulkDelete(body?.ids);
     return {
       success: true,

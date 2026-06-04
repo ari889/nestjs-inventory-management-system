@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { ProductCategory } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProductCategoryDto } from './schemas/product-category.schema';
@@ -173,7 +173,7 @@ export class ProductCategoriesService {
    * @param ids ProductCategory IDs
    * @returns { count: number }
    */
-  async bulkDelete(ids: BlukDeleteIdsDto['ids']): Promise<{ count: number }> {
+  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{ count: number }> {
     return this.prisma.productCategory.deleteMany({
       where: { id: { in: ids } },
     });

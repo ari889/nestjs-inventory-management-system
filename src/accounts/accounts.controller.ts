@@ -26,7 +26,7 @@ import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { type AccountDto, AccountSchema } from './schemas/account.schema';
 import type { FastifyRequest } from 'fastify';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
 
@@ -427,7 +427,7 @@ export class AccountsController {
   })
   @Permission('account-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BulkDeleteIdsDto) {
     const data = await this.accountsService.bulkDelete(body?.ids);
     return {
       success: true,

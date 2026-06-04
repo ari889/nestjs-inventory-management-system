@@ -34,7 +34,7 @@ import type { FastifyRequest } from 'fastify';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { PurchaseSchema } from './schemas/purchase.schema';
 import { CreatePurchaseDto, UpdatePurchaseDto } from './dto/purchase.dto';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 const purchaseProductSchema = {
@@ -350,7 +350,7 @@ export class PurchasesController {
   })
   @Permission('purchase-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@FormBody() body: BlukDeleteIdsDto) {
+  async bulkDelete(@FormBody() body: BulkDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const purchases = await this.purchasesService.bulkDelete(body.ids);

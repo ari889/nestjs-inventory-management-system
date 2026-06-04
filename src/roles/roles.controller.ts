@@ -24,7 +24,7 @@ import { RoleSchema, UpdateRoleSchema } from './schemas/role.schema';
 import { RoleDto, UpdateRoleDto } from './dto/role.dto';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import {
   type RoleQueryDto,
   RoleQuerySchema,
@@ -396,7 +396,7 @@ export class RolesController {
   })
   @Permission('role-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@FormBody() body: BlukDeleteIdsDto) {
+  async bulkDelete(@FormBody() body: BulkDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const roles = await this.rolesService.bulkDelete(body.ids);

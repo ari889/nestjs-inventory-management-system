@@ -32,7 +32,7 @@ import {
 } from '@blazity/nest-file-fastify';
 import type { FastifyRequest } from 'fastify';
 import { ProductDto, ProductSchema } from './schemas/product.schema';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
@@ -763,7 +763,7 @@ export class ProductsController {
   })
   @Permission('product-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@FormBody() body: BlukDeleteIdsDto) {
+  async bulkDelete(@FormBody() body: BulkDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const products = await this.productsService.bulkDelete(body.ids);

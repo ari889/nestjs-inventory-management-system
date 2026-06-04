@@ -30,7 +30,7 @@ import {
   MenuQuerySchema,
 } from './schemas/menu-query.schema';
 import { AnyFilesInterceptor } from '@blazity/nest-file-fastify';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 const menuProperties = {
@@ -321,7 +321,7 @@ export class MenusController {
   })
   @Permission('menu-bulk-delete')
   @Delete('bulk')
-  async bulkDeleteMenu(@FormBody() body: BlukDeleteIdsDto) {
+  async bulkDeleteMenu(@FormBody() body: BulkDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const menus = await this.menusService.bulkDelete(body?.ids);

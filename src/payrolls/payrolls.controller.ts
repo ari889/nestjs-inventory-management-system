@@ -27,7 +27,7 @@ import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { type PayrollDto, PayrollSchema } from './schemas/payroll.schema';
 import type { FastifyRequest } from 'fastify';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
@@ -439,7 +439,7 @@ export class PayrollsController {
   })
   @Permission('payroll-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BulkDeleteIdsDto) {
     const data = await this.payrollsService.bulkDelete(body?.ids);
     return {
       success: true,

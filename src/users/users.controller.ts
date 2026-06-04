@@ -35,7 +35,7 @@ import type { FastifyRequest } from 'fastify';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import { type UserQueryDto, UserQuerySchema } from './schema/user-query.schema';
 import { UserListItem } from './@types/user.types';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { AnyFilesInterceptor } from '@blazity/nest-file-fastify';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
 
@@ -455,7 +455,7 @@ export class UsersController {
   })
   @Permission('user-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@FormBody() body: BlukDeleteIdsDto) {
+  async bulkDelete(@FormBody() body: BulkDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const users = await this.usersService.bulkDelete(body.ids);

@@ -6,7 +6,7 @@ import {
 import { Supplier } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SupplierDto } from './schemas/supplier.schema';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 
 @Injectable()
 export class SuppliersService {
@@ -184,7 +184,7 @@ export class SuppliersService {
    * @param ids Supplier IDs
    * @returns Number
    */
-  async bulkDelete(ids: BlukDeleteIdsDto['ids']): Promise<{ count: number }> {
+  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{ count: number }> {
     return this.prisma.supplier.deleteMany({
       where: { id: { in: ids } },
     });

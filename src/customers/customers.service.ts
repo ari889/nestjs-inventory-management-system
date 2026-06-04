@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Customer } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CustomerDto } from './schemas/customer.schema';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 
 @Injectable()
 export class CustomersService {
@@ -189,7 +189,7 @@ export class CustomersService {
    * @param ids Customer IDs
    * @returns Number
    */
-  async bulkDelete(ids: BlukDeleteIdsDto['ids']): Promise<{ count: number }> {
+  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{ count: number }> {
     return this.prisma.customer.deleteMany({
       where: { id: { in: ids } },
     });

@@ -15,7 +15,7 @@ import {
   replaceFile,
   saveFile,
 } from 'src/common/fileUpload/fileHelper';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 
 @Injectable()
 export class SalesService {
@@ -748,7 +748,7 @@ export class SalesService {
     return deleted;
   }
 
-  async bulkDelete(ids: BlukDeleteIdsDto['ids']): Promise<{ count: number }> {
+  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{ count: number }> {
     const sales = await this.prisma.sale.findMany({
       where: { id: { in: ids } },
       select: {

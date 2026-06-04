@@ -27,7 +27,7 @@ import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { type ExpenseDto, ExpenseSchema } from './schemas/expense.schema';
 import type { FastifyRequest } from 'fastify';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
 
 @UseGuards(JwtAuthGuard)
@@ -452,7 +452,7 @@ export class ExpensesController {
   })
   @Permission('expense-bulk-delete')
   @Delete('bulk')
-  async bulkDeletePermission(@FormBody() body: BlukDeleteIdsDto) {
+  async bulkDeletePermission(@FormBody() body: BulkDeleteIdsDto) {
     const data = await this.expensesService.bulkDelete(body?.ids);
     return {
       success: true,

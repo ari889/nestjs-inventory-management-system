@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class BlukDeleteIdsDto {
+export class BulkDeleteIdsDto {
   @ApiProperty({
     type: [Number],
     description: 'Array of ids',

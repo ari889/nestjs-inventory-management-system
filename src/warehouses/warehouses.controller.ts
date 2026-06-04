@@ -1,11 +1,9 @@
 import {
   BadRequestException,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -13,16 +11,46 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiQuery,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { WarehousesService } from './warehouses.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
-import { BlukDeleteWarehouseDto, WarehouseDto } from './dto/warehouse.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { WarehouseSchema } from './schemas/warehouse.schema';
+import { type WarehouseDto, WarehouseSchema } from './schemas/warehouse.schema';
 import type { FastifyRequest } from 'fastify';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type WarehouseQueryDto,
+  WarehouseQuerySchema,
+} from './schemas/warehouse-query.schema';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
+
+const warehouseProperties = {
+  id: { type: 'number', example: 1 },
+  name: { type: 'string', example: 'Warehouse 1' },
+  phone: { type: 'string', example: '1234567890' },
+  email: { type: 'string', example: 'XbM4o@example.com' },
+  address: { type: 'string', example: '123 Main St' },
+  status: { type: 'boolean', example: true },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+  creator: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+};
+
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 @Controller('warehouses')
@@ -36,6 +64,8 @@ export class WarehousesController {
    * @param order
    * @param direction
    * @param search
+   * @param status
+   * @param createdBy
    * @returns Warehouses
    */
   @ApiQuery({
@@ -67,6 +97,18 @@ export class WarehousesController {
     type: String,
     example: 'Warehouse 1',
   })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: Boolean,
+    example: true,
+  })
+  @ApiQuery({
+    name: 'createdBy',
+    required: false,
+    type: Number,
+    example: 1,
+  })
   @ApiOkResponse({
     description: 'Warehouses fetched success response!',
     schema: {
@@ -84,24 +126,10 @@ export class WarehousesController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  name: { type: 'string', example: 'Warehouse 1' },
-                  phone: { type: 'string', example: '1234567890' },
-                  address: { type: 'string', example: '123 Main St' },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: warehouseProperties,
               },
             },
-            totalItems: { type: 'number' },
+            totalItems: { type: 'number', example: 1 },
           },
         },
       },
@@ -110,25 +138,10 @@ export class WarehousesController {
   @Permission('warehouse-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe)
-    page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
-    @Query('search') search?: string,
+    @Query(new ZodValidationPipe(WarehouseQuerySchema))
+    query: WarehouseQueryDto,
   ) {
-    const data = await this.warehousesService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-    });
+    const data = await this.warehousesService.findAll(query);
     return {
       success: true,
       message: 'Warehouses fetched successfully!',
@@ -146,40 +159,11 @@ export class WarehousesController {
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: { type: 'string', example: 'Warehouse fetched successfully!' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Warehouse 1' },
-            email: { type: 'string', example: '2mX3o@example.com' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: '123 Main St' },
-            status: { type: 'boolean', example: true },
-            creator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            updator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: warehouseProperties,
         },
       },
     },
@@ -206,27 +190,26 @@ export class WarehousesController {
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: { type: 'string', example: 'Warehouse created successfully!' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Warehouse 1' },
-            email: { type: 'string', example: '2mX3o@example.com' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: '123 Main St' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: warehouseProperties,
         },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['name'],
+      properties: {
+        name: { type: 'string', example: 'Warehouse One' },
+        phone: { type: 'string', example: '1234567890' },
+        email: { type: 'string', example: '2M7tH@example.com' },
+        address: { type: 'string', example: '123 Main St' },
+        status: { type: 'boolean', example: true },
       },
     },
   })
@@ -260,34 +243,26 @@ export class WarehousesController {
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: { type: 'string' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Warehouse 1' },
-            email: { type: 'string', example: '2mX3o@example.com' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: '123 Main St' },
-            status: { type: 'boolean', example: true },
-            creator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-          },
+          properties: warehouseProperties,
         },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['name'],
+      properties: {
+        name: { type: 'string', example: 'Warehouse One' },
+        phone: { type: 'string', example: '1234567890' },
+        email: { type: 'string', example: '2M7tH@example.com' },
+        address: { type: 'string', example: '123 Main St' },
+        status: { type: 'boolean', example: true },
       },
     },
   })
@@ -332,21 +307,7 @@ export class WarehousesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Warehouse 1' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: '123 Main St' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: warehouseProperties,
         },
       },
     },
@@ -373,15 +334,32 @@ export class WarehousesController {
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
-        message: { type: 'string', example: 'Users deleted successfully!' },
+        success: { type: 'boolean', example: true },
+        message: {
+          type: 'string',
+          example: 'Warehouses deleted successfully!',
+        },
         data: { type: 'number', example: 4 },
+      },
+    },
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
       },
     },
   })
   @Permission('warehouse-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@FormBody() body: BlukDeleteWarehouseDto) {
+  async bulkDelete(@FormBody() body: BulkDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const warehouses = await this.warehousesService.bulkDelete(body.ids);

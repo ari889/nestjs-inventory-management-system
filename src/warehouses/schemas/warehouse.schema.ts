@@ -13,7 +13,9 @@ export const WarehouseSchema = z.object({
     .nullable(),
   phone: z.string().min(1, { message: 'Phone number is required!' }).nullable(),
   address: z.string().min(1, { message: 'Address is required!' }).nullable(),
-  status: z.boolean({
+  status: z.coerce.boolean({
     message: 'Status is required!',
   }),
 });
+
+export type WarehouseDto = z.infer<typeof WarehouseSchema>;

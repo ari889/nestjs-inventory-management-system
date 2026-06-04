@@ -8,7 +8,7 @@ import { hashPassword } from 'src/common/hash';
 import { UserQueryDto } from './schema/user-query.schema';
 import { UserListItem } from './@types/user.types';
 import { CreateUserDto, UpdateUserDto } from './schema/user.schema';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 
 @Injectable()
 export class UsersService {
@@ -301,7 +301,7 @@ export class UsersService {
    * @param ids
    * @returns { count: number }
    */
-  async bulkDelete(ids: BlukDeleteIdsDto['ids']): Promise<{ count: number }> {
+  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{ count: number }> {
     const deletableUsers = await this.prisma.user.findMany({
       where: {
         id: { in: ids },

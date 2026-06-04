@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ExpenseCategory } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ExpenseCategoryDto } from './schemas/expenase-category.schema';
-import { BlukDeleteIdsDto } from 'src/common/dto/base.dto';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 
 @Injectable()
 export class ExpenseCategoriesService {
@@ -173,7 +173,7 @@ export class ExpenseCategoriesService {
    * @param ids ExpenseCategory IDs
    * @returns { count: number }
    */
-  async bulkDelete(ids: BlukDeleteIdsDto['ids']): Promise<{ count: number }> {
+  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{ count: number }> {
     return this.prisma.expenseCategory.deleteMany({
       where: { id: { in: ids } },
     });
