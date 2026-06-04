@@ -13,9 +13,23 @@ export const UserQuerySchema = z.object({
 
   search: z.string().trim().optional(),
 
-  gender: z.coerce.boolean().optional(),
+  gender: z
+    .union([z.boolean(), z.string()])
+    .transform((val) => {
+      if (val === 'false' || val === false) return false;
+      if (val === 'true' || val === true) return true;
+      return undefined;
+    })
+    .optional(),
 
-  status: z.coerce.boolean().optional(),
+  status: z
+    .union([z.boolean(), z.string()])
+    .transform((val) => {
+      if (val === 'false' || val === false) return false;
+      if (val === 'true' || val === true) return true;
+      return undefined;
+    })
+    .optional(),
 });
 
 export type UserQueryDto = z.infer<typeof UserQuerySchema>;

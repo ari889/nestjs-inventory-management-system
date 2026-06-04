@@ -34,15 +34,20 @@ export class UsersService {
     items: UserListItem[];
     totalItems: number;
   }> {
+    const where = {
+      ...(search && {
+        OR: [
+          { name: { contains: search } },
+          { email: { contains: search } },
+          { phoneNo: { contains: search } },
+        ],
+      }),
+      ...(status !== undefined && { status }),
+      ...(gender !== undefined && { gender }),
+    };
     const [items, totalItems] = await Promise.all([
       this.prisma.user.findMany({
-        where: {
-          name: {
-            contains: search,
-          },
-          gender,
-          status,
-        },
+        where,
         skip: page * limit,
         take: limit,
         orderBy: {
@@ -71,7 +76,7 @@ export class UsersService {
           },
         },
       }),
-      this.prisma.user.count(),
+      this.prisma.user.count({ where }),
     ]);
     return { items, totalItems };
   }
