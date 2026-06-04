@@ -1,11 +1,9 @@
 import {
   BadRequestException,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -23,15 +21,36 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { CustomerGroupSchema } from './schemas/customer-group.schema';
 import {
-  BlukDeleteCustomerGroupDto,
-  CustomerGroupDto,
-} from './dto/customer-group.dto';
+  type CustomerGroupDto,
+  CustomerGroupSchema,
+} from './schemas/customer-group.schema';
 import type { FastifyRequest } from 'fastify';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type CustomerGroupQueryDto,
+  CustomerGroupQuerySchema,
+} from './schemas/customer-group-query.schema';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
+
+const customerGroupProperties = {
+  id: { type: 'number', example: 1 },
+  groupName: { type: 'string', example: 'Customer Group 1' },
+  percentage: { type: 'number', example: 10 },
+  status: { type: 'boolean', example: true },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+  creator: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -51,7 +70,7 @@ export class CustomerGroupsController {
   @ApiQuery({
     name: 'order',
     required: false,
-    example: 'id',
+    example: 'createdAt',
   })
   @ApiQuery({
     name: 'direction',
@@ -77,12 +96,24 @@ export class CustomerGroupsController {
     type: String,
     example: 'Customer Group 1',
   })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: Boolean,
+    example: true,
+  })
+  @ApiQuery({
+    name: 'createdBy',
+    required: false,
+    type: Number,
+    example: 1,
+  })
   @ApiOkResponse({
     description: 'Customer groups fetched success response!',
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: {
           type: 'string',
           example: 'Customer groups fetched successfully!',
@@ -94,20 +125,7 @@ export class CustomerGroupsController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  groupName: { type: 'string', example: 'Customer Group 1' },
-                  percentage: { type: 'number', example: 10 },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: customerGroupProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -119,25 +137,10 @@ export class CustomerGroupsController {
   @Permission('customer-group-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe)
-    page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
-    @Query('search') search?: string,
+    @Query(new ZodValidationPipe(CustomerGroupQuerySchema))
+    query: CustomerGroupQueryDto,
   ) {
-    const data = await this.customerGroupService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-    });
+    const data = await this.customerGroupService.findAll(query);
     return {
       success: true,
       message: 'Customer groups fetched successfully!',
@@ -162,34 +165,7 @@ export class CustomerGroupsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            groupName: { type: 'string', example: 'Customer Group 1' },
-            percentage: { type: 'number', example: 10 },
-            status: { type: 'boolean', example: true },
-            creator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            updator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: customerGroupProperties,
         },
       },
     },
@@ -223,20 +199,7 @@ export class CustomerGroupsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            groupName: { type: 'string', example: 'Customer Group 1' },
-            percentage: { type: 'number', example: 10 },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: customerGroupProperties,
         },
       },
     },
@@ -247,7 +210,7 @@ export class CustomerGroupsController {
       type: 'object',
       required: ['groupName', 'percentage', 'status'],
       properties: {
-        groupName: { type: 'string', example: 'Customer Group 1' },
+        groupName: { type: 'string', example: 'Customer Group One' },
         percentage: { type: 'number', example: 10 },
         status: { type: 'boolean', example: true },
       },
@@ -411,9 +374,23 @@ export class CustomerGroupsController {
       },
     },
   })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
+      },
+    },
+  })
   @Permission('customer-group-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@FormBody() body: BlukDeleteCustomerGroupDto) {
+  async bulkDelete(@FormBody() body: BulkDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const customerGroups = await this.customerGroupService.bulkDelete(body.ids);

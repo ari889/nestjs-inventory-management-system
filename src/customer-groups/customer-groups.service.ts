@@ -1,10 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CustomerGroup } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import {
-  BlukDeleteCustomerGroupDto,
-  CustomerGroupDto,
-} from './dto/customer-group.dto';
+import { CustomerGroupQueryDto } from './schemas/customer-group-query.schema';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
+import { CustomerGroupDto } from './schemas/customer-group.schema';
 
 @Injectable()
 export class CustomerGroupsService {
@@ -21,20 +24,19 @@ export class CustomerGroupsService {
     order,
     direction,
     search = '',
-  }: {
-    page: number;
-    limit: number;
-    order: string;
-    direction: string;
-    search?: string;
-  }): Promise<{ items: CustomerGroup[]; totalItems: number }> {
-    const where = search
-      ? {
-          groupName: {
-            contains: search,
-          },
-        }
-      : {};
+    status = undefined,
+    createdBy = undefined,
+  }: CustomerGroupQueryDto): Promise<{
+    items: Array<Omit<CustomerGroup, 'createdBy' | 'updatedBy' | 'updatedAt'>>;
+    totalItems: number;
+  }> {
+    const where = {
+      ...(search && {
+        groupName: { contains: search },
+      }),
+      ...(status !== undefined && { status }),
+      ...(createdBy && { createdBy }),
+    };
     const [items, totalItems] = await Promise.all([
       this.prisma.customerGroup.findMany({
         where,
@@ -43,13 +45,18 @@ export class CustomerGroupsService {
         orderBy: {
           [order]: direction,
         },
-        include: {
+        select: {
+          id: true,
+          groupName: true,
+          percentage: true,
+          status: true,
           creator: {
             select: {
               id: true,
               name: true,
             },
           },
+          createdAt: true,
         },
       }),
       this.prisma.customerGroup.count({ where }),
@@ -67,7 +74,7 @@ export class CustomerGroupsService {
    */
   async findOne(
     id: number,
-  ): Promise<Omit<CustomerGroup, 'createdBy' | 'updatedBy'>> {
+  ): Promise<Omit<CustomerGroup, 'createdBy' | 'updatedBy' | 'updatedAt'>> {
     const customerGroup = await this.prisma.customerGroup.findUnique({
       where: { id },
       select: {
@@ -81,14 +88,7 @@ export class CustomerGroupsService {
             name: true,
           },
         },
-        updater: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
         createdAt: true,
-        updatedAt: true,
       },
     });
     if (!customerGroup)
@@ -105,7 +105,7 @@ export class CustomerGroupsService {
   async create(
     customerGroupDto: CustomerGroupDto,
     creatorEmail: string,
-  ): Promise<CustomerGroup> {
+  ): Promise<Omit<CustomerGroup, 'createdBy' | 'updatedBy' | 'updatedAt'>> {
     const creator = await this.prisma.user.findUnique({
       where: { email: creatorEmail },
       select: {
@@ -122,13 +122,18 @@ export class CustomerGroupsService {
         createdBy: creator?.id,
         updatedBy: creator?.id,
       },
-      include: {
+      select: {
+        id: true,
+        groupName: true,
+        percentage: true,
+        status: true,
         creator: {
           select: {
             id: true,
             name: true,
           },
         },
+        createdAt: true,
       },
     });
   }
@@ -144,7 +149,7 @@ export class CustomerGroupsService {
     id: number,
     updatorEmail: string,
     customerGroupDto: CustomerGroupDto,
-  ): Promise<CustomerGroup> {
+  ): Promise<Omit<CustomerGroup, 'createdBy' | 'updatedBy' | 'updatedAt'>> {
     const updator = await this.prisma.user.findUnique({
       where: { email: updatorEmail },
       select: {
@@ -159,13 +164,18 @@ export class CustomerGroupsService {
     return this.prisma.customerGroup.update({
       where: { id },
       data: { ...customerGroupDto, updatedBy: updator.id },
-      include: {
+      select: {
+        id: true,
+        groupName: true,
+        percentage: true,
+        status: true,
         creator: {
           select: {
             id: true,
             name: true,
           },
         },
+        createdAt: true,
       },
     });
   }
@@ -175,16 +185,39 @@ export class CustomerGroupsService {
    * @param id
    * @returns CustomerGroup
    */
-  async remove(id: number): Promise<CustomerGroup> {
-    const customerGroup = await this.prisma.customerGroup.findUnique({
-      where: { id },
-      select: { id: true },
+  async remove(
+    id: number,
+  ): Promise<Omit<CustomerGroup, 'createdBy' | 'updatedBy' | 'updatedAt'>> {
+    return this.prisma.$transaction(async (prisma) => {
+      const customerGroup = await prisma.customerGroup.findUnique({
+        where: { id },
+        select: { id: true },
+      });
+
+      if (!customerGroup)
+        throw new NotFoundException('Customer Group not found.');
+
+      const customerCount = await prisma.customer.count({
+        where: { customerGroupId: id },
+      });
+
+      if (customerCount > 0)
+        throw new ConflictException(
+          `Cannot delete customer group. It is assigned to ${customerCount} customer(s).`,
+        );
+
+      return prisma.customerGroup.delete({
+        where: { id },
+        select: {
+          id: true,
+          groupName: true,
+          percentage: true,
+          status: true,
+          createdAt: true,
+          creator: { select: { id: true, name: true } },
+        },
+      });
     });
-
-    if (!customerGroup)
-      throw new NotFoundException('Customer Group not found.');
-
-    return this.prisma.customerGroup.delete({ where: { id } });
   }
 
   /**
@@ -192,11 +225,61 @@ export class CustomerGroupsService {
    * @param ids
    * @returns CustomerGroup
    */
-  async bulkDelete(
-    ids: BlukDeleteCustomerGroupDto['ids'],
-  ): Promise<{ count: number }> {
-    return this.prisma.customerGroup.deleteMany({
-      where: { id: { in: ids } },
+  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{
+    count: number;
+    deletedIds: number[];
+    skippedIds: { id: number; reasons: string[] }[];
+  }> {
+    return this.prisma.$transaction(async (prisma) => {
+      const customerGroups = await prisma.customerGroup.findMany({
+        where: { id: { in: ids } },
+        select: { id: true },
+      });
+
+      const foundIds = customerGroups.map((cg) => cg.id);
+      const notFoundIds = ids.filter((id) => !foundIds.includes(id));
+
+      if (foundIds.length === 0)
+        throw new NotFoundException(
+          'No customer groups found for the given IDs.',
+        );
+
+      const customers = await prisma.customer.groupBy({
+        by: ['customerGroupId'],
+        where: { customerGroupId: { in: foundIds } },
+        _count: true,
+      });
+
+      const conflictMap = new Map<number, string[]>();
+      customers.forEach((c) =>
+        conflictMap.set(c.customerGroupId, [`${c._count} customer(s)`]),
+      );
+
+      const deletableIds = foundIds.filter((id) => !conflictMap.has(id));
+
+      const skippedIds = [
+        ...notFoundIds.map((id) => ({ id, reasons: ['Not found'] })),
+        ...Array.from(conflictMap.entries()).map(([id, reasons]) => ({
+          id,
+          reasons,
+        })),
+      ];
+
+      if (deletableIds.length === 0)
+        throw new ConflictException({
+          message: 'No customer groups could be deleted.',
+          skipped: skippedIds,
+        });
+
+      const result = await prisma.customerGroup.deleteMany({
+        where: { id: { in: deletableIds } },
+      });
+
+      return {
+        count: result.count,
+        deletedIds: deletableIds,
+        skippedIds,
+      };
     });
   }
 }

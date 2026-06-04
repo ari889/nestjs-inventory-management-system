@@ -7,13 +7,15 @@ export const CustomerGroupSchema = z.object({
     .regex(/^[A-Za-z ]+$/, {
       message: 'Name can contain only letters and spaces',
     }),
-  percentage: z
+  percentage: z.coerce
     .number({
       message: 'Percentage is required!',
     })
     .min(0)
     .max(100),
-  status: z.boolean({
+  status: z.coerce.boolean({
     message: 'Status is required!',
   }),
 });
+
+export type CustomerGroupDto = z.infer<typeof CustomerGroupSchema>;
