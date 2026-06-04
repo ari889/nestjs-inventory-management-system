@@ -42,11 +42,14 @@ const brandProperties = {
   title: { type: 'string', example: 'Customer Group 1' },
   image: { type: 'string', example: '/uploads/brand/1.jpg' },
   status: { type: 'boolean', example: true },
-  createdAt: {
-    type: 'string',
-    example: '2021-01-01T00:00:00.000Z',
+  creator: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
   },
-  updatedAt: {
+  createdAt: {
     type: 'string',
     example: '2021-01-01T00:00:00.000Z',
   },
@@ -350,6 +353,20 @@ export class BrandsController {
         success: { type: 'boolean' },
         message: { type: 'string', example: 'Brands deleted successfully!' },
         data: { type: 'number', example: 4 },
+      },
+    },
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
       },
     },
   })

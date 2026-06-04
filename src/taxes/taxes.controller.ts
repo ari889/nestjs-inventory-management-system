@@ -1,11 +1,9 @@
 import {
   BadRequestException,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -22,13 +20,31 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { TaxSchema } from './schemas/taxes.schema';
-import { BlukDeleteTaxDto, TaxDto } from './dto/taxes.dto';
+import { type TaxDto, TaxSchema } from './schemas/taxes.schema';
 import type { FastifyRequest } from 'fastify';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import { type TaxQueryDto, TaxQuerySchema } from './schemas/tax-query.schema';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
+
+const taxProperties = {
+  id: { type: 'number', example: 1 },
+  name: { type: 'string', example: 'Tax 1' },
+  rate: { type: 'number', example: 10 },
+  status: { type: 'boolean', example: true },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+  creator: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -70,7 +86,11 @@ export class TaxesController {
     name: 'search',
     required: false,
     type: String,
-    example: 'Tax 10%',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: Boolean,
   })
   @ApiOkResponse({
     description: 'Taxes fetched success response!',
@@ -89,20 +109,7 @@ export class TaxesController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  name: { type: 'string', example: 'Tax 1' },
-                  rate: { type: 'number', example: 10 },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: taxProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -114,25 +121,10 @@ export class TaxesController {
   @Permission('tax-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe)
-    page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
-    @Query('search') search?: string,
+    @Query(new ZodValidationPipe(TaxQuerySchema))
+    query: TaxQueryDto,
   ) {
-    const data = await this.taxesService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-    });
+    const data = await this.taxesService.findAll(query);
     return {
       success: true,
       message: 'Taxes fetched successfully!',
@@ -157,34 +149,7 @@ export class TaxesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Tax 1' },
-            rate: { type: 'number', example: 10 },
-            status: { type: 'boolean', example: true },
-            creator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            updator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: taxProperties,
         },
       },
     },
@@ -218,20 +183,7 @@ export class TaxesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Tax 1' },
-            rate: { type: 'number', example: 10 },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: taxProperties,
         },
       },
     },
@@ -279,27 +231,7 @@ export class TaxesController {
         message: { type: 'string' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Tax 1' },
-            rate: { type: 'number', example: 10 },
-            status: { type: 'boolean', example: true },
-            creator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-          },
+          properties: taxProperties,
         },
       },
     },
@@ -401,7 +333,7 @@ export class TaxesController {
   })
   @Permission('tax-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@FormBody() body: BlukDeleteTaxDto) {
+  async bulkDelete(@FormBody() body: BulkDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const taxes = await this.taxesService.bulkDelete(body.ids);

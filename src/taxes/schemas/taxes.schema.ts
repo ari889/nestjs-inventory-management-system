@@ -17,3 +17,5 @@ export const TaxSchema = z.object({
     message: 'Status is required!',
   }),
 });
+
+export type TaxDto = z.infer<typeof TaxSchema>;
