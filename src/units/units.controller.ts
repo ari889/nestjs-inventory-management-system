@@ -1,11 +1,9 @@
 import {
   BadRequestException,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -22,13 +20,37 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
-import { BlukDeleteUnitDto, UnitDto } from './dto/unit.dto';
 import type { FastifyRequest } from 'fastify';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { UnitSchema } from './schemas/units.schemas';
+import { type UnitDto, UnitSchema } from './schemas/units.schemas';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type UnitQueryDto,
+  UnitQuerySchema,
+} from './schemas/unit-query.schema';
+import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
+
+const unitProperties = {
+  id: { type: 'number', example: 1 },
+  unitCode: { type: 'string', example: 'tax1' },
+  unitName: { type: 'string', example: 'Tax 1' },
+  baseUnit: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      unitCode: { type: 'string', example: 'tax1' },
+      unitName: { type: 'string', example: 'Tax 1' },
+    },
+  },
+  operator: { type: 'string', example: '*' },
+  operationValue: { type: 'number', example: 1 },
+  status: { type: 'boolean', example: true },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -41,6 +63,10 @@ export class UnitsController {
    * @param limit
    * @param order
    * @param direction
+   * @param search
+   * @param status
+   * @param unitId
+   * @param createdBy
    * @returns Unit[]
    */
   @ApiQuery({
@@ -72,6 +98,21 @@ export class UnitsController {
     type: String,
     example: 'test',
   })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: Boolean,
+  })
+  @ApiQuery({
+    name: 'baseUnitId',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'createdBy',
+    required: false,
+    type: Number,
+  })
   @ApiOkResponse({
     description: 'Units fetched success response!',
     schema: {
@@ -89,23 +130,7 @@ export class UnitsController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  unitCode: { type: 'string', example: 'tax1' },
-                  unitName: { type: 'string', example: 'Tax 1' },
-                  baseUnitId: { type: 'number', example: 1 },
-                  operator: { type: 'string', example: '*' },
-                  operationValue: { type: 'number', example: 1 },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: unitProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -117,25 +142,10 @@ export class UnitsController {
   @Permission('unit-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe)
-    page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
-    @Query('search') search?: string,
+    @Query(new ZodValidationPipe(UnitQuerySchema))
+    query: UnitQueryDto,
   ) {
-    const data = await this.unitsService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-    });
+    const data = await this.unitsService.findAll(query);
     return {
       success: true,
       message: 'Taxes fetched successfully!',
@@ -160,37 +170,7 @@ export class UnitsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            unitCode: { type: 'string', example: 'Tax 1' },
-            unitName: { type: 'string', example: 'Tax 1' },
-            baseUnitId: { type: 'number', example: 1 },
-            operator: { type: 'string', example: '*' },
-            operationValue: { type: 'number', example: 1 },
-            status: { type: 'boolean', example: true },
-            creator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            updator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: unitProperties,
         },
       },
     },
@@ -224,23 +204,7 @@ export class UnitsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            unitCode: { type: 'string', example: 'UNIT-001' },
-            unitName: { type: 'string', example: 'Unit 1' },
-            baseUnitId: { type: 'number', example: 1 },
-            operator: { type: 'string', example: '*' },
-            operationValue: { type: 'number', example: 10 },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: unitProperties,
         },
       },
     },
@@ -298,30 +262,7 @@ export class UnitsController {
         message: { type: 'string' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            unitName: { type: 'string', example: 'Unit 1' },
-            unitCode: { type: 'string', example: 'UNIT-001' },
-            baseUnitId: { type: 'number', example: 1 },
-            operator: { type: 'string', example: '*' },
-            operationValue: { type: 'number', example: 10 },
-            status: { type: 'boolean', example: true },
-            creator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-          },
+          properties: unitProperties,
         },
       },
     },
@@ -385,23 +326,7 @@ export class UnitsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            unitName: { type: 'string', example: 'Unit 1' },
-            unitCode: { type: 'string', example: 'UNIT-001' },
-            baseUnitId: { type: 'number', example: 1 },
-            operator: { type: 'string', example: '*' },
-            operationValue: { type: 'number', example: 10 },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: unitProperties,
         },
       },
     },
@@ -436,7 +361,7 @@ export class UnitsController {
   })
   @Permission('unit-bulk-delete')
   @Delete('bulk')
-  async bulkDelete(@FormBody() body: BlukDeleteUnitDto) {
+  async bulkDelete(@FormBody() body: BulkDeleteIdsDto) {
     if (!Array.isArray(body?.ids))
       throw new BadRequestException('ids must be an array');
     const units = await this.unitsService.bulkDelete(body.ids);

@@ -165,7 +165,6 @@ export class UsersController {
       totalItems: number;
     };
   }> {
-    console.log(query);
     const users = await this.usersService.findAll(query);
     return {
       success: true,

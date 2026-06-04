@@ -32,3 +32,5 @@ export const UnitSchema = z.object({
     message: 'Status is required!',
   }),
 });
+
+export type UnitDto = z.infer<typeof UnitSchema>;
