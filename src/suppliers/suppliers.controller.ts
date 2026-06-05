@@ -1,11 +1,9 @@
 import {
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   NotFoundException,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -23,12 +21,41 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { SuppliersService } from './suppliers.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { type SupplierDto, SupplierSchema } from './schemas/supplier.schema';
 import type { FastifyRequest } from 'fastify';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type SupplierQueryDto,
+  SupplierQuerySchema,
+} from './schemas/supplier-query.schema';
+
+const supplierProperties = {
+  id: { type: 'number', example: 1 },
+  name: { type: 'string', example: 'Supplier 1' },
+  companyName: { type: 'string', example: 'Company 1' },
+  vatNumber: { type: 'string', example: '1234567890' },
+  email: { type: 'string', example: 'supplier1@example.com' },
+  phone: { type: 'string', example: '1234567890' },
+  address: { type: 'string', example: '123 Main St' },
+  city: { type: 'string', example: 'New York' },
+  state: { type: 'string', example: 'NY' },
+  postalCode: { type: 'string', example: '10001' },
+  country: { type: 'string', example: 'USA' },
+  status: { type: 'boolean', example: true },
+  creator: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -48,13 +75,16 @@ export class SuppliersController {
   @ApiQuery({
     name: 'order',
     required: false,
-    example: 'id',
+    example: 'createdAt',
   })
   @ApiQuery({
     name: 'direction',
     required: false,
     enum: ['asc', 'desc'],
-    example: 'asc',
+    schema: {
+      default: 'desc',
+      enum: ['asc', 'desc'],
+    },
   })
   @ApiQuery({
     name: 'page',
@@ -72,7 +102,16 @@ export class SuppliersController {
     name: 'search',
     required: false,
     type: String,
-    example: 'search',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: Boolean,
+  })
+  @ApiQuery({
+    name: 'createdBy',
+    required: false,
+    type: Number,
   })
   @ApiOkResponse({
     description: 'Supplier fetched successful response!',
@@ -88,28 +127,7 @@ export class SuppliersController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  name: { type: 'string', example: 'Supplier 1' },
-                  companyName: { type: 'string', example: 'Company 1' },
-                  vatNumber: { type: 'string', example: '1234567890' },
-                  email: { type: 'string', example: 'supplier1@example.com' },
-                  phone: { type: 'string', example: '1234567890' },
-                  address: { type: 'string', example: '123 Main St' },
-                  city: { type: 'string', example: 'New York' },
-                  state: { type: 'string', example: 'NY' },
-                  postalCode: { type: 'string', example: '10001' },
-                  country: { type: 'string', example: 'USA' },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: supplierProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -121,24 +139,9 @@ export class SuppliersController {
   @Permission('supplier-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query('search') search?: string,
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
+    @Query(new ZodValidationPipe(SupplierQuerySchema)) query: SupplierQueryDto,
   ) {
-    const suppliers = await this.suppliersService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-    });
+    const suppliers = await this.suppliersService.findAll(query);
     return {
       success: true,
       message: 'Suppliers fetched successfully!',
@@ -163,28 +166,7 @@ export class SuppliersController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Supplier 1' },
-            companyName: { type: 'string', example: 'Company 1' },
-            vatNumber: { type: 'string', example: '1234567890' },
-            email: { type: 'string', example: 'supplier1@example.com' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: '123 Main St' },
-            city: { type: 'string', example: 'New York' },
-            state: { type: 'string', example: 'NY' },
-            postalCode: { type: 'string', example: '10001' },
-            country: { type: 'string', example: 'USA' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: supplierProperties,
         },
       },
     },
@@ -219,28 +201,7 @@ export class SuppliersController {
         },
         data: {
           type: 'array',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Supplier 1' },
-            companyName: { type: 'string', example: 'Company 1' },
-            vatNumber: { type: 'string', example: '1234567890' },
-            email: { type: 'string', example: 'supplier1@example.com' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: '123 Main St' },
-            city: { type: 'string', example: 'New York' },
-            state: { type: 'string', example: 'NY' },
-            postalCode: { type: 'string', example: '10001' },
-            country: { type: 'string', example: 'USA' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: supplierProperties,
         },
       },
     },
@@ -301,28 +262,7 @@ export class SuppliersController {
         },
         data: {
           type: 'object ',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Supplier 1' },
-            companyName: { type: 'string', example: 'Company 1' },
-            vatNumber: { type: 'string', example: '1234567890' },
-            email: { type: 'string', example: 'supplier1@example.com' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: '123 Main St' },
-            city: { type: 'string', example: 'New York' },
-            state: { type: 'string', example: 'NY' },
-            postalCode: { type: 'string', example: '10001' },
-            country: { type: 'string', example: 'USA' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: supplierProperties,
         },
       },
     },
@@ -384,28 +324,7 @@ export class SuppliersController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Supplier 1' },
-            companyName: { type: 'string', example: 'Company 1' },
-            vatNumber: { type: 'string', example: '1234567890' },
-            email: { type: 'string', example: 'supplier1@example.com' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: '123 Main St' },
-            city: { type: 'string', example: 'New York' },
-            state: { type: 'string', example: 'NY' },
-            postalCode: { type: 'string', example: '10001' },
-            country: { type: 'string', example: 'USA' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: supplierProperties,
         },
       },
     },

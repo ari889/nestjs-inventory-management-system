@@ -47,7 +47,7 @@ export const SupplierSchema = z.object({
     z.string().min(1, { message: 'Enter a valid country!' }),
   ),
 
-  status: z.boolean({
+  status: z.coerce.boolean({
     message: 'Status is required!',
   }),
 });
