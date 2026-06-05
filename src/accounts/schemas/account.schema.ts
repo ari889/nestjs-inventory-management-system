@@ -32,7 +32,7 @@ export const AccountSchema = z.object({
     .max(255, { message: 'Max 255 characters!' })
     .optional()
     .nullable(),
-  status: z.boolean({ message: 'Status is required!' }),
+  status: z.coerce.boolean({ message: 'Status is required!' }),
 });
 
 export type AccountDto = z.infer<typeof AccountSchema>;
