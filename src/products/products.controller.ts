@@ -20,7 +20,6 @@ import {
   ApiOkResponse,
   ApiQuery,
 } from '@nestjs/swagger';
-import { responseCommonObject } from 'src/common/swagger/common';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import {
   FileFieldsInterceptor,
@@ -54,7 +53,7 @@ const productProperties = {
   },
   image: {
     type: 'string',
-    example: 'https://example.com/image.jpg',
+    example: '/uploads/product/1.jpg',
   },
   brand: {
     type: 'object',
@@ -121,6 +120,13 @@ const productProperties = {
   status: {
     type: 'boolean',
     example: true,
+  },
+  creator: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
   },
   createdAt: {
     type: 'string',
@@ -338,77 +344,7 @@ export class ProductsController {
         },
         data: {
           type: 'object',
-          properties: {
-            ...responseCommonObject,
-            name: {
-              type: 'string',
-              example: 'Product 1',
-            },
-            code: {
-              type: 'string',
-              example: 'P001',
-            },
-            barcodeSymbology: {
-              type: 'string',
-              example: 'C128',
-            },
-            image: {
-              type: 'string',
-              example: 'https://example.com/image.jpg',
-            },
-            brandId: {
-              type: 'number',
-              example: 1,
-            },
-            categoryId: {
-              type: 'number',
-              example: 1,
-            },
-            unitId: {
-              type: 'number',
-              example: 1,
-            },
-            purchaseUnitId: {
-              type: 'number',
-              example: 1,
-            },
-            saleUnitId: {
-              type: 'number',
-              example: 1,
-            },
-            cost: {
-              type: 'string',
-              example: '100.00',
-            },
-            price: {
-              type: 'string',
-              example: '200.00',
-            },
-            qty: {
-              type: 'number',
-              example: 10,
-            },
-            alertQty: {
-              type: 'number',
-              example: 5,
-            },
-            taxId: {
-              type: 'number',
-              example: 1,
-            },
-            taxMethod: {
-              type: 'boolean',
-              example: true, // true = Exclusive, False = Inclusive
-            },
-            description: {
-              type: 'string',
-              example: 'Product description',
-            },
-            status: {
-              type: 'boolean',
-              example: true,
-            },
-          },
+          properties: productProperties,
         },
       },
     },
@@ -460,77 +396,7 @@ export class ProductsController {
         message: { type: 'string', example: 'Product updated successfully!' },
         data: {
           type: 'object',
-          properties: {
-            ...responseCommonObject,
-            name: {
-              type: 'string',
-              example: 'Product 1',
-            },
-            code: {
-              type: 'string',
-              example: 'P001',
-            },
-            barcodeSymbology: {
-              type: 'string',
-              example: 'C128',
-            },
-            image: {
-              type: 'string',
-              example: 'https://example.com/image.jpg',
-            },
-            brandId: {
-              type: 'number',
-              example: 1,
-            },
-            categoryId: {
-              type: 'number',
-              example: 1,
-            },
-            unitId: {
-              type: 'number',
-              example: 1,
-            },
-            purchaseUnitId: {
-              type: 'number',
-              example: 1,
-            },
-            saleUnitId: {
-              type: 'number',
-              example: 1,
-            },
-            cost: {
-              type: 'string',
-              example: '100.00',
-            },
-            price: {
-              type: 'string',
-              example: '200.00',
-            },
-            qty: {
-              type: 'number',
-              example: 10,
-            },
-            alertQty: {
-              type: 'number',
-              example: 5,
-            },
-            taxId: {
-              type: 'number',
-              example: 1,
-            },
-            taxMethod: {
-              type: 'boolean',
-              example: true, // true = Exclusive, False = Inclusive
-            },
-            description: {
-              type: 'string',
-              example: 'Product description',
-            },
-            status: {
-              type: 'boolean',
-              example: true,
-            },
-          },
+          properties: productProperties,
         },
       },
     },
@@ -626,77 +492,7 @@ export class ProductsController {
         },
         data: {
           type: 'object',
-          properties: {
-            ...responseCommonObject,
-            name: {
-              type: 'string',
-              example: 'Product 1',
-            },
-            code: {
-              type: 'string',
-              example: 'P001',
-            },
-            barcodeSymbology: {
-              type: 'string',
-              example: 'C128',
-            },
-            image: {
-              type: 'string',
-              example: 'https://example.com/image.jpg',
-            },
-            brandId: {
-              type: 'number',
-              example: 1,
-            },
-            categoryId: {
-              type: 'number',
-              example: 1,
-            },
-            unitId: {
-              type: 'number',
-              example: 1,
-            },
-            purchaseUnitId: {
-              type: 'number',
-              example: 1,
-            },
-            saleUnitId: {
-              type: 'number',
-              example: 1,
-            },
-            cost: {
-              type: 'string',
-              example: '100.00',
-            },
-            price: {
-              type: 'string',
-              example: '200.00',
-            },
-            qty: {
-              type: 'number',
-              example: 10,
-            },
-            alertQty: {
-              type: 'number',
-              example: 5,
-            },
-            taxId: {
-              type: 'number',
-              example: 1,
-            },
-            taxMethod: {
-              type: 'boolean',
-              example: true, // true = Exclusive, False = Inclusive
-            },
-            description: {
-              type: 'string',
-              example: 'Product description',
-            },
-            status: {
-              type: 'boolean',
-              example: true,
-            },
-          },
+          properties: productProperties,
         },
       },
     },

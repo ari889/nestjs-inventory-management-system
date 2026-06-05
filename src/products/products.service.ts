@@ -19,16 +19,17 @@ import { Decimal } from '@prisma/client/runtime/client';
 @Injectable()
 export class ProductsService {
   constructor(private readonly prisma: PrismaService) {}
+
   /**
-   * Find All products
+   *
    * @param param0
-   * @returns Product[]
+   * @returns
    */
   async findAll({
-    page,
-    limit,
-    order,
-    direction,
+    page = 0,
+    limit = 10,
+    order = 'createdAt',
+    direction = 'desc',
     search = '',
     status = undefined,
     createdBy = undefined,
@@ -148,6 +149,12 @@ export class ProductsService {
           },
           taxMethod: true,
           status: true,
+          creator: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
           createdAt: true,
         },
       }),
@@ -232,6 +239,12 @@ export class ProductsService {
         },
         taxMethod: true,
         status: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         createdAt: true,
       },
     });
@@ -347,11 +360,25 @@ export class ProductsService {
         },
         taxMethod: true,
         status: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         createdAt: true,
       },
     });
   }
 
+  /**
+   * Update product
+   * @param id
+   * @param dto
+   * @param updatorEmail
+   * @param image
+   * @returns Product
+   */
   async update(
     id: number,
     dto: ProductDto,
@@ -468,6 +495,12 @@ export class ProductsService {
         },
         taxMethod: true,
         status: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         createdAt: true,
       },
     });
@@ -544,6 +577,12 @@ export class ProductsService {
           tax: { select: { id: true, name: true } },
           taxMethod: true,
           status: true,
+          creator: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
           createdAt: true,
         },
       });

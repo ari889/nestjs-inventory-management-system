@@ -6,7 +6,20 @@ export const ProductQuerySchema = z.object({
   limit: z.coerce.number().int().positive().default(10),
 
   order: z
-    .enum(['id', 'name', 'status', 'createdBy', 'createdAt'])
+    .enum([
+      'id',
+      'name',
+      'code',
+      'barcodeSymbology',
+      'cost',
+      'price',
+      'qty',
+      'alertQty',
+      'taxMethod',
+      'status',
+      'createdBy',
+      'createdAt',
+    ])
     .default('createdAt'),
 
   direction: z.enum(['asc', 'desc']).default('desc'),
