@@ -359,6 +359,20 @@ export class UnitsController {
       },
     },
   })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
+      },
+    },
+  })
   @Permission('unit-bulk-delete')
   @Delete('bulk')
   async bulkDelete(@FormBody() body: BulkDeleteIdsDto) {

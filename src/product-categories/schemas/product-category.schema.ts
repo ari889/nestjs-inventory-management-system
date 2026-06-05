@@ -8,7 +8,7 @@ export const ProductCategorySchema = z.object({
     .regex(/^[A-Za-z0-9\s]+$/, {
       message: 'Name can contain only letters, numbers, and spaces',
     }),
-  status: z.boolean({ message: 'Status is required!' }),
+  status: z.coerce.boolean({ message: 'Status is required!' }),
 });
 
 export type ProductCategoryDto = z.infer<typeof ProductCategorySchema>;

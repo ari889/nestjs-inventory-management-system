@@ -437,6 +437,20 @@ export class SuppliersController {
       },
     },
   })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
+      },
+    },
+  })
   @Permission('supplier-bulk-delete')
   @Delete('bulk')
   async bulkDeletePermission(@FormBody() body: BulkDeleteIdsDto) {

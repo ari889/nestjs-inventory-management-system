@@ -1,11 +1,8 @@
 import {
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
-  NotFoundException,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -23,7 +20,6 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ProductCategoriesService } from './product-categories.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import {
   type ProductCategoryDto,
@@ -32,6 +28,27 @@ import {
 import type { FastifyRequest } from 'fastify';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type ProductCategoryQueryDto,
+  ProductCategoryQuerySchema,
+} from './schemas/product-category-query.schema';
+
+const productCategoryProperties = {
+  id: { type: 'number', example: 1 },
+  name: { type: 'string', example: 'John Doe' },
+  status: { type: 'boolean', example: true },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+  createdBy: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -79,6 +96,11 @@ export class ProductCategoriesController {
     type: String,
     example: 'search',
   })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: Boolean,
+  })
   @ApiOkResponse({
     description: 'Product categories fetched successful response!',
     schema: {
@@ -96,19 +118,7 @@ export class ProductCategoriesController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  name: { type: 'string', example: 'John Doe' },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: productCategoryProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -120,24 +130,11 @@ export class ProductCategoriesController {
   @Permission('product-category-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query('search') search?: string,
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
+    @Query(new ZodValidationPipe(ProductCategoryQuerySchema))
+    query: ProductCategoryQueryDto,
   ) {
-    const productCategories = await this.productCategoriesService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-    });
+    const productCategories =
+      await this.productCategoriesService.findAll(query);
     return {
       success: true,
       message: 'Product categories fetched successfully!',
@@ -162,19 +159,7 @@ export class ProductCategoriesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: productCategoryProperties,
         },
       },
     },
@@ -183,8 +168,6 @@ export class ProductCategoriesController {
   @Get(':id')
   async find(@Param('id', ParseIntPipe) id: number) {
     const productCategory = await this.productCategoriesService.findOne(id);
-    if (!productCategory)
-      throw new NotFoundException('Product category not found.');
     return {
       success: true,
       message: 'Product category fetched successfully!',
@@ -209,20 +192,8 @@ export class ProductCategoriesController {
           example: 'Product category created successfully!',
         },
         data: {
-          type: 'array',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          type: 'object',
+          properties: productCategoryProperties,
         },
       },
     },
@@ -279,20 +250,8 @@ export class ProductCategoriesController {
           example: 'Product category updated successfully!',
         },
         data: {
-          type: 'object ',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          type: 'object',
+          properties: productCategoryProperties,
         },
       },
     },
@@ -351,19 +310,7 @@ export class ProductCategoriesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: productCategoryProperties,
         },
       },
     },
@@ -395,6 +342,20 @@ export class ProductCategoriesController {
           example: 'Product Categories deleted successfully!',
         },
         data: { type: 'number', example: 4 },
+      },
+    },
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
       },
     },
   })
