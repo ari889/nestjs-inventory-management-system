@@ -1,11 +1,11 @@
 import z from 'zod';
 
-export const RoleSchema = z.object({
+export const CreateRoleSchema = z.object({
   roleName: z.string().min(1, { message: 'Type a menu name first!' }),
   deletable: z.coerce.boolean().optional(),
 });
 
-export const UpdateRoleSchema = RoleSchema.extend({
+export const UpdateRoleSchema = CreateRoleSchema.extend({
   moduleIds: z.preprocess((val) => {
     if (typeof val === 'string') {
       return val.split(',').map(Number);
@@ -25,3 +25,6 @@ export const UpdateRoleSchema = RoleSchema.extend({
     return val;
   }, z.array(z.number())),
 });
+
+export type CreateRoleDto = z.infer<typeof CreateRoleSchema>;
+export type UpdateRoleDto = z.infer<typeof UpdateRoleSchema>;

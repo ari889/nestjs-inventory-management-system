@@ -1,11 +1,9 @@
 import {
   BadRequestException,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -24,7 +22,6 @@ import {
 } from '@nestjs/swagger';
 import { responseCommonObject } from 'src/common/swagger/common';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import {
   FileFieldsInterceptor,
   MemoryStorageFile,
@@ -36,6 +33,100 @@ import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type ProductQueryDto,
+  ProductQuerySchema,
+} from './schemas/product-query.schema';
+
+const productProperties = {
+  id: { type: 'number', example: 1 },
+  name: {
+    type: 'string',
+    example: 'Product 1',
+  },
+  code: {
+    type: 'string',
+    example: 'P001',
+  },
+  barcodeSymbology: {
+    type: 'string',
+    example: 'C128',
+  },
+  image: {
+    type: 'string',
+    example: 'https://example.com/image.jpg',
+  },
+  brand: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      title: { type: 'string', example: 'Brand 1' },
+    },
+  },
+  category: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'Category 1' },
+    },
+  },
+  unit: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      unitName: { type: 'string', example: 'Unit 1' },
+    },
+  },
+  purchaseUnit: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      unitName: { type: 'string', example: 'Unit 1' },
+    },
+  },
+  saleUnit: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      unitName: { type: 'string', example: 'Unit 1' },
+    },
+  },
+  cost: {
+    type: 'string',
+    example: '100.00',
+  },
+  price: {
+    type: 'string',
+    example: '200.00',
+  },
+  qty: {
+    type: 'number',
+    example: 10,
+  },
+  alertQty: {
+    type: 'number',
+    example: 5,
+  },
+  tax: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'Tax 1' },
+    },
+  },
+  taxMethod: {
+    type: 'boolean',
+    example: true, // true = Exclusive, False = Inclusive
+  },
+  status: {
+    type: 'boolean',
+    example: true,
+  },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -54,13 +145,16 @@ export class ProductsController {
   @ApiQuery({
     name: 'order',
     required: false,
-    example: 'id',
+    example: 'createdAt',
   })
   @ApiQuery({
     name: 'direction',
     required: false,
     enum: ['asc', 'desc'],
-    example: 'asc',
+    schema: {
+      default: 'desc',
+      enum: ['asc', 'desc'],
+    },
   })
   @ApiQuery({
     name: 'page',
@@ -78,7 +172,36 @@ export class ProductsController {
     name: 'search',
     required: false,
     type: String,
-    example: 'Product 1',
+  })
+  @ApiQuery({
+    name: 'createdBy',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'brandId',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'categoryId',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'unitId',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'purchaseUnitId',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'saleUnitId',
+    required: false,
+    type: Number,
   })
   @ApiOkResponse({
     description: 'Product fetched success response!',
@@ -97,77 +220,7 @@ export class ProductsController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  ...responseCommonObject,
-                  name: {
-                    type: 'string',
-                    example: 'Product 1',
-                  },
-                  code: {
-                    type: 'string',
-                    example: 'P001',
-                  },
-                  barcodeSymbology: {
-                    type: 'string',
-                    example: 'C128',
-                  },
-                  image: {
-                    type: 'string',
-                    example: 'https://example.com/image.jpg',
-                  },
-                  brandId: {
-                    type: 'number',
-                    example: 1,
-                  },
-                  categoryId: {
-                    type: 'number',
-                    example: 1,
-                  },
-                  unitId: {
-                    type: 'number',
-                    example: 1,
-                  },
-                  purchaseUnitId: {
-                    type: 'number',
-                    example: 1,
-                  },
-                  saleUnitId: {
-                    type: 'number',
-                    example: 1,
-                  },
-                  cost: {
-                    type: 'string',
-                    example: '100.00',
-                  },
-                  price: {
-                    type: 'string',
-                    example: '200.00',
-                  },
-                  qty: {
-                    type: 'number',
-                    example: 10,
-                  },
-                  alertQty: {
-                    type: 'number',
-                    example: 5,
-                  },
-                  taxId: {
-                    type: 'number',
-                    example: 1,
-                  },
-                  taxMethod: {
-                    type: 'boolean',
-                    example: true, // true = Exclusive, False = Inclusive
-                  },
-                  description: {
-                    type: 'string',
-                    example: 'Product description',
-                  },
-                  status: {
-                    type: 'boolean',
-                    example: true,
-                  },
-                },
+                properties: productProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -179,25 +232,10 @@ export class ProductsController {
   @Permission('product-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe)
-    page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
-    @Query('search') search?: string,
+    @Query(new ZodValidationPipe(ProductQuerySchema))
+    query: ProductQueryDto,
   ) {
-    const data = await this.productsService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-    });
+    const data = await this.productsService.findAll(query);
     return {
       success: true,
       message: 'Products fetched successfully!',
@@ -222,77 +260,7 @@ export class ProductsController {
         },
         data: {
           type: 'object',
-          properties: {
-            ...responseCommonObject,
-            name: {
-              type: 'string',
-              example: 'Product 1',
-            },
-            code: {
-              type: 'string',
-              example: 'P001',
-            },
-            barcodeSymbology: {
-              type: 'string',
-              example: 'C128',
-            },
-            image: {
-              type: 'string',
-              example: 'https://example.com/image.jpg',
-            },
-            brandId: {
-              type: 'number',
-              example: 1,
-            },
-            categoryId: {
-              type: 'number',
-              example: 1,
-            },
-            unitId: {
-              type: 'number',
-              example: 1,
-            },
-            purchaseUnitId: {
-              type: 'number',
-              example: 1,
-            },
-            saleUnitId: {
-              type: 'number',
-              example: 1,
-            },
-            cost: {
-              type: 'string',
-              example: '100.00',
-            },
-            price: {
-              type: 'string',
-              example: '200.00',
-            },
-            qty: {
-              type: 'number',
-              example: 10,
-            },
-            alertQty: {
-              type: 'number',
-              example: 5,
-            },
-            taxId: {
-              type: 'number',
-              example: 1,
-            },
-            taxMethod: {
-              type: 'boolean',
-              example: true, // true = Exclusive, False = Inclusive
-            },
-            description: {
-              type: 'string',
-              example: 'Product description',
-            },
-            status: {
-              type: 'boolean',
-              example: true,
-            },
-          },
+          properties: productProperties,
         },
       },
     },
@@ -758,6 +726,20 @@ export class ProductsController {
         success: { type: 'boolean' },
         message: { type: 'string', example: 'Products deleted successfully!' },
         data: { type: 'number', example: 4 },
+      },
+    },
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
       },
     },
   })

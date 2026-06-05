@@ -7,8 +7,8 @@ import {
 } from '@nestjs/common';
 import { Role } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { RoleDto, UpdateRoleDto } from './dto/role.dto';
 import { RoleQueryDto } from './schemas/role-query.schema';
+import { CreateRoleDto, UpdateRoleDto } from './schemas/role.schema';
 
 @Injectable()
 export class RolesService {
@@ -100,7 +100,7 @@ export class RolesService {
    * @param roleDto
    * @returns Role
    */
-  async create(roleDto: RoleDto): Promise<Omit<Role, 'updatedAt'>> {
+  async create(roleDto: CreateRoleDto): Promise<Omit<Role, 'updatedAt'>> {
     return this.prisma.role.create({
       data: roleDto,
       select: {

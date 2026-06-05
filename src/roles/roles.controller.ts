@@ -20,8 +20,12 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesService } from './roles.service';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { RoleSchema, UpdateRoleSchema } from './schemas/role.schema';
-import { RoleDto, UpdateRoleDto } from './dto/role.dto';
+import {
+  type CreateRoleDto,
+  type UpdateRoleDto,
+  CreateRoleSchema,
+  UpdateRoleSchema,
+} from './schemas/role.schema';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
@@ -236,7 +240,9 @@ export class RolesController {
   })
   @Permission('role-create')
   @Post()
-  async create(@FormBody(new ZodValidationPipe(RoleSchema)) roleDto: RoleDto) {
+  async create(
+    @FormBody(new ZodValidationPipe(CreateRoleSchema)) roleDto: CreateRoleDto,
+  ) {
     const role = await this.rolesService.create(roleDto);
     return {
       success: true,
