@@ -1,11 +1,9 @@
 import {
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   NotFoundException,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -23,12 +21,48 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CustomersService } from './customers.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import { type CustomerDto, CustomerSchema } from './schemas/customer.schema';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import type { FastifyRequest } from 'fastify';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type CustomerQueryDto,
+  CustomerQuerySchema,
+} from './schemas/customer-query.schema';
+
+const customerProperties = {
+  id: { type: 'number', example: 1 },
+  customerGroup: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'Customer Group 1' },
+    },
+  },
+  name: { type: 'string', example: 'Customer 1' },
+  companyName: { type: 'string', example: 'Company 1' },
+  vatNumber: { type: 'string', example: '1234567890' },
+  email: { type: 'string', example: 'supplier1@example.com' },
+  phone: { type: 'string', example: '1234567890' },
+  address: { type: 'string', example: '123 Main St' },
+  city: { type: 'string', example: 'New York' },
+  state: { type: 'string', example: 'NY' },
+  postalCode: { type: 'string', example: '10001' },
+  country: { type: 'string', example: 'USA' },
+  status: { type: 'boolean', example: true },
+  creator: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -42,18 +76,25 @@ export class CustomersController {
    * @param limit
    * @param order
    * @param direction
+   * @param search
+   * @param status
+   * @param createdBy
+   * @param customerGroupId
    * @returns Customer
    */
   @ApiQuery({
     name: 'order',
     required: false,
-    example: 'id',
+    example: 'createdAt',
   })
   @ApiQuery({
     name: 'direction',
     required: false,
     enum: ['asc', 'desc'],
-    example: 'asc',
+    schema: {
+      default: 'desc',
+      enum: ['asc', 'desc'],
+    },
   })
   @ApiQuery({
     name: 'page',
@@ -71,7 +112,21 @@ export class CustomersController {
     name: 'search',
     required: false,
     type: String,
-    example: 'search',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: Boolean,
+  })
+  @ApiQuery({
+    name: 'createdBy',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'customerGroupId',
+    required: false,
+    type: Number,
   })
   @ApiOkResponse({
     description: 'Customer fetched successful response!',
@@ -87,29 +142,7 @@ export class CustomersController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  customerGroupId: { type: 'number', example: 1 },
-                  name: { type: 'string', example: 'Customer 1' },
-                  companyName: { type: 'string', example: 'Company 1' },
-                  vatNumber: { type: 'string', example: '1234567890' },
-                  email: { type: 'string', example: 'supplier1@example.com' },
-                  phone: { type: 'string', example: '1234567890' },
-                  address: { type: 'string', example: '123 Main St' },
-                  city: { type: 'string', example: 'New York' },
-                  state: { type: 'string', example: 'NY' },
-                  postalCode: { type: 'string', example: '10001' },
-                  country: { type: 'string', example: 'USA' },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: customerProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -121,24 +154,10 @@ export class CustomersController {
   @Permission('customer-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query('search') search?: string,
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
+    @Query(new ZodValidationPipe(CustomerQuerySchema))
+    query: CustomerQueryDto,
   ) {
-    const customers = await this.customersService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-    });
+    const customers = await this.customersService.findAll(query);
     return {
       success: true,
       message: 'Customers fetched successfully!',
@@ -163,29 +182,7 @@ export class CustomersController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            customerGroupId: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Customer 1' },
-            companyName: { type: 'string', example: 'Company 1' },
-            vatNumber: { type: 'string', example: '1234567890' },
-            email: { type: 'string', example: 'supplier1@example.com' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: '123 Main St' },
-            city: { type: 'string', example: 'New York' },
-            state: { type: 'string', example: 'NY' },
-            postalCode: { type: 'string', example: '10001' },
-            country: { type: 'string', example: 'USA' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: customerProperties,
         },
       },
     },
@@ -220,29 +217,7 @@ export class CustomersController {
         },
         data: {
           type: 'array',
-          properties: {
-            id: { type: 'number', example: 1 },
-            customerGroupId: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Customer 1' },
-            companyName: { type: 'string', example: 'Company 1' },
-            vatNumber: { type: 'string', example: '1234567890' },
-            email: { type: 'string', example: 'customer1@example.com' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: '123 Main St' },
-            city: { type: 'string', example: 'New York' },
-            state: { type: 'string', example: 'NY' },
-            postalCode: { type: 'string', example: '10001' },
-            country: { type: 'string', example: 'USA' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: customerProperties,
         },
       },
     },
@@ -304,29 +279,7 @@ export class CustomersController {
         },
         data: {
           type: 'object ',
-          properties: {
-            id: { type: 'number', example: 1 },
-            customerGroupId: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Customer 1' },
-            companyName: { type: 'string', example: 'Company 1' },
-            vatNumber: { type: 'string', example: '1234567890' },
-            email: { type: 'string', example: 'customer1@example.com' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: '123 Main St' },
-            city: { type: 'string', example: 'New York' },
-            state: { type: 'string', example: 'NY' },
-            postalCode: { type: 'string', example: '10001' },
-            country: { type: 'string', example: 'USA' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: customerProperties,
         },
       },
     },
@@ -389,28 +342,7 @@ export class CustomersController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Customer 1' },
-            companyName: { type: 'string', example: 'Company 1' },
-            vatNumber: { type: 'string', example: '1234567890' },
-            email: { type: 'string', example: 'customer1@example.com' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: '123 Main St' },
-            city: { type: 'string', example: 'New York' },
-            state: { type: 'string', example: 'NY' },
-            postalCode: { type: 'string', example: '10001' },
-            country: { type: 'string', example: 'USA' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: customerProperties,
         },
       },
     },
@@ -439,6 +371,20 @@ export class CustomersController {
         success: { type: 'boolean' },
         message: { type: 'string', example: 'Customers deleted successfully!' },
         data: { type: 'number', example: 4 },
+      },
+    },
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
       },
     },
   })

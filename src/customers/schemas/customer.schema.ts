@@ -1,10 +1,12 @@
 import * as z from 'zod';
 
-const nullableString = (schema: z.ZodString) =>
+const nullableString = <T extends z.ZodType<string>>(schema: T) =>
   schema.nullable().or(z.literal('').transform(() => null));
 
 export const CustomerSchema = z.object({
-  customerGroupId: z.number({ message: 'Select a valid customer group!' }),
+  customerGroupId: z.coerce.number({
+    message: 'Select a valid customer group!',
+  }),
   name: z
     .string()
     .min(1, { message: 'Enter a valid customer name!' })
@@ -19,7 +21,7 @@ export const CustomerSchema = z.object({
   ),
 
   taxNumber: nullableString(
-    z.string().regex(/^[A-Za-z0-9% ]+$/, {
+    z.coerce.string().regex(/^[A-Za-z0-9% ]+$/, {
       message: 'Vat number can contain only letters, numbers, % and spaces',
     }),
   ),
@@ -48,7 +50,7 @@ export const CustomerSchema = z.object({
     z.string().min(1, { message: 'Enter a valid country!' }),
   ),
 
-  status: z.boolean({
+  status: z.coerce.boolean({
     message: 'Status is required!',
   }),
 });

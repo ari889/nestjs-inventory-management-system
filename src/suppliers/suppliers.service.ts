@@ -20,10 +20,10 @@ export class SuppliersService {
    * @returns Supplier
    */
   async findAll({
-    page,
-    limit,
-    order,
-    direction,
+    page = 0,
+    limit = 10,
+    order = 'createdAt',
+    direction = 'desc',
     search = '',
     status = undefined,
     createdBy = undefined,
