@@ -1,8 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Department } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { DepartmentDto } from './schemas/department.schema';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
+import { DepartmentQueryDto } from './schemas/department-query.schema';
 
 @Injectable()
 export class DepartmentsService {
@@ -14,25 +19,22 @@ export class DepartmentsService {
    * @returns Department[]
    */
   async findAll({
-    page,
-    limit,
-    order,
-    direction,
-    search,
-  }: {
-    page: number;
-    limit: number;
-    order: string;
-    direction: string;
-    search?: string;
-  }): Promise<{ items: Department[]; totalItems: number }> {
-    const where = search
-      ? {
-          name: {
-            contains: search,
-          },
-        }
-      : {};
+    page = 0,
+    limit = 10,
+    order = 'createdAt',
+    direction = 'desc',
+    search = '',
+    status = undefined,
+  }: DepartmentQueryDto): Promise<{
+    items: Array<Omit<Department, 'createdBy' | 'updatedBy' | 'updatedAt'>>;
+    totalItems: number;
+  }> {
+    const where = {
+      ...(search && {
+        name: { contains: search },
+      }),
+      ...(status !== undefined && { status }),
+    };
     const [items, totalItems] = await Promise.all([
       this.prisma.department.findMany({
         where,
@@ -41,13 +43,17 @@ export class DepartmentsService {
         orderBy: {
           [order]: direction,
         },
-        include: {
+        select: {
+          id: true,
+          name: true,
+          status: true,
           creator: {
             select: {
               id: true,
               name: true,
             },
           },
+          createdAt: true,
         },
       }),
       this.prisma.department.count({ where }),
@@ -64,22 +70,22 @@ export class DepartmentsService {
    * @param id
    * @returns Department
    */
-  async findOne(id: number): Promise<Department | null> {
+  async findOne(
+    id: number,
+  ): Promise<Omit<Department, 'createdBy' | 'updatedBy' | 'updatedAt'> | null> {
     return await this.prisma.department.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        status: true,
         creator: {
           select: {
             id: true,
             name: true,
           },
         },
-        updater: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+        createdAt: true,
       },
     });
   }
@@ -92,7 +98,7 @@ export class DepartmentsService {
   async create(
     departmentDto: DepartmentDto,
     creatorEmail: string,
-  ): Promise<Department> {
+  ): Promise<Omit<Department, 'createdBy' | 'updatedBy' | 'updatedAt'>> {
     const creator = await this.prisma.user.findUnique({
       where: { email: creatorEmail },
       select: {
@@ -105,13 +111,17 @@ export class DepartmentsService {
 
     return this.prisma.department.create({
       data: { ...departmentDto, createdBy: creator?.id },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        status: true,
         creator: {
           select: {
             id: true,
             name: true,
           },
         },
+        createdAt: true,
       },
     });
   }
@@ -126,7 +136,7 @@ export class DepartmentsService {
     id: number,
     departmentDto: DepartmentDto,
     updatorEmail: string,
-  ): Promise<Department> {
+  ): Promise<Omit<Department, 'createdBy' | 'updatedBy' | 'updatedAt'>> {
     const updator = await this.prisma.user.findUnique({
       where: { email: updatorEmail },
       select: {
@@ -140,13 +150,17 @@ export class DepartmentsService {
     return this.prisma.department.update({
       where: { id },
       data: { ...departmentDto, updatedBy: updator?.id },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        status: true,
         creator: {
           select: {
             id: true,
             name: true,
           },
         },
+        createdAt: true,
       },
     });
   }
@@ -156,15 +170,37 @@ export class DepartmentsService {
    * @param id Department ID
    * @returns Department
    */
-  async remove(id: number): Promise<Department> {
-    const department = await this.prisma.department.findUnique({
-      where: { id },
-      select: { id: true },
+  async remove(
+    id: number,
+  ): Promise<Omit<Department, 'createdBy' | 'updatedBy' | 'updatedAt'>> {
+    return this.prisma.$transaction(async (prisma) => {
+      const department = await prisma.department.findUnique({
+        where: { id },
+        select: { id: true },
+      });
+
+      if (!department) throw new NotFoundException('Department not found.');
+
+      const employeeCount = await prisma.employee.count({
+        where: { departmentId: id },
+      });
+
+      if (employeeCount > 0)
+        throw new ConflictException(
+          `Cannot delete department. It is assigned to ${employeeCount} employee(s).`,
+        );
+
+      return prisma.department.delete({
+        where: { id },
+        select: {
+          id: true,
+          name: true,
+          status: true,
+          creator: { select: { id: true, name: true } },
+          createdAt: true,
+        },
+      });
     });
-
-    if (!department) throw new NotFoundException('Department not found.');
-
-    return this.prisma.department.delete({ where: { id } });
   }
 
   /**
@@ -172,9 +208,59 @@ export class DepartmentsService {
    * @param ids Department IDs
    * @returns { count: number }
    */
-  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{ count: number }> {
-    return this.prisma.department.deleteMany({
-      where: { id: { in: ids } },
+  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{
+    count: number;
+    deletedIds: number[];
+    skippedIds: { id: number; reasons: string[] }[];
+  }> {
+    return this.prisma.$transaction(async (prisma) => {
+      const departments = await prisma.department.findMany({
+        where: { id: { in: ids } },
+        select: { id: true },
+      });
+
+      const foundIds = departments.map((d) => d.id);
+      const notFoundIds = ids.filter((id) => !foundIds.includes(id));
+
+      if (foundIds.length === 0)
+        throw new NotFoundException('No departments found for the given IDs.');
+
+      const employees = await prisma.employee.groupBy({
+        by: ['departmentId'],
+        where: { departmentId: { in: foundIds } },
+        _count: true,
+      });
+
+      const conflictMap = new Map<number, string[]>();
+      employees.forEach((e) =>
+        conflictMap.set(e.departmentId, [`${e._count} employee(s)`]),
+      );
+
+      const deletableIds = foundIds.filter((id) => !conflictMap.has(id));
+
+      const skippedIds = [
+        ...notFoundIds.map((id) => ({ id, reasons: ['Not found'] })),
+        ...Array.from(conflictMap.entries()).map(([id, reasons]) => ({
+          id,
+          reasons,
+        })),
+      ];
+
+      if (deletableIds.length === 0)
+        throw new ConflictException({
+          message: 'No departments could be deleted.',
+          skipped: skippedIds,
+        });
+
+      const result = await prisma.department.deleteMany({
+        where: { id: { in: deletableIds } },
+      });
+
+      return {
+        count: result.count,
+        deletedIds: deletableIds,
+        skippedIds,
+      };
     });
   }
 }

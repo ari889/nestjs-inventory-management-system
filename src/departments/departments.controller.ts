@@ -1,11 +1,9 @@
 import {
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   NotFoundException,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -23,7 +21,6 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { DepartmentsService } from './departments.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import {
   type DepartmentDto,
   DepartmentSchema,
@@ -32,6 +29,27 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import type { FastifyRequest } from 'fastify';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type DepartmentQueryDto,
+  DepartmentQuerySchema,
+} from './schemas/department-query.schema';
+
+const departmentProperties = {
+  id: { type: 'number', example: 1 },
+  name: { type: 'string', example: 'John Doe' },
+  status: { type: 'boolean', example: true },
+  creator: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -51,13 +69,16 @@ export class DepartmentsController {
   @ApiQuery({
     name: 'order',
     required: false,
-    example: 'id',
+    example: 'createdAt',
   })
   @ApiQuery({
     name: 'direction',
     required: false,
     enum: ['asc', 'desc'],
-    example: 'asc',
+    schema: {
+      default: 'desc',
+      enum: ['asc', 'desc'],
+    },
   })
   @ApiQuery({
     name: 'page',
@@ -75,7 +96,11 @@ export class DepartmentsController {
     name: 'search',
     required: false,
     type: String,
-    example: 'search',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: Boolean,
   })
   @ApiOkResponse({
     description: 'Department fetched successful response!',
@@ -94,19 +119,7 @@ export class DepartmentsController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  name: { type: 'string', example: 'John Doe' },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: departmentProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -118,24 +131,10 @@ export class DepartmentsController {
   @Permission('department-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query('search') search?: string,
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
+    @Query(new ZodValidationPipe(DepartmentQuerySchema))
+    query: DepartmentQueryDto,
   ) {
-    const departments = await this.departmentsService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-    });
+    const departments = await this.departmentsService.findAll(query);
     return {
       success: true,
       message: 'Departments fetched successfully!',
@@ -160,19 +159,7 @@ export class DepartmentsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: departmentProperties,
         },
       },
     },
@@ -207,19 +194,7 @@ export class DepartmentsController {
         },
         data: {
           type: 'array',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: departmentProperties,
         },
       },
     },
@@ -277,19 +252,7 @@ export class DepartmentsController {
         },
         data: {
           type: 'object ',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: departmentProperties,
         },
       },
     },
@@ -348,19 +311,7 @@ export class DepartmentsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: departmentProperties,
         },
       },
     },
@@ -392,6 +343,20 @@ export class DepartmentsController {
           example: 'Departments deleted successfully!',
         },
         data: { type: 'number', example: 4 },
+      },
+    },
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
       },
     },
   })
