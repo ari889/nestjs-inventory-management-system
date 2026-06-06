@@ -1,11 +1,9 @@
 import {
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   NotFoundException,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -23,12 +21,54 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ExpensesService } from './expenses.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { type ExpenseDto, ExpenseSchema } from './schemas/expense.schema';
 import type { FastifyRequest } from 'fastify';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type ExpenseQueryDto,
+  ExpenseQuerySchema,
+} from './schemas/expense-query.schema';
+
+const expenseProperties = {
+  id: { type: 'number', example: 1 },
+  expenseCategory: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'Expense Category 1' },
+    },
+  },
+  warehouse: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'Warehouse 1' },
+    },
+  },
+  account: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'Account 1' },
+    },
+  },
+  amount: { type: 'number', example: 100 },
+  note: { type: 'string', example: 'Note' },
+  status: { type: 'boolean', example: true },
+  creator: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -47,13 +87,16 @@ export class ExpensesController {
   @ApiQuery({
     name: 'order',
     required: false,
-    example: 'id',
+    example: 'createdAt',
   })
   @ApiQuery({
     name: 'direction',
     required: false,
     enum: ['asc', 'desc'],
-    example: 'asc',
+    schema: {
+      default: 'desc',
+      enum: ['asc', 'desc'],
+    },
   })
   @ApiQuery({
     name: 'page',
@@ -68,20 +111,39 @@ export class ExpensesController {
     example: 10,
   })
   @ApiQuery({
-    name: 'search',
+    name: 'status',
     required: false,
-    type: String,
-    example: 'search',
+    type: Boolean,
+  })
+  @ApiQuery({
+    name: 'expenseCategoryId',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'warehouseId',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'accountId',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'createdBy',
+    required: false,
+    type: Number,
   })
   @ApiOkResponse({
-    description: 'Expense categories fetched successful response!',
+    description: 'Expense fetched successful response!',
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: {
           type: 'string',
-          example: 'Expense categories fetched successfully!',
+          example: 'Expense fetched successfully!',
         },
         data: {
           type: 'object',
@@ -90,23 +152,7 @@ export class ExpensesController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  expenseCategoryId: { type: 'number', example: 1 },
-                  warehouseId: { type: 'number', example: 1 },
-                  accountId: { type: 'number', example: 1 },
-                  amount: { type: 'number', example: 100 },
-                  note: { type: 'string', example: 'Note' },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: expenseProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -118,22 +164,9 @@ export class ExpensesController {
   @Permission('expense-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
+    @Query(new ZodValidationPipe(ExpenseQuerySchema)) query: ExpenseQueryDto,
   ) {
-    const expense = await this.expensesService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-    });
+    const expense = await this.expensesService.findAll(query);
     return {
       success: true,
       message: 'Expense fetched successfully!',
@@ -159,21 +192,8 @@ export class ExpensesController {
         data: {
           type: 'object',
           properties: {
-            id: { type: 'number', example: 1 },
-            expenseCategoryId: { type: 'number', example: 1 },
-            warehouseId: { type: 'number', example: 1 },
-            accountId: { type: 'number', example: 1 },
-            amount: { type: 'number', example: 100 },
+            ...expenseProperties,
             note: { type: 'string', example: 'Note' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
           },
         },
       },
@@ -209,23 +229,7 @@ export class ExpensesController {
         },
         data: {
           type: 'array',
-          properties: {
-            id: { type: 'number', example: 1 },
-            expenseCategoryId: { type: 'number', example: 1 },
-            warehouseId: { type: 'number', example: 1 },
-            accountId: { type: 'number', example: 1 },
-            amount: { type: 'number', example: 100 },
-            note: { type: 'string', example: 'Note' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: expenseProperties,
         },
       },
     },
@@ -305,23 +309,7 @@ export class ExpensesController {
         },
         data: {
           type: 'object ',
-          properties: {
-            id: { type: 'number', example: 1 },
-            expenseCategoryId: { type: 'number', example: 1 },
-            warehouseId: { type: 'number', example: 1 },
-            accountId: { type: 'number', example: 1 },
-            amount: { type: 'number', example: 100 },
-            note: { type: 'string', example: 'Note' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: expenseProperties,
         },
       },
     },
@@ -402,23 +390,7 @@ export class ExpensesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            expenseCategoryId: { type: 'number', example: 1 },
-            warehouseId: { type: 'number', example: 1 },
-            accountId: { type: 'number', example: 1 },
-            amount: { type: 'number', example: 100 },
-            note: { type: 'string', example: 'Note' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: expenseProperties,
         },
       },
     },
@@ -447,6 +419,20 @@ export class ExpensesController {
         success: { type: 'boolean' },
         message: { type: 'string', example: 'Accounts deleted successfully!' },
         data: { type: 'number', example: 4 },
+      },
+    },
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
       },
     },
   })

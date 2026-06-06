@@ -1,11 +1,11 @@
 import * as z from 'zod';
 
 export const ExpenseSchema = z.object({
-  expenseCategoryId: z.number({
+  expenseCategoryId: z.coerce.number({
     message: 'Expense category is required!',
   }),
-  warehouseId: z.number({ message: 'Warehouse is required!' }),
-  accountId: z.number({ message: 'Account is required!' }),
+  warehouseId: z.coerce.number({ message: 'Warehouse is required!' }),
+  accountId: z.coerce.number({ message: 'Account is required!' }),
   amount: z
     .string({
       message: 'Amount is required!',
@@ -17,7 +17,7 @@ export const ExpenseSchema = z.object({
       message: 'Only 2 decimal places allowed',
     }),
   note: z.string().max(255, { message: 'Max 255 characters!' }).nullable(),
-  status: z.boolean({ message: 'Status is required!' }),
+  status: z.coerce.boolean({ message: 'Status is required!' }),
 });
 
 export type ExpenseDto = z.infer<typeof ExpenseSchema>;

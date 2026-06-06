@@ -3,6 +3,7 @@ import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { Expense } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ExpenseDto } from './schemas/expense.schema';
+import { ExpenseQueryDto } from './schemas/expense-query.schema';
 
 @Injectable()
 export class ExpensesService {
@@ -14,30 +15,47 @@ export class ExpensesService {
    * @returns Expense
    */
   async findAll({
-    page,
-    limit,
-    order,
-    direction,
-  }: {
-    page: number;
-    limit: number;
-    order: string;
-    direction: string;
-  }): Promise<{ items: Expense[]; totalItems: number }> {
+    page = 0,
+    limit = 10,
+    order = 'createdAt',
+    direction = 'desc',
+    expenseCategoryId = undefined,
+    warehouseId = undefined,
+    accountId = undefined,
+    status = undefined,
+    createdBy = undefined,
+  }: ExpenseQueryDto): Promise<{
+    items: Array<
+      Omit<
+        Expense,
+        | 'createdBy'
+        | 'updatedBy'
+        | 'updatedAt'
+        | 'note'
+        | 'expenseCategoryId'
+        | 'warehouseId'
+        | 'accountId'
+      >
+    >;
+    totalItems: number;
+  }> {
+    const where = {
+      ...(expenseCategoryId !== undefined && { expenseCategoryId }),
+      ...(warehouseId !== undefined && { warehouseId }),
+      ...(accountId !== undefined && { accountId }),
+      ...(status !== undefined && { status }),
+      ...(createdBy !== undefined && { createdBy }),
+    };
     const [items, totalItems] = await Promise.all([
       this.prisma.expense.findMany({
+        where,
         skip: page * limit,
         take: limit,
         orderBy: {
           [order]: direction,
         },
-        include: {
-          creator: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
+        select: {
+          id: true,
           expenseCategory: {
             select: {
               id: true,
@@ -56,9 +74,18 @@ export class ExpensesService {
               name: true,
             },
           },
+          amount: true,
+          status: true,
+          creator: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          createdAt: true,
         },
       }),
-      this.prisma.expenseCategory.count(),
+      this.prisma.expense.count({ where }),
     ]);
 
     return {
@@ -72,16 +99,22 @@ export class ExpensesService {
    * @param id
    * @returns Expense
    */
-  async findOne(id: number): Promise<Expense | null> {
+  async findOne(
+    id: number,
+  ): Promise<Omit<
+    Expense,
+    | 'createdBy'
+    | 'updatedBy'
+    | 'updatedAt'
+    | 'note'
+    | 'expenseCategoryId'
+    | 'warehouseId'
+    | 'accountId'
+  > | null> {
     return await this.prisma.expense.findUnique({
       where: { id },
-      include: {
-        creator: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+      select: {
+        id: true,
         expenseCategory: {
           select: {
             id: true,
@@ -100,6 +133,16 @@ export class ExpensesService {
             name: true,
           },
         },
+        amount: true,
+        note: true,
+        status: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        createdAt: true,
       },
     });
   }
@@ -110,26 +153,50 @@ export class ExpensesService {
    * @param creatorEmail
    * @returns Expense
    */
-  async create(expenseDto: ExpenseDto, creatorEmail: string): Promise<Expense> {
-    const creator = await this.prisma.user.findUnique({
-      where: { email: creatorEmail },
-      select: {
-        id: true,
-        email: true,
-      },
-    });
+  async create(
+    expenseDto: ExpenseDto,
+    creatorEmail: string,
+  ): Promise<
+    Omit<
+      Expense,
+      | 'createdBy'
+      | 'updatedBy'
+      | 'updatedAt'
+      | 'note'
+      | 'expenseCategoryId'
+      | 'warehouseId'
+      | 'accountId'
+    >
+  > {
+    const [expenseCategory, warehouse, account, creator] = await Promise.all([
+      this.prisma.expenseCategory.findUnique({
+        where: { id: expenseDto.expenseCategoryId },
+        select: { id: true },
+      }),
+      this.prisma.warehouse.findUnique({
+        where: { id: expenseDto.warehouseId },
+        select: { id: true },
+      }),
+      this.prisma.account.findUnique({
+        where: { id: expenseDto.accountId },
+        select: { id: true },
+      }),
+      this.prisma.user.findUnique({
+        where: { email: creatorEmail },
+        select: { id: true },
+      }),
+    ]);
 
+    if (!expenseCategory)
+      throw new NotFoundException('Expense category not found!');
+    if (!warehouse) throw new NotFoundException('Warehouse not found!');
+    if (!account) throw new NotFoundException('Account not found!');
     if (!creator) throw new NotFoundException('Creator user not found!');
 
     return this.prisma.expense.create({
       data: { ...expenseDto, createdBy: creator.id },
-      include: {
-        creator: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+      select: {
+        id: true,
         expenseCategory: {
           select: {
             id: true,
@@ -148,6 +215,15 @@ export class ExpensesService {
             name: true,
           },
         },
+        amount: true,
+        status: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        createdAt: true,
       },
     });
   }
@@ -163,34 +239,54 @@ export class ExpensesService {
     id: number,
     expenseDto: ExpenseDto,
     updatorEmail: string,
-  ): Promise<Expense> {
-    const updator = await this.prisma.user.findUnique({
-      where: { email: updatorEmail },
-      select: {
-        id: true,
-        email: true,
-      },
-    });
+  ): Promise<
+    Omit<
+      Expense,
+      | 'createdBy'
+      | 'updatedBy'
+      | 'updatedAt'
+      | 'note'
+      | 'expenseCategoryId'
+      | 'warehouseId'
+      | 'accountId'
+    >
+  > {
+    const [expenseCategory, warehouse, account, updator, existingExpense] =
+      await Promise.all([
+        this.prisma.expenseCategory.findUnique({
+          where: { id: expenseDto.expenseCategoryId },
+          select: { id: true },
+        }),
+        this.prisma.warehouse.findUnique({
+          where: { id: expenseDto.warehouseId },
+          select: { id: true },
+        }),
+        this.prisma.account.findUnique({
+          where: { id: expenseDto.accountId },
+          select: { id: true },
+        }),
+        this.prisma.user.findUnique({
+          where: { email: updatorEmail },
+          select: { id: true },
+        }),
+        this.prisma.expense.findUnique({
+          where: { id },
+          select: { id: true },
+        }),
+      ]);
 
+    if (!expenseCategory)
+      throw new NotFoundException('Expense category not found!');
+    if (!warehouse) throw new NotFoundException('Warehouse not found!');
+    if (!account) throw new NotFoundException('Account not found!');
     if (!updator) throw new NotFoundException('Updator user not found!');
-
-    const existingExpense = await this.prisma.expense.findUnique({
-      where: { id },
-      select: { id: true },
-    });
-
     if (!existingExpense) throw new NotFoundException('Expense not found!');
 
     return await this.prisma.expense.update({
       where: { id },
       data: { ...expenseDto, updatedBy: updator.id },
-      include: {
-        creator: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+      select: {
+        id: true,
         expenseCategory: {
           select: {
             id: true,
@@ -209,6 +305,15 @@ export class ExpensesService {
             name: true,
           },
         },
+        amount: true,
+        status: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        createdAt: true,
       },
     });
   }
@@ -218,15 +323,40 @@ export class ExpensesService {
    * @param id Expense ID
    * @returns Expense
    */
-  async remove(id: number): Promise<Expense> {
+  async remove(
+    id: number,
+  ): Promise<
+    Omit<
+      Expense,
+      | 'createdBy'
+      | 'updatedBy'
+      | 'updatedAt'
+      | 'note'
+      | 'expenseCategoryId'
+      | 'warehouseId'
+      | 'accountId'
+    >
+  > {
     const expense = await this.prisma.expense.findUnique({
       where: { id },
-      select: { id: true, amount: true, accountId: true },
+      select: { id: true },
     });
 
     if (!expense) throw new NotFoundException('Expense not found.');
 
-    return this.prisma.expense.delete({ where: { id } });
+    return this.prisma.expense.delete({
+      where: { id },
+      select: {
+        id: true,
+        expenseCategory: { select: { id: true, name: true } },
+        warehouse: { select: { id: true, name: true } },
+        account: { select: { id: true, name: true } },
+        amount: true,
+        status: true,
+        creator: { select: { id: true, name: true } },
+        createdAt: true,
+      },
+    });
   }
 
   /**
@@ -234,16 +364,30 @@ export class ExpensesService {
    * @param ids Expense IDs
    * @returns { count: number }
    */
-  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{ count: number }> {
+  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{
+    count: number;
+    deletedIds: number[];
+    skippedIds: { id: number; reasons: string[] }[];
+  }> {
     const expenses = await this.prisma.expense.findMany({
       where: { id: { in: ids } },
       select: { id: true },
     });
 
-    if (!expenses.length) throw new NotFoundException('No expenses found.');
+    const foundIds = expenses.map((e) => e.id);
+    const notFoundIds = ids.filter((id) => !foundIds.includes(id));
 
-    return this.prisma.expense.deleteMany({
-      where: { id: { in: ids } },
+    if (foundIds.length === 0)
+      throw new NotFoundException('No expenses found for the given IDs.');
+
+    const result = await this.prisma.expense.deleteMany({
+      where: { id: { in: foundIds } },
     });
+
+    return {
+      count: result.count,
+      deletedIds: foundIds,
+      skippedIds: notFoundIds.map((id) => ({ id, reasons: ['Not found'] })),
+    };
   }
 }
