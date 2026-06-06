@@ -102,6 +102,11 @@ export class DepartmentsController {
     required: false,
     type: Boolean,
   })
+  @ApiQuery({
+    name: 'createdBy',
+    required: false,
+    type: Number,
+  })
   @ApiOkResponse({
     description: 'Department fetched successful response!',
     schema: {

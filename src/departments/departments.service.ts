@@ -25,6 +25,7 @@ export class DepartmentsService {
     direction = 'desc',
     search = '',
     status = undefined,
+    createdBy = undefined,
   }: DepartmentQueryDto): Promise<{
     items: Array<Omit<Department, 'createdBy' | 'updatedBy' | 'updatedAt'>>;
     totalItems: number;
@@ -33,6 +34,7 @@ export class DepartmentsService {
       ...(search && {
         name: { contains: search },
       }),
+      ...(createdBy !== undefined && { createdBy }),
       ...(status !== undefined && { status }),
     };
     const [items, totalItems] = await Promise.all([

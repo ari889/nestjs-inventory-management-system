@@ -21,6 +21,7 @@ export const DepartmentQuerySchema = z.object({
       return undefined;
     })
     .optional(),
+  createdBy: z.coerce.number().int().optional(),
 });
 
 export type DepartmentQueryDto = z.infer<typeof DepartmentQuerySchema>;
