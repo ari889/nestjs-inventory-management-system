@@ -343,6 +343,7 @@ export class PurchasesController {
   /**
    * Bulk Delete Purchases
    */
+  @ApiConsumes('application/json')
   @ApiBody({
     schema: {
       type: 'object',

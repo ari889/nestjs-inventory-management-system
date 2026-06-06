@@ -1,6 +1,6 @@
 import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
-import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Permission } from 'src/common/decorators/permission.decorator';
 import {
@@ -19,6 +19,15 @@ export class DashboardController {
    * Get all dashboard data
    * @returns sectionCards, monthlyOverview, yearlyReport, cashFlow
    */
+  @ApiQuery({
+    name: 'range',
+    required: false,
+    enum: ['today', 'thisWeek', 'thisMonth', 'thisYear'],
+    schema: {
+      default: 'thisMonth',
+      enum: ['today', 'thisWeek', 'thisMonth', 'thisYear'],
+    },
+  })
   @ApiOkResponse({
     description: 'Dashboard data fetched successfully!',
     schema: {

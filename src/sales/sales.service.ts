@@ -2,7 +2,6 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
@@ -16,6 +15,7 @@ import {
   saveFile,
 } from 'src/common/fileUpload/fileHelper';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
+import { SaleQueryDto } from './schemas/sale-query.schema';
 
 @Injectable()
 export class SalesService {
@@ -27,25 +27,38 @@ export class SalesService {
    * @returns Sale[]
    */
   async findAll({
-    page,
-    limit,
-    order,
-    direction,
+    page = 0,
+    limit = 10,
+    order = 'createdAt',
+    direction = 'desc',
     search = '',
-  }: {
-    page: number;
-    limit: number;
-    order: string;
-    direction: string;
-    search?: string;
-  }): Promise<{ items: Sale[]; totalItems: number }> {
-    const where = search
-      ? {
-          saleNo: {
-            contains: search,
-          },
-        }
-      : {};
+    status = undefined,
+    createdBy = undefined,
+    customerId = undefined,
+    warehouseId = undefined,
+  }: SaleQueryDto): Promise<{
+    items: Array<
+      Omit<
+        Sale,
+        | 'createdBy'
+        | 'updatedBy'
+        | 'updatedAt'
+        | 'customerId'
+        | 'warehouseId'
+        | 'note'
+      >
+    >;
+    totalItems: number;
+  }> {
+    const where = {
+      ...(search && {
+        saleNo: { contains: search },
+      }),
+      ...(status !== undefined && { status }),
+      ...(createdBy !== undefined && { createdBy }),
+      ...(customerId !== undefined && { customerId }),
+      ...(warehouseId !== undefined && { warehouseId }),
+    };
     const [items, totalItems] = await Promise.all([
       this.prisma.sale.findMany({
         where,
@@ -54,13 +67,9 @@ export class SalesService {
         orderBy: {
           [order]: direction,
         },
-        include: {
-          creator: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
+        select: {
+          id: true,
+          saleNo: true,
           customer: {
             select: {
               id: true,
@@ -73,6 +82,29 @@ export class SalesService {
               name: true,
             },
           },
+          item: true,
+          totalQty: true,
+          totalDiscount: true,
+          totalTax: true,
+          totalPrice: true,
+          orderTaxRate: true,
+          orderTax: true,
+          orderDiscount: true,
+          shippingCost: true,
+          grandTotal: true,
+          paidAmount: true,
+          taxId: true,
+          saleStatus: true,
+          paymentStatus: true,
+          document: true,
+          status: true,
+          creator: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          createdAt: true,
         },
       }),
       this.prisma.sale.count({ where }),
@@ -88,16 +120,24 @@ export class SalesService {
    * @param id
    * @returns Sale
    */
-  async findOne(id: number): Promise<Omit<Sale, 'createdBy' | 'updatedBy'>> {
+  async findOne(
+    id: number,
+  ): Promise<
+    Omit<
+      Sale,
+      | 'createdBy'
+      | 'updatedBy'
+      | 'updatedAt'
+      | 'customerId'
+      | 'warehouseId'
+      | 'note'
+    >
+  > {
     const sale = await this.prisma.sale.findUnique({
       where: { id },
-      include: {
-        creator: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+      select: {
+        id: true,
+        saleNo: true,
         customer: {
           select: {
             id: true,
@@ -110,37 +150,30 @@ export class SalesService {
             name: true,
           },
         },
-        tax: {
+        item: true,
+        totalQty: true,
+        totalDiscount: true,
+        totalTax: true,
+        totalPrice: true,
+        orderTaxRate: true,
+        orderTax: true,
+        orderDiscount: true,
+        shippingCost: true,
+        grandTotal: true,
+        paidAmount: true,
+        taxId: true,
+        saleStatus: true,
+        paymentStatus: true,
+        document: true,
+        note: true,
+        status: true,
+        creator: {
           select: {
             id: true,
             name: true,
           },
         },
-        saleProducts: {
-          include: {
-            productTax: {
-              select: {
-                id: true,
-                name: true,
-                rate: true,
-              },
-            },
-            unit: {
-              select: {
-                id: true,
-                unitName: true,
-              },
-            },
-            product: {
-              select: {
-                id: true,
-                name: true,
-                code: true,
-                price: true,
-              },
-            },
-          },
-        },
+        createdAt: true,
       },
     });
     if (!sale) throw new NotFoundException('Sale not found.');
@@ -157,207 +190,257 @@ export class SalesService {
     dto: CreateSaleDto,
     creatorEmail: string,
     document?: MemoryStorageFile,
-  ) {
-    try {
-      const creator = await this.prisma.user.findUnique({
+  ): Promise<
+    Omit<
+      Sale,
+      | 'createdBy'
+      | 'updatedBy'
+      | 'updatedAt'
+      | 'customerId'
+      | 'warehouseId'
+      | 'note'
+    >
+  > {
+    const [customer, warehouse, creator] = await Promise.all([
+      this.prisma.customer.findUnique({
+        where: { id: dto.customerId },
+        select: { id: true },
+      }),
+      this.prisma.warehouse.findUnique({
+        where: { id: dto.warehouseId },
+        select: { id: true },
+      }),
+      this.prisma.user.findUnique({
         where: { email: creatorEmail },
         select: { id: true },
-      });
+      }),
+    ]);
 
-      if (!creator) throw new NotFoundException('Creator user not found!');
+    if (!creator) throw new NotFoundException('Creator user not found!');
+    if (!customer) throw new NotFoundException('Customer not found!');
+    if (!warehouse) throw new NotFoundException('Warehouse not found!');
 
-      let documentUrl: string | null = null;
-      if (document) {
-        documentUrl = await saveFile(document, 'sales');
-      }
+    let documentUrl: string | null = null;
+    if (document) {
+      documentUrl = await saveFile(document, 'sales');
+    }
 
-      const totalDiscount = dto.products.reduce(
-        (sum, p) => sum + Number(p.discount || 0),
-        0,
-      );
-      const totalTax = dto.products.reduce(
-        (sum, p) => sum + Number(p.tax || 0),
-        0,
-      );
-      const totalPrice = dto.products.reduce(
-        (sum, p) => sum + Number(p.netUnitPrice || 0) * Number(p.qty || 0),
-        0,
-      );
-      const item = dto.products.length;
-      const totalQty = dto.products.reduce(
-        (sum, p) => sum + Number(p.qty || 0),
-        0,
-      );
+    const totalDiscount = dto.products.reduce(
+      (sum, p) => sum + Number(p.discount || 0),
+      0,
+    );
+    const totalTax = dto.products.reduce(
+      (sum, p) => sum + Number(p.tax || 0),
+      0,
+    );
+    const totalPrice = dto.products.reduce(
+      (sum, p) => sum + Number(p.netUnitPrice || 0) * Number(p.qty || 0),
+      0,
+    );
+    const item = dto.products.length;
+    const totalQty = dto.products.reduce(
+      (sum, p) => sum + Number(p.qty || 0),
+      0,
+    );
 
-      const orderTaxRate = Number(dto.orderTaxRate || 0);
-      const orderTax = Number(dto.orderTax || 0);
-      const orderDiscount = Number(dto.orderDiscount || 0);
-      const shippingCost = Number(dto.shippingCost || 0);
+    const orderTaxRate = Number(dto.orderTaxRate || 0);
+    const orderTax = Number(dto.orderTax || 0);
+    const orderDiscount = Number(dto.orderDiscount || 0);
+    const shippingCost = Number(dto.shippingCost || 0);
 
-      const grandTotal =
-        totalPrice -
-        totalDiscount +
-        totalTax -
-        orderDiscount +
-        orderTax +
-        shippingCost;
+    const grandTotal =
+      totalPrice -
+      totalDiscount +
+      totalTax -
+      orderDiscount +
+      orderTax +
+      shippingCost;
 
-      const isCompleted = dto.saleStatus === true;
-      const isDue = dto.paymentStatus === 'DUE';
+    const isCompleted = dto.saleStatus === true;
+    const isDue = dto.paymentStatus === 'DUE';
 
-      const paidAmount =
-        isCompleted && !isDue ? Number(dto.paidAmount || 0) : 0;
+    const paidAmount = isCompleted && !isDue ? Number(dto.paidAmount || 0) : 0;
 
-      const now = new Date();
-      const pad = (n: number) => String(n).padStart(2, '0');
+    const now = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
 
-      const saleNo = `SINV-${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+    const saleNo = `SINV-${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
 
-      return await this.prisma.$transaction(async (tx) => {
-        const sale = await tx.sale.create({
-          data: {
-            saleNo,
-            customerId: dto.customerId,
-            warehouseId: dto.warehouseId,
+    return await this.prisma.$transaction(async (tx) => {
+      const sale = await tx.sale.create({
+        data: {
+          saleNo,
+          customerId: dto.customerId,
+          warehouseId: dto.warehouseId,
 
-            item,
-            totalQty,
+          item,
+          totalQty,
 
-            totalDiscount: new Prisma.Decimal(totalDiscount),
-            totalTax: new Prisma.Decimal(totalTax),
-            totalPrice: new Prisma.Decimal(totalPrice),
+          totalDiscount: new Prisma.Decimal(totalDiscount),
+          totalTax: new Prisma.Decimal(totalTax),
+          totalPrice: new Prisma.Decimal(totalPrice),
 
-            orderTaxRate: new Prisma.Decimal(orderTaxRate),
-            orderTax: new Prisma.Decimal(orderTax),
-            orderDiscount: new Prisma.Decimal(orderDiscount),
+          orderTaxRate: new Prisma.Decimal(orderTaxRate),
+          orderTax: new Prisma.Decimal(orderTax),
+          orderDiscount: new Prisma.Decimal(orderDiscount),
 
-            shippingCost: new Prisma.Decimal(shippingCost),
-            grandTotal: new Prisma.Decimal(grandTotal),
+          shippingCost: new Prisma.Decimal(shippingCost),
+          grandTotal: new Prisma.Decimal(grandTotal),
 
-            paidAmount: new Prisma.Decimal(paidAmount),
-            taxId: dto.taxId,
+          paidAmount: new Prisma.Decimal(paidAmount),
+          taxId: dto.taxId,
 
-            saleStatus: dto.saleStatus,
-            paymentStatus: dto.paymentStatus || 'DUE',
-            document: documentUrl,
-            note: dto.note,
-            status: true,
-            createdBy: creator.id,
-            updatedBy: creator.id,
+          saleStatus: dto.saleStatus,
+          paymentStatus: dto.paymentStatus || 'DUE',
+          document: documentUrl,
+          note: dto.note,
+          status: true,
+          createdBy: creator.id,
+          updatedBy: creator.id,
 
-            saleProducts: {
-              create: dto.products.map((p) => ({
-                productId: p.productId,
-                unitId: p.unitId,
-                qty: Number(p.qty || 0),
-                taxId: p.taxId ?? null,
-                taxRate: new Prisma.Decimal(p.taxRate || 0),
-                tax: new Prisma.Decimal(p.tax || 0),
-                netUnitPrice: new Prisma.Decimal(p.netUnitPrice || 0),
-                discount: new Prisma.Decimal(p.discount || 0),
-                total: new Prisma.Decimal(p.total || 0),
-              })),
+          saleProducts: {
+            create: dto.products.map((p) => ({
+              productId: p.productId,
+              unitId: p.unitId,
+              qty: Number(p.qty || 0),
+              taxId: p.taxId ?? null,
+              taxRate: new Prisma.Decimal(p.taxRate || 0),
+              tax: new Prisma.Decimal(p.tax || 0),
+              netUnitPrice: new Prisma.Decimal(p.netUnitPrice || 0),
+              discount: new Prisma.Decimal(p.discount || 0),
+              total: new Prisma.Decimal(p.total || 0),
+            })),
+          },
+        },
+        select: {
+          id: true,
+          saleNo: true,
+          customer: {
+            select: {
+              id: true,
+              name: true,
             },
           },
-          include: {
-            creator: { select: { id: true, name: true } },
-            saleProducts: true,
+          warehouse: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
-        });
+          item: true,
+          totalQty: true,
+          totalDiscount: true,
+          totalTax: true,
+          totalPrice: true,
+          orderTaxRate: true,
+          orderTax: true,
+          orderDiscount: true,
+          shippingCost: true,
+          grandTotal: true,
+          paidAmount: true,
+          taxId: true,
+          saleStatus: true,
+          paymentStatus: true,
+          document: true,
+          status: true,
+          creator: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          createdAt: true,
+        },
+      });
 
-        await Promise.all(
-          dto.products.map(async (p) => {
-            const unit = await tx.unit.findUnique({
-              where: { id: p.unitId },
-              select: { operator: true, operationValue: true },
-            });
-
-            if (!unit) {
-              throw new NotFoundException(`Unit ${p.unitId} not found!`);
-            }
-
-            const qtyValue =
-              unit.operator === '*'
-                ? Number(p.qty) * Number(unit.operationValue)
-                : Number(p.qty) / Number(unit.operationValue);
-
-            await tx.product.update({
-              where: { id: p.productId },
-              data: { qty: { decrement: qtyValue } },
-            });
-
-            const warehouseProduct = await tx.warehouseProduct.findFirst({
-              where: { warehouseId: dto.warehouseId, productId: p.productId },
-              select: {
-                id: true,
-                qty: true,
-                product: { select: { id: true, name: true, code: true } },
-              },
-            });
-
-            if (warehouseProduct) {
-              if (Number(warehouseProduct.qty) < qtyValue) {
-                throw new BadRequestException(
-                  `${warehouseProduct?.product?.name}(${warehouseProduct?.product?.code}) have ${warehouseProduct.qty} but you want ${qtyValue}.`,
-                );
-              }
-              await tx.warehouseProduct.update({
-                where: { id: warehouseProduct.id },
-                data: { qty: { decrement: qtyValue } },
-              });
-            } else {
-              const product = await tx.product.findUnique({
-                where: { id: p.productId },
-                select: { name: true, code: true },
-              });
-              throw new BadRequestException(
-                `${product?.name ?? 'Product'}(${product?.code ?? 'N/A'}) is not available in the selected warehouse`,
-              );
-            }
-          }),
-        );
-
-        if (isCompleted && !isDue && paidAmount > 0) {
-          const account = await tx.account.findUnique({
-            where: { id: dto.accountId as number },
+      await Promise.all(
+        dto.products.map(async (p) => {
+          const unit = await tx.unit.findUnique({
+            where: { id: p.unitId },
+            select: { operator: true, operationValue: true },
           });
 
-          if (!account) throw new NotFoundException('Account not found!');
-
-          if (!account.status) {
-            throw new UnprocessableEntityException('Account is inactive.');
+          if (!unit) {
+            throw new NotFoundException(`Unit ${p.unitId} not found!`);
           }
 
-          const incomingAmount = new Prisma.Decimal(paidAmount);
+          const qtyValue =
+            unit.operator === '*'
+              ? Number(p.qty) * Number(unit.operationValue)
+              : Number(p.qty) / Number(unit.operationValue);
 
-          const lastPayment = await tx.payment.findFirst({
-            orderBy: { id: 'desc' },
-            select: { id: true },
+          await tx.product.update({
+            where: { id: p.productId },
+            data: { qty: { decrement: qtyValue } },
           });
 
-          const nextId = (lastPayment?.id ?? 0) + 1;
-          const paymentNo = `PAY-${String(nextId).padStart(6, '0')}`;
-
-          await tx.payment.create({
-            data: {
-              accountId: dto.accountId as number,
-              saleId: sale.id,
-              amount: incomingAmount,
-              change: new Prisma.Decimal(dto.change || 0),
-              paymentMethod: dto.paymentMethod,
-              paymentNo,
-              createdBy: creator.id,
+          const warehouseProduct = await tx.warehouseProduct.findFirst({
+            where: { warehouseId: dto.warehouseId, productId: p.productId },
+            select: {
+              id: true,
+              qty: true,
+              product: { select: { id: true, name: true, code: true } },
             },
           });
+
+          if (warehouseProduct) {
+            if (Number(warehouseProduct.qty) < qtyValue) {
+              throw new BadRequestException(
+                `${warehouseProduct?.product?.name}(${warehouseProduct?.product?.code}) have ${warehouseProduct.qty} but you want ${qtyValue}.`,
+              );
+            }
+            await tx.warehouseProduct.update({
+              where: { id: warehouseProduct.id },
+              data: { qty: { decrement: qtyValue } },
+            });
+          } else {
+            const product = await tx.product.findUnique({
+              where: { id: p.productId },
+              select: { name: true, code: true },
+            });
+            throw new BadRequestException(
+              `${product?.name ?? 'Product'}(${product?.code ?? 'N/A'}) is not available in the selected warehouse`,
+            );
+          }
+        }),
+      );
+
+      if (isCompleted && !isDue && paidAmount > 0) {
+        const account = await tx.account.findUnique({
+          where: { id: dto.accountId as number },
+        });
+
+        if (!account) throw new NotFoundException('Account not found!');
+
+        if (!account.status) {
+          throw new UnprocessableEntityException('Account is inactive.');
         }
 
-        return sale;
-      });
-    } catch (error: unknown) {
-      if (error instanceof NotFoundException) throw error;
-      if (error instanceof BadRequestException) throw error;
-      throw new InternalServerErrorException('Failed to save Sale!');
-    }
+        const incomingAmount = new Prisma.Decimal(paidAmount);
+
+        const lastPayment = await tx.payment.findFirst({
+          orderBy: { id: 'desc' },
+          select: { id: true },
+        });
+
+        const nextId = (lastPayment?.id ?? 0) + 1;
+        const paymentNo = `PAY-${String(nextId).padStart(6, '0')}`;
+
+        await tx.payment.create({
+          data: {
+            accountId: dto.accountId as number,
+            saleId: sale.id,
+            amount: incomingAmount,
+            change: new Prisma.Decimal(dto.change || 0),
+            paymentMethod: dto.paymentMethod,
+            paymentNo,
+            createdBy: creator.id,
+          },
+        });
+      }
+
+      return sale;
+    });
   }
 
   async update(
@@ -365,215 +448,207 @@ export class SalesService {
     dto: UpdateSaleDto,
     updatorEmail: string,
     document?: MemoryStorageFile,
-  ) {
-    try {
-      const [sale, updator] = await Promise.all([
-        this.prisma.sale.findUnique({
-          where: { id },
-          select: {
-            id: true,
-            document: true,
-            warehouseId: true,
-            paymentStatus: true,
-            saleStatus: true,
-            saleProducts: {
-              select: {
-                id: true,
-                productId: true,
-                unitId: true,
-                qty: true,
-              },
-            },
-            payments: {
-              select: {
-                id: true,
-                accountId: true,
-                amount: true,
-              },
+  ): Promise<
+    Omit<
+      Sale,
+      | 'createdBy'
+      | 'updatedBy'
+      | 'updatedAt'
+      | 'customerId'
+      | 'warehouseId'
+      | 'note'
+    >
+  > {
+    const [sale, updator, customer, warehouse] = await Promise.all([
+      this.prisma.sale.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          document: true,
+          warehouseId: true,
+          paymentStatus: true,
+          saleStatus: true,
+          saleProducts: {
+            select: {
+              id: true,
+              productId: true,
+              unitId: true,
+              qty: true,
             },
           },
-        }),
-        this.prisma.user.findUnique({
-          where: { email: updatorEmail },
-          select: { id: true },
-        }),
-      ]);
+          payments: {
+            select: {
+              id: true,
+              accountId: true,
+              amount: true,
+            },
+          },
+        },
+      }),
+      this.prisma.user.findUnique({
+        where: { email: updatorEmail },
+        select: { id: true },
+      }),
+      this.prisma.customer.findUnique({
+        where: { id: dto.customerId },
+        select: { id: true },
+      }),
+      this.prisma.warehouse.findUnique({
+        where: { id: dto.warehouseId },
+        select: { id: true },
+      }),
+    ]);
 
-      if (!updator) throw new NotFoundException('User not found!');
-      if (!sale) throw new NotFoundException('Sale not found!');
+    if (!updator) throw new NotFoundException('User not found!');
+    if (!sale) throw new NotFoundException('Sale not found!');
+    if (!customer) throw new NotFoundException('Customer not found!');
+    if (!warehouse) throw new NotFoundException('Warehouse not found!');
 
-      if (sale.saleStatus && sale.paymentStatus === 'PAID') {
-        throw new ForbiddenException(
-          'This sale has been fully paid and cannot be edited. Please delete it and create a new sale.',
-        );
-      }
-
-      if (sale.saleStatus && sale.paymentStatus === 'PARTIAL') {
-        const totalPaid = sale.payments.reduce(
-          (sum, p) => sum + Number(p.amount),
-          0,
-        );
-
-        const incomingTotalPrice = dto.products.reduce(
-          (sum, p) => sum + Number(p.total || 0),
-          0,
-        );
-        const incomingGrandTotal =
-          incomingTotalPrice -
-          Number(dto.orderDiscount || 0) +
-          Number(dto.orderTax || 0) +
-          Number(dto.shippingCost || 0);
-
-        if (incomingGrandTotal < totalPaid) {
-          throw new BadRequestException(
-            `Grand total (${incomingGrandTotal.toFixed(2)}) cannot be less than the amount already paid (${totalPaid.toFixed(2)}).`,
-          );
-        }
-      }
-
-      let documentUrl: string | null = sale.document ?? null;
-      if (document) {
-        documentUrl = await replaceFile(document, 'sales', sale.document);
-      }
-
-      const totalDiscount = dto.products.reduce(
-        (sum, p) => sum + Number(p.discount || 0),
-        0,
+    if (sale.saleStatus && sale.paymentStatus === 'PAID') {
+      throw new ForbiddenException(
+        'This sale has been fully paid and cannot be edited. Please delete it and create a new sale.',
       );
-      const totalTax = dto.products.reduce(
-        (sum, p) => sum + Number(p.tax || 0),
+    }
+
+    if (sale.saleStatus && sale.paymentStatus === 'PARTIAL') {
+      const totalPaid = sale.payments.reduce(
+        (sum, p) => sum + Number(p.amount),
         0,
       );
 
-      const totalPrice = dto.products.reduce(
+      const incomingTotalPrice = dto.products.reduce(
         (sum, p) => sum + Number(p.total || 0),
         0,
       );
+      const incomingGrandTotal =
+        incomingTotalPrice -
+        Number(dto.orderDiscount || 0) +
+        Number(dto.orderTax || 0) +
+        Number(dto.shippingCost || 0);
 
-      const item = dto.products.length;
-      const totalQty = dto.products.reduce(
-        (sum, p) => sum + Number(p.qty || 0),
-        0,
-      );
+      if (incomingGrandTotal < totalPaid) {
+        throw new BadRequestException(
+          `Grand total (${incomingGrandTotal.toFixed(2)}) cannot be less than the amount already paid (${totalPaid.toFixed(2)}).`,
+        );
+      }
+    }
 
-      const orderTaxRate = Number(dto.orderTaxRate || 0);
-      const orderTax = Number(dto.orderTax || 0);
-      const orderDiscount = Number(dto.orderDiscount || 0);
-      const shippingCost = Number(dto.shippingCost || 0);
+    let documentUrl: string | null = sale.document ?? null;
+    if (document) {
+      documentUrl = await replaceFile(document, 'sales', sale.document);
+    }
 
-      const grandTotal = totalPrice - orderDiscount + orderTax + shippingCost;
+    const totalDiscount = dto.products.reduce(
+      (sum, p) => sum + Number(p.discount || 0),
+      0,
+    );
+    const totalTax = dto.products.reduce(
+      (sum, p) => sum + Number(p.tax || 0),
+      0,
+    );
 
-      return await this.prisma.$transaction(async (tx) => {
-        await Promise.all(
-          sale.saleProducts.map(async (oldProduct) => {
-            if (!oldProduct.productId) return;
+    const totalPrice = dto.products.reduce(
+      (sum, p) => sum + Number(p.total || 0),
+      0,
+    );
 
-            const unit = await tx.unit.findUnique({
-              where: { id: oldProduct.unitId },
-              select: { operator: true, operationValue: true },
-            });
+    const item = dto.products.length;
+    const totalQty = dto.products.reduce(
+      (sum, p) => sum + Number(p.qty || 0),
+      0,
+    );
 
-            if (!unit) {
-              throw new NotFoundException(
-                `Unit ${oldProduct.unitId} not found!`,
-              );
-            }
+    const orderTaxRate = Number(dto.orderTaxRate || 0);
+    const orderTax = Number(dto.orderTax || 0);
+    const orderDiscount = Number(dto.orderDiscount || 0);
+    const shippingCost = Number(dto.shippingCost || 0);
 
-            const oldQtyValue =
-              unit.operator === '*'
-                ? Number(oldProduct.qty) * Number(unit.operationValue)
-                : Number(oldProduct.qty) / Number(unit.operationValue);
+    const grandTotal = totalPrice - orderDiscount + orderTax + shippingCost;
 
-            await tx.product.update({
-              where: { id: oldProduct.productId },
+    return await this.prisma.$transaction(async (tx) => {
+      await Promise.all(
+        sale.saleProducts.map(async (oldProduct) => {
+          if (!oldProduct.productId) return;
+
+          const unit = await tx.unit.findUnique({
+            where: { id: oldProduct.unitId },
+            select: { operator: true, operationValue: true },
+          });
+
+          if (!unit) {
+            throw new NotFoundException(`Unit ${oldProduct.unitId} not found!`);
+          }
+
+          const oldQtyValue =
+            unit.operator === '*'
+              ? Number(oldProduct.qty) * Number(unit.operationValue)
+              : Number(oldProduct.qty) / Number(unit.operationValue);
+
+          await tx.product.update({
+            where: { id: oldProduct.productId },
+            data: { qty: { increment: oldQtyValue } },
+          });
+
+          const warehouseProduct = await tx.warehouseProduct.findFirst({
+            where: {
+              warehouseId: sale.warehouseId,
+              productId: oldProduct.productId,
+            },
+            select: { id: true },
+          });
+
+          if (warehouseProduct) {
+            await tx.warehouseProduct.update({
+              where: { id: warehouseProduct.id },
               data: { qty: { increment: oldQtyValue } },
             });
+          }
+        }),
+      );
 
-            const warehouseProduct = await tx.warehouseProduct.findFirst({
-              where: {
-                warehouseId: sale.warehouseId,
-                productId: oldProduct.productId,
-              },
-              select: { id: true },
-            });
+      const keepIds = dto.products
+        .map((p) => p.id)
+        .filter((pid): pid is number => pid !== null && pid !== undefined);
 
-            if (warehouseProduct) {
-              await tx.warehouseProduct.update({
-                where: { id: warehouseProduct.id },
-                data: { qty: { increment: oldQtyValue } },
-              });
-            }
-          }),
-        );
+      await tx.saleProduct.deleteMany({
+        where: {
+          saleId: id,
+          ...(keepIds.length > 0 ? { id: { notIn: keepIds } } : {}),
+        },
+      });
 
-        const keepIds = dto.products
-          .map((p) => p.id)
-          .filter((pid): pid is number => pid !== null && pid !== undefined);
+      const updated = await tx.sale.update({
+        where: { id },
+        data: {
+          customerId: dto.customerId,
+          warehouseId: dto.warehouseId,
+          taxId: dto.taxId ?? null,
+          saleStatus: dto.saleStatus,
 
-        await tx.saleProduct.deleteMany({
-          where: {
-            saleId: id,
-            ...(keepIds.length > 0 ? { id: { notIn: keepIds } } : {}),
-          },
-        });
+          item,
+          totalQty,
 
-        const updated = await tx.sale.update({
-          where: { id },
-          data: {
-            customerId: dto.customerId,
-            warehouseId: dto.warehouseId,
-            taxId: dto.taxId ?? null,
-            saleStatus: dto.saleStatus,
+          totalDiscount: new Prisma.Decimal(totalDiscount),
+          totalTax: new Prisma.Decimal(totalTax),
+          totalPrice: new Prisma.Decimal(totalPrice),
 
-            item,
-            totalQty,
+          orderTaxRate: new Prisma.Decimal(orderTaxRate),
+          orderTax: new Prisma.Decimal(orderTax),
+          orderDiscount: new Prisma.Decimal(orderDiscount),
 
-            totalDiscount: new Prisma.Decimal(totalDiscount),
-            totalTax: new Prisma.Decimal(totalTax),
-            totalPrice: new Prisma.Decimal(totalPrice),
+          shippingCost: new Prisma.Decimal(shippingCost),
+          grandTotal: new Prisma.Decimal(grandTotal),
 
-            orderTaxRate: new Prisma.Decimal(orderTaxRate),
-            orderTax: new Prisma.Decimal(orderTax),
-            orderDiscount: new Prisma.Decimal(orderDiscount),
+          note: dto.note,
+          document: documentUrl,
+          updatedBy: updator.id,
 
-            shippingCost: new Prisma.Decimal(shippingCost),
-            grandTotal: new Prisma.Decimal(grandTotal),
-
-            note: dto.note,
-            document: documentUrl,
-            updatedBy: updator.id,
-
-            saleProducts: {
-              upsert: dto.products
-                .filter((p) => p.id)
-                .map((p) => ({
-                  where: { id: p.id },
-                  update: {
-                    productId: p.productId,
-                    unitId: p.unitId,
-                    taxId: p.taxId ?? null,
-                    qty: Number(p.qty || 0),
-                    netUnitPrice: new Prisma.Decimal(p.netUnitPrice || 0),
-                    discount: new Prisma.Decimal(p.discount || 0),
-                    taxRate: new Prisma.Decimal(p.taxRate || 0),
-                    tax: new Prisma.Decimal(p.tax || 0),
-                    total: new Prisma.Decimal(p.total || 0),
-                  },
-                  create: {
-                    productId: p.productId,
-                    unitId: p.unitId,
-                    taxId: p.taxId ?? null,
-                    qty: Number(p.qty || 0),
-                    netUnitPrice: new Prisma.Decimal(p.netUnitPrice || 0),
-                    discount: new Prisma.Decimal(p.discount || 0),
-                    taxRate: new Prisma.Decimal(p.taxRate || 0),
-                    tax: new Prisma.Decimal(p.tax || 0),
-                    total: new Prisma.Decimal(p.total || 0),
-                  },
-                })),
-              create: dto.products
-                .filter((p) => !p.id)
-                .map((p) => ({
+          saleProducts: {
+            upsert: dto.products
+              .filter((p) => p.id)
+              .map((p) => ({
+                where: { id: p.id },
+                update: {
                   productId: p.productId,
                   unitId: p.unitId,
                   taxId: p.taxId ?? null,
@@ -583,82 +658,132 @@ export class SalesService {
                   taxRate: new Prisma.Decimal(p.taxRate || 0),
                   tax: new Prisma.Decimal(p.tax || 0),
                   total: new Prisma.Decimal(p.total || 0),
-                })),
+                },
+                create: {
+                  productId: p.productId,
+                  unitId: p.unitId,
+                  taxId: p.taxId ?? null,
+                  qty: Number(p.qty || 0),
+                  netUnitPrice: new Prisma.Decimal(p.netUnitPrice || 0),
+                  discount: new Prisma.Decimal(p.discount || 0),
+                  taxRate: new Prisma.Decimal(p.taxRate || 0),
+                  tax: new Prisma.Decimal(p.tax || 0),
+                  total: new Prisma.Decimal(p.total || 0),
+                },
+              })),
+            create: dto.products
+              .filter((p) => !p.id)
+              .map((p) => ({
+                productId: p.productId,
+                unitId: p.unitId,
+                taxId: p.taxId ?? null,
+                qty: Number(p.qty || 0),
+                netUnitPrice: new Prisma.Decimal(p.netUnitPrice || 0),
+                discount: new Prisma.Decimal(p.discount || 0),
+                taxRate: new Prisma.Decimal(p.taxRate || 0),
+                tax: new Prisma.Decimal(p.tax || 0),
+                total: new Prisma.Decimal(p.total || 0),
+              })),
+          },
+        },
+        select: {
+          id: true,
+          saleNo: true,
+          customer: {
+            select: {
+              id: true,
+              name: true,
             },
           },
-          include: {
-            creator: { select: { id: true, name: true } },
-            saleProducts: true,
+          warehouse: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
-        });
+          item: true,
+          totalQty: true,
+          totalDiscount: true,
+          totalTax: true,
+          totalPrice: true,
+          orderTaxRate: true,
+          orderTax: true,
+          orderDiscount: true,
+          shippingCost: true,
+          grandTotal: true,
+          paidAmount: true,
+          taxId: true,
+          saleStatus: true,
+          paymentStatus: true,
+          document: true,
+          status: true,
+          creator: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          createdAt: true,
+        },
+      });
 
-        await Promise.all(
-          dto.products.map(async (p) => {
-            const unit = await tx.unit.findUnique({
-              where: { id: p.unitId },
-              select: { operator: true, operationValue: true },
-            });
+      await Promise.all(
+        dto.products.map(async (p) => {
+          const unit = await tx.unit.findUnique({
+            where: { id: p.unitId },
+            select: { operator: true, operationValue: true },
+          });
 
-            if (!unit) {
-              throw new NotFoundException(`Unit ${p.unitId} not found!`);
-            }
+          if (!unit) {
+            throw new NotFoundException(`Unit ${p.unitId} not found!`);
+          }
 
-            const newQtyValue =
-              unit.operator === '*'
-                ? Number(p.qty) * Number(unit.operationValue)
-                : Number(p.qty) / Number(unit.operationValue);
+          const newQtyValue =
+            unit.operator === '*'
+              ? Number(p.qty) * Number(unit.operationValue)
+              : Number(p.qty) / Number(unit.operationValue);
 
-            await tx.product.update({
-              where: { id: p.productId },
-              data: { qty: { decrement: newQtyValue } },
-            });
+          await tx.product.update({
+            where: { id: p.productId },
+            data: { qty: { decrement: newQtyValue } },
+          });
 
-            const warehouseProduct = await tx.warehouseProduct.findFirst({
-              where: {
-                warehouseId: dto.warehouseId,
-                productId: p.productId,
-              },
-              select: {
-                id: true,
-                qty: true,
-                product: { select: { id: true, name: true, code: true } },
-              },
-            });
+          const warehouseProduct = await tx.warehouseProduct.findFirst({
+            where: {
+              warehouseId: dto.warehouseId,
+              productId: p.productId,
+            },
+            select: {
+              id: true,
+              qty: true,
+              product: { select: { id: true, name: true, code: true } },
+            },
+          });
 
-            if (warehouseProduct) {
-              if (Number(warehouseProduct.qty) < newQtyValue) {
-                throw new BadRequestException(
-                  `${warehouseProduct?.product?.name}(${warehouseProduct?.product?.code}) have ${warehouseProduct.qty} but you want ${newQtyValue}.`,
-                );
-              }
-              await tx.warehouseProduct.update({
-                where: { id: warehouseProduct.id },
-                data: { qty: { decrement: newQtyValue } },
-              });
-            } else {
-              const product = await tx.product.findUnique({
-                where: { id: p.productId },
-                select: { name: true, code: true },
-              });
+          if (warehouseProduct) {
+            if (Number(warehouseProduct.qty) < newQtyValue) {
               throw new BadRequestException(
-                `${product?.name ?? 'Product'}(${product?.code ?? 'N/A'}) is not available in the selected warehouse`,
+                `${warehouseProduct?.product?.name}(${warehouseProduct?.product?.code}) have ${warehouseProduct.qty} but you want ${newQtyValue}.`,
               );
             }
-          }),
-        );
+            await tx.warehouseProduct.update({
+              where: { id: warehouseProduct.id },
+              data: { qty: { decrement: newQtyValue } },
+            });
+          } else {
+            const product = await tx.product.findUnique({
+              where: { id: p.productId },
+              select: { name: true, code: true },
+            });
+            throw new BadRequestException(
+              `${product?.name ?? 'Product'}(${product?.code ?? 'N/A'}) is not available in the selected warehouse`,
+            );
+          }
+        }),
+      );
 
-        return updated;
-      });
-    } catch (error: unknown) {
-      if (error instanceof NotFoundException) throw error;
-      if (error instanceof BadRequestException) throw error;
-      if (error instanceof ForbiddenException) throw error;
-      if (error instanceof UnprocessableEntityException) throw error;
-
-      const message =
-        error instanceof Error ? error.message : 'Failed to update Sale!';
-      throw new InternalServerErrorException(message);
-    }
+      return updated;
+    });
   }
 
   /**
@@ -666,26 +791,50 @@ export class SalesService {
    * @param id
    * @returns Sale
    */
-  async remove(id: number): Promise<Sale> {
+  async remove(
+    id: number,
+  ): Promise<
+    Omit<
+      Sale,
+      | 'createdBy'
+      | 'updatedBy'
+      | 'updatedAt'
+      | 'customerId'
+      | 'warehouseId'
+      | 'note'
+    >
+  > {
     const sale = await this.prisma.sale.findUnique({
       where: { id },
       select: {
         id: true,
-        document: true,
+        saleNo: true,
+        customer: { select: { id: true, name: true } },
         warehouseId: true,
+        warehouse: { select: { id: true, name: true } },
+        item: true,
+        totalQty: true,
+        totalDiscount: true,
+        totalTax: true,
+        totalPrice: true,
+        orderTaxRate: true,
+        orderTax: true,
+        orderDiscount: true,
+        shippingCost: true,
+        grandTotal: true,
+        paidAmount: true,
+        taxId: true,
+        saleStatus: true,
+        paymentStatus: true,
+        document: true,
+        status: true,
+        creator: { select: { id: true, name: true } },
+        createdAt: true,
         saleProducts: {
-          select: {
-            productId: true,
-            qty: true,
-            unitId: true,
-          },
+          select: { productId: true, qty: true, unitId: true },
         },
         payments: {
-          select: {
-            id: true,
-            accountId: true,
-            amount: true,
-          },
+          select: { id: true, accountId: true, amount: true },
         },
       },
     });
@@ -693,11 +842,7 @@ export class SalesService {
     if (!sale) throw new NotFoundException('Sale not found.');
 
     const deleted = await this.prisma.$transaction(async (tx) => {
-      await Promise.all(
-        sale.payments.map(async (payment) => {
-          await tx.payment.delete({ where: { id: payment.id } });
-        }),
-      );
+      await tx.payment.deleteMany({ where: { saleId: id } });
 
       await Promise.all(
         sale.saleProducts.map(async (oldProduct) => {
@@ -743,12 +888,22 @@ export class SalesService {
       return tx.sale.delete({ where: { id } });
     });
 
+    // 5. Delete document outside transaction
     await deleteOldFile(sale.document ?? null);
 
     return deleted;
   }
 
-  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{ count: number }> {
+  /**
+   * Bulk delete sales
+   * @param ids
+   * @returns
+   */
+  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{
+    count: number;
+    deletedIds: number[];
+    skippedIds: { id: number; reasons: string[] }[];
+  }> {
     const sales = await this.prisma.sale.findMany({
       where: { id: { in: ids } },
       select: {
@@ -756,35 +911,35 @@ export class SalesService {
         document: true,
         warehouseId: true,
         saleProducts: {
-          select: {
-            productId: true,
-            qty: true,
-            unitId: true,
-          },
+          select: { productId: true, qty: true, unitId: true },
         },
         payments: {
-          select: {
-            id: true,
-            accountId: true,
-            amount: true,
-          },
+          select: { id: true },
         },
       },
     });
 
-    if (!sales.length) throw new NotFoundException('Sales not found.');
+    const foundIds = sales.map((s) => s.id);
+    const notFoundIds = ids.filter((id) => !foundIds.includes(id));
+
+    if (foundIds.length === 0)
+      throw new NotFoundException('No sales found for the given IDs.');
+
+    const deletableSales = sales;
+    const deletableIds = foundIds;
+
+    const skippedIds = notFoundIds.map((id) => ({
+      id,
+      reasons: ['Not found'],
+    }));
 
     await this.prisma.$transaction(async (tx) => {
-      await Promise.all(
-        sales.flatMap((sale) =>
-          sale.payments.map(async (payment) => {
-            await tx.payment.delete({ where: { id: payment.id } });
-          }),
-        ),
-      );
+      await tx.payment.deleteMany({
+        where: { saleId: { in: deletableIds } },
+      });
 
       await Promise.all(
-        sales.flatMap((sale) =>
+        deletableSales.flatMap((sale) =>
           sale.saleProducts.map(async (oldProduct) => {
             if (!oldProduct.productId) return;
 
@@ -827,14 +982,20 @@ export class SalesService {
       );
 
       await tx.saleProduct.deleteMany({
-        where: { saleId: { in: ids } },
+        where: { saleId: { in: deletableIds } },
       });
 
-      await tx.sale.deleteMany({ where: { id: { in: ids } } });
+      await tx.sale.deleteMany({ where: { id: { in: deletableIds } } });
     });
 
-    await Promise.all(sales.map((p) => deleteOldFile(p.document ?? null)));
+    await Promise.all(
+      deletableSales.map((s) => deleteOldFile(s.document ?? null)),
+    );
 
-    return { count: sales.length };
+    return {
+      count: deletableIds.length,
+      deletedIds: deletableIds,
+      skippedIds,
+    };
   }
 }

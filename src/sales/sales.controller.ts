@@ -1,11 +1,9 @@
 import {
   BadRequestException,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -25,7 +23,6 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { SalesService } from './sales.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import { CreateSaleDto, UpdateSaleDto } from './dto/sale.dto';
 import {
   FileFieldsInterceptor,
@@ -36,68 +33,73 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { SaleCreateSchema, SaleUpdateSchema } from './schemas/sale.schema';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type SaleQueryDto,
+  SaleQuerySchema,
+} from './schemas/sale-query.schema';
 
-const saleProductSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'number', example: 1 },
-    saleId: { type: 'number', example: 1 },
-    productId: { type: 'number', example: 1 },
-    unitId: { type: 'number', example: 1 },
-    qty: { type: 'string', example: '10.00' },
-    taxId: { type: 'number', example: 1 },
-    taxRate: { type: 'string', example: '10.00' },
-    tax: { type: 'string', example: '5.00' },
-    netUnitPrice: { type: 'string', example: '50.00' },
-    discount: { type: 'string', example: '5.00' },
-    total: { type: 'string', example: '100.00' },
-    createdAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
-    updatedAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
-  },
+const saleProductProperties = {
+  id: { type: 'number', example: 1 },
+  saleId: { type: 'number', example: 1 },
+  productId: { type: 'number', example: 1 },
+  unitId: { type: 'number', example: 1 },
+  qty: { type: 'string', example: '10.00' },
+  taxId: { type: 'number', example: 1 },
+  taxRate: { type: 'string', example: '10.00' },
+  tax: { type: 'string', example: '5.00' },
+  netUnitPrice: { type: 'string', example: '50.00' },
+  discount: { type: 'string', example: '5.00' },
+  total: { type: 'string', example: '100.00' },
+  createdAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
+  updatedAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
 };
 
-const saleSchema = {
-  type: 'object',
-  properties: {
-    id: { type: 'number', example: 1 },
-    saleNo: { type: 'string', example: 'PUR-1710000000000' },
-    customerId: { type: 'number', example: 1 },
-    warehouseId: { type: 'number', example: 1 },
-    item: { type: 'number', example: 3 },
-    totalQty: { type: 'number', example: 10 },
-    totalDiscount: { type: 'string', example: '10.00' },
-    totalTax: { type: 'string', example: '5.00' },
-    totalPrice: { type: 'string', example: '100.00' },
-    orderTaxRate: { type: 'string', example: '5.00' },
-    orderTax: { type: 'string', example: '5.00' },
-    orderDiscount: { type: 'string', example: '10.00' },
-    shippingCost: { type: 'string', example: '20.00' },
-    grandTotal: { type: 'string', example: '115.00' },
-    taxId: { type: 'number', example: 1 },
-    paidAmount: { type: 'string', example: '50.00' },
-    saleStatus: { type: 'boolean', example: true },
-    paymentStatus: { type: 'string', example: 'PAID' },
-    document: {
-      type: 'string',
-      example: '/uploads/sales/file.jpg',
-      nullable: true,
+const saleProperties = {
+  id: { type: 'number', example: 1 },
+  saleNo: { type: 'string', example: 'PUR-1710000000000' },
+  customer: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'Customer 1' },
     },
-    note: { type: 'string', example: 'Some note', nullable: true },
-    status: { type: 'boolean', example: true },
-    creator: {
+    warehouse: {
       type: 'object',
       properties: {
         id: { type: 'number', example: 1 },
-        name: { type: 'string', example: 'John Doe' },
+        name: { type: 'string', example: 'Warehouse 1' },
       },
     },
-    saleProducts: {
-      type: 'array',
-      items: saleProductSchema,
-    },
-    createdAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
-    updatedAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
   },
+  item: { type: 'number', example: 3 },
+  totalQty: { type: 'number', example: 10 },
+  totalDiscount: { type: 'string', example: '10.00' },
+  totalTax: { type: 'string', example: '5.00' },
+  totalPrice: { type: 'string', example: '100.00' },
+  orderTaxRate: { type: 'string', example: '5.00' },
+  orderTax: { type: 'string', example: '5.00' },
+  orderDiscount: { type: 'string', example: '10.00' },
+  shippingCost: { type: 'string', example: '20.00' },
+  grandTotal: { type: 'string', example: '115.00' },
+  taxId: { type: 'number', example: 1 },
+  paidAmount: { type: 'string', example: '50.00' },
+  saleStatus: { type: 'boolean', example: true },
+  paymentStatus: { type: 'string', example: 'PAID' },
+  document: {
+    type: 'string',
+    example: '/uploads/sales/file.jpg',
+    nullable: true,
+  },
+  note: { type: 'string', example: 'Some note', nullable: true },
+  status: { type: 'boolean', example: true },
+  creator: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+  createdAt: { type: 'string', example: '2024-01-01T00:00:00.000Z' },
 };
 
 @UseGuards(JwtAuthGuard)
@@ -111,16 +113,23 @@ export class SalesController {
    */
   @ApiQuery({ name: 'page', required: false, type: Number, example: 0 })
   @ApiQuery({ name: 'limit', required: false, type: Number, example: 10 })
-  @ApiQuery({ name: 'order', required: false, example: 'id' })
+  @ApiQuery({ name: 'order', required: false, example: 'createdAt' })
   @ApiQuery({
     name: 'direction',
     required: false,
     enum: ['asc', 'desc'],
-    example: 'desc',
+    schema: {
+      default: 'desc',
+      enum: ['asc', 'desc'],
+    },
   })
-  @ApiQuery({ name: 'search', required: false, type: String, example: 'PUR-' })
+  @ApiQuery({ name: 'search', required: false, type: String })
+  @ApiQuery({ name: 'status', required: false, type: Boolean })
+  @ApiQuery({ name: 'createdBy', required: false, type: Number })
+  @ApiQuery({ name: 'customerId', required: false, type: Number })
+  @ApiQuery({ name: 'warehouseId', required: false, type: Number })
   @ApiOkResponse({
-    description: 'Sales fetched successfully!',
+    description: 'Sales fetched successfull response!',
     schema: {
       type: 'object',
       properties: {
@@ -129,7 +138,13 @@ export class SalesController {
         data: {
           type: 'object',
           properties: {
-            items: { type: 'array', items: saleSchema },
+            items: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: saleProperties,
+              },
+            },
             totalItems: { type: 'number', example: 100 },
           },
         },
@@ -139,24 +154,9 @@ export class SalesController {
   @Permission('sale-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
-    @Query('search') search?: string,
+    @Query(new ZodValidationPipe(SaleQuerySchema)) query: SaleQueryDto,
   ) {
-    const data = await this.salesService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-    });
+    const data = await this.salesService.findAll(query);
     return {
       success: true,
       message: 'Sales fetched successfully!',
@@ -174,7 +174,20 @@ export class SalesController {
       properties: {
         success: { type: 'boolean', example: true },
         message: { type: 'string', example: 'Sale fetched successfully!' },
-        data: saleSchema,
+        data: {
+          type: 'object',
+          properties: {
+            ...saleProperties,
+
+            saleProducts: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: saleProductProperties,
+              },
+            },
+          },
+        },
       },
     },
   })
@@ -204,7 +217,10 @@ export class SalesController {
       properties: {
         success: { type: 'boolean', example: true },
         message: { type: 'string', example: 'Sale created successfully!' },
-        data: saleSchema,
+        data: {
+          type: 'object',
+          properties: saleProperties,
+        },
       },
     },
   })
@@ -255,7 +271,10 @@ export class SalesController {
       properties: {
         success: { type: 'boolean', example: true },
         message: { type: 'string', example: 'Sale updated successfully!' },
-        data: saleSchema,
+        data: {
+          type: 'object',
+          properties: saleProperties,
+        },
       },
     },
   })
@@ -302,7 +321,10 @@ export class SalesController {
       properties: {
         success: { type: 'boolean', example: true },
         message: { type: 'string', example: 'Sale deleted successfully!' },
-        data: saleSchema,
+        data: {
+          type: 'object',
+          properties: saleProperties,
+        },
       },
     },
   })
@@ -345,6 +367,20 @@ export class SalesController {
           properties: {
             count: { type: 'number', example: 3 },
           },
+        },
+      },
+    },
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
         },
       },
     },
