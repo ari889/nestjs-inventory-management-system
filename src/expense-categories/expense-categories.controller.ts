@@ -1,11 +1,9 @@
 import {
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   NotFoundException,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -22,7 +20,6 @@ import {
   ApiQuery,
 } from '@nestjs/swagger';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import {
   type ExpenseCategoryDto,
@@ -32,6 +29,20 @@ import type { FastifyRequest } from 'fastify';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type ExpenseCategoryQueryDto,
+  ExpenseCategoryQuerySchema,
+} from './schemas/expense-category-query.schema';
+
+const expenseCategoryProperties = {
+  id: { type: 'number', example: 1 },
+  name: { type: 'string', example: 'John Doe' },
+  status: { type: 'boolean', example: true },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -53,13 +64,16 @@ export class ExpenseCategoriesController {
   @ApiQuery({
     name: 'order',
     required: false,
-    example: 'id',
+    example: 'createdAt',
   })
   @ApiQuery({
     name: 'direction',
     required: false,
     enum: ['asc', 'desc'],
-    example: 'asc',
+    schema: {
+      default: 'desc',
+      enum: ['asc', 'desc'],
+    },
   })
   @ApiQuery({
     name: 'page',
@@ -77,14 +91,18 @@ export class ExpenseCategoriesController {
     name: 'search',
     required: false,
     type: String,
-    example: 'search',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: Boolean,
   })
   @ApiOkResponse({
     description: 'Expense categories fetched successful response!',
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: {
           type: 'string',
           example: 'Expense categories fetched successfully!',
@@ -96,19 +114,7 @@ export class ExpenseCategoriesController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  name: { type: 'string', example: 'John Doe' },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: expenseCategoryProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -120,24 +126,11 @@ export class ExpenseCategoriesController {
   @Permission('expense-category-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query('search') search?: string,
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
+    @Query(new ZodValidationPipe(ExpenseCategoryQuerySchema))
+    query: ExpenseCategoryQueryDto,
   ) {
-    const expenseCategories = await this.expenseCategoriesService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-    });
+    const expenseCategories =
+      await this.expenseCategoriesService.findAll(query);
     return {
       success: true,
       message: 'Expense categories fetched successfully!',
@@ -162,19 +155,7 @@ export class ExpenseCategoriesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: expenseCategoryProperties,
         },
       },
     },
@@ -203,26 +184,14 @@ export class ExpenseCategoriesController {
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: {
           type: 'string',
           example: 'Expense category created successfully!',
         },
         data: {
           type: 'array',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: expenseCategoryProperties,
         },
       },
     },
@@ -273,26 +242,14 @@ export class ExpenseCategoriesController {
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: {
           type: 'string',
           example: 'Expense category updated successfully!',
         },
         data: {
           type: 'object ',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: expenseCategoryProperties,
         },
       },
     },
@@ -344,26 +301,14 @@ export class ExpenseCategoriesController {
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: {
           type: 'string',
           example: 'Expense category fetched successfully!',
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'John Doe' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: expenseCategoryProperties,
         },
       },
     },
@@ -389,12 +334,26 @@ export class ExpenseCategoriesController {
     schema: {
       type: 'object',
       properties: {
-        success: { type: 'boolean' },
+        success: { type: 'boolean', example: true },
         message: {
           type: 'string',
           example: 'Expense Categories deleted successfully!',
         },
         data: { type: 'number', example: 4 },
+      },
+    },
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
       },
     },
   })

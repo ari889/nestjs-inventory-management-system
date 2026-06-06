@@ -8,7 +8,7 @@ export const ExpenseCategorySchema = z.object({
     .regex(/^[A-Za-z0-9\s]+$/, {
       message: 'Name can contain only letters, numbers, and spaces',
     }),
-  status: z.boolean({ message: 'Status is required!' }),
+  status: z.coerce.boolean({ message: 'Status is required!' }),
 });
 
 export type ExpenseCategoryDto = z.infer<typeof ExpenseCategorySchema>;
