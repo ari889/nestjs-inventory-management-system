@@ -40,7 +40,6 @@ export class EmployeesService {
     >;
     totalItems: number;
   }> {
-    console.log(search);
     const where = {
       ...(search && {
         OR: [

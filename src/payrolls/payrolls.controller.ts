@@ -1,11 +1,9 @@
 import {
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   NotFoundException,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -23,12 +21,47 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { PayrollsService } from './payrolls.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { type PayrollDto, PayrollSchema } from './schemas/payroll.schema';
 import type { FastifyRequest } from 'fastify';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type PayrollQueryDto,
+  PayrollQuerySchema,
+} from './schemas/payroll-query.schema';
+
+const payrollProperties = {
+  id: { type: 'number', example: 1 },
+  employee: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+  account: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'Account 1' },
+    },
+  },
+  amount: { type: 'number', example: 100 },
+  paymentMethods: { type: 'string', example: 'CASH' },
+  status: { type: 'boolean', example: true },
+  creator: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -42,6 +75,10 @@ export class PayrollsController {
    * @param limit
    * @param order
    * @param direction
+   * @param employeeId
+   * @param accountId
+   * @param paymentMethods
+   * @param createdBy
    * @returns Payroll
    */
   @ApiQuery({
@@ -53,7 +90,10 @@ export class PayrollsController {
     name: 'direction',
     required: false,
     enum: ['asc', 'desc'],
-    example: 'asc',
+    schema: {
+      default: 'desc',
+      enum: ['asc', 'desc'],
+    },
   })
   @ApiQuery({
     name: 'page',
@@ -68,10 +108,19 @@ export class PayrollsController {
     example: 10,
   })
   @ApiQuery({
-    name: 'search',
+    name: 'employeeId',
     required: false,
-    type: String,
-    example: 'search',
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'accountId',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'paymentMethods',
+    required: false,
+    enum: ['CASH', 'CHEQUE', 'BANK'],
   })
   @ApiOkResponse({
     description: 'Payroll fetched successful response!',
@@ -90,22 +139,7 @@ export class PayrollsController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  employeeId: { type: 'number', example: 1 },
-                  accountId: { type: 'number', example: 1 },
-                  amount: { type: 'number', example: 100 },
-                  paymentMethods: { type: 'string', example: 'CASH' },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: payrollProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -117,22 +151,9 @@ export class PayrollsController {
   @Permission('payroll-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
+    @Query(new ZodValidationPipe(PayrollQuerySchema)) query: PayrollQueryDto,
   ) {
-    const payroll = await this.payrollsService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-    });
+    const payroll = await this.payrollsService.findAll(query);
     return {
       success: true,
       message: 'Payroll fetched successfully!',
@@ -157,22 +178,7 @@ export class PayrollsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            employeeId: { type: 'number', example: 1 },
-            accountId: { type: 'number', example: 1 },
-            amount: { type: 'number', example: 100 },
-            paymentMethods: { type: 'string', example: 'CASH' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: payrollProperties,
         },
       },
     },
@@ -206,23 +212,8 @@ export class PayrollsController {
           example: 'Payroll created successfully!',
         },
         data: {
-          type: 'array',
-          properties: {
-            id: { type: 'number', example: 1 },
-            employeeId: { type: 'number', example: 1 },
-            accountId: { type: 'number', example: 1 },
-            amount: { type: 'number', example: 100 },
-            paymentMethods: { type: 'string', example: 'CASH' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          type: 'object',
+          properties: payrollProperties,
         },
       },
     },
@@ -298,22 +289,7 @@ export class PayrollsController {
         },
         data: {
           type: 'object ',
-          properties: {
-            id: { type: 'number', example: 1 },
-            employeeId: { type: 'number', example: 1 },
-            accountId: { type: 'number', example: 1 },
-            amount: { type: 'number', example: 100 },
-            paymentMethods: { type: 'string', example: 'CASH' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: payrollProperties,
         },
       },
     },
@@ -390,22 +366,7 @@ export class PayrollsController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            employeeId: { type: 'number', example: 1 },
-            accountId: { type: 'number', example: 1 },
-            amount: { type: 'number', example: 100 },
-            paymentMethods: { type: 'string', example: 'CASH' },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: payrollProperties,
         },
       },
     },
@@ -434,6 +395,20 @@ export class PayrollsController {
         success: { type: 'boolean' },
         message: { type: 'string', example: 'Accounts deleted successfully!' },
         data: { type: 'number', example: 4 },
+      },
+    },
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
       },
     },
   })

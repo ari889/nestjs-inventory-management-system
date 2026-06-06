@@ -3,6 +3,7 @@ import { Payroll } from 'src/generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { PayrollDto } from './schemas/payroll.schema';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
+import { PayrollQueryDto } from './schemas/payroll-query.schema';
 
 @Injectable()
 export class PayrollsService {
@@ -14,28 +15,61 @@ export class PayrollsService {
    * @returns Payroll[]
    */
   async findAll({
-    page,
-    limit,
-    order,
-    direction,
-  }: {
-    page: number;
-    limit: number;
-    order: string;
-    direction: string;
-  }): Promise<{ items: Payroll[]; totalItems: number }> {
+    page = 0,
+    limit = 10,
+    order = 'createdAt',
+    direction = 'desc',
+    employeeId = undefined,
+    accountId = undefined,
+    paymentMethods = undefined,
+    createdBy = undefined,
+  }: PayrollQueryDto): Promise<{
+    items: Array<
+      Omit<
+        Payroll,
+        'createdBy' | 'updatedBy' | 'updatedAt' | 'employeeId' | 'accountId'
+      >
+    >;
+    totalItems: number;
+  }> {
+    const where = {
+      ...(employeeId !== undefined && { employeeId }),
+      ...(accountId !== undefined && { accountId }),
+      ...(paymentMethods !== undefined && { paymentMethods }),
+      ...(createdBy !== undefined && { createdBy }),
+    };
     const [items, totalItems] = await Promise.all([
       this.prisma.payroll.findMany({
+        where,
         skip: page * limit,
         take: limit,
         orderBy: { [order]: direction },
-        include: {
-          creator: { select: { id: true, name: true } },
-          employee: { select: { id: true, name: true } },
-          account: { select: { id: true, name: true } },
+        select: {
+          id: true,
+          employee: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          account: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          amount: true,
+          paymentMethods: true,
+          creator: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          createdAt: true,
         },
       }),
-      this.prisma.payroll.count(),
+      this.prisma.payroll.count({ where }),
     ]);
 
     return { items, totalItems };
@@ -46,13 +80,37 @@ export class PayrollsService {
    * @param id
    * @returns Payroll
    */
-  async findOne(id: number): Promise<Payroll | null> {
+  async findOne(
+    id: number,
+  ): Promise<Omit<
+    Payroll,
+    'createdBy' | 'updatedBy' | 'updatedAt' | 'employeeId' | 'accountId'
+  > | null> {
     return this.prisma.payroll.findUnique({
       where: { id },
-      include: {
-        creator: { select: { id: true, name: true } },
-        employee: { select: { id: true, name: true } },
-        account: { select: { id: true, name: true } },
+      select: {
+        id: true,
+        employee: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        account: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        amount: true,
+        paymentMethods: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        createdAt: true,
       },
     });
   }
@@ -63,20 +121,59 @@ export class PayrollsService {
    * @param creatorEmail
    * @returns Payroll
    */
-  async create(payrollDto: PayrollDto, creatorEmail: string): Promise<Payroll> {
-    const creator = await this.prisma.user.findUnique({
-      where: { email: creatorEmail },
-      select: { id: true, email: true },
-    });
+  async create(
+    payrollDto: PayrollDto,
+    creatorEmail: string,
+  ): Promise<
+    Omit<
+      Payroll,
+      'createdBy' | 'updatedBy' | 'updatedAt' | 'employeeId' | 'accountId'
+    >
+  > {
+    const [employee, account, creator] = await Promise.all([
+      this.prisma.employee.findUnique({
+        where: { id: payrollDto.employeeId },
+        select: { id: true },
+      }),
+      this.prisma.account.findUnique({
+        where: { id: payrollDto.accountId },
+        select: { id: true },
+      }),
+      this.prisma.user.findUnique({
+        where: { email: creatorEmail },
+        select: { id: true },
+      }),
+    ]);
 
+    if (!employee) throw new NotFoundException('Employee not found.');
+    if (!account) throw new NotFoundException('Account not found.');
     if (!creator) throw new NotFoundException('Creator user not found!');
 
     return this.prisma.payroll.create({
       data: { ...payrollDto, createdBy: creator.id },
-      include: {
-        creator: { select: { id: true, name: true } },
-        employee: { select: { id: true, name: true } },
-        account: { select: { id: true, name: true } },
+      select: {
+        id: true,
+        employee: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        account: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        amount: true,
+        paymentMethods: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        createdAt: true,
       },
     });
   }
@@ -92,21 +189,57 @@ export class PayrollsService {
     id: number,
     payrollDto: PayrollDto,
     updatorEmail: string,
-  ): Promise<Payroll> {
-    const updator = await this.prisma.user.findUnique({
-      where: { email: updatorEmail },
-      select: { id: true, email: true },
-    });
+  ): Promise<
+    Omit<
+      Payroll,
+      'createdBy' | 'updatedBy' | 'updatedAt' | 'employeeId' | 'accountId'
+    >
+  > {
+    const [employee, account, updator] = await Promise.all([
+      this.prisma.employee.findUnique({
+        where: { id: payrollDto.employeeId },
+        select: { id: true },
+      }),
+      this.prisma.account.findUnique({
+        where: { id: payrollDto.accountId },
+        select: { id: true },
+      }),
+      this.prisma.user.findUnique({
+        where: { email: updatorEmail },
+        select: { id: true },
+      }),
+    ]);
 
+    if (!employee) throw new NotFoundException('Employee not found.');
+    if (!account) throw new NotFoundException('Account not found.');
     if (!updator) throw new NotFoundException('Updator user not found!');
 
     return this.prisma.payroll.update({
       where: { id },
       data: { ...payrollDto, updatedBy: updator.id },
-      include: {
-        creator: { select: { id: true, name: true } },
-        employee: { select: { id: true, name: true } },
-        account: { select: { id: true, name: true } },
+      select: {
+        id: true,
+        employee: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        account: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        amount: true,
+        paymentMethods: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        createdAt: true,
       },
     });
   }
@@ -116,15 +249,33 @@ export class PayrollsService {
    * @param id
    * @returns Payroll
    */
-  async remove(id: number): Promise<Payroll> {
+  async remove(
+    id: number,
+  ): Promise<
+    Omit<
+      Payroll,
+      'createdBy' | 'updatedBy' | 'updatedAt' | 'employeeId' | 'accountId'
+    >
+  > {
     const payroll = await this.prisma.payroll.findUnique({
       where: { id },
-      select: { id: true, amount: true, accountId: true },
+      select: { id: true },
     });
 
     if (!payroll) throw new NotFoundException('Payroll not found.');
 
-    return this.prisma.payroll.delete({ where: { id } });
+    return this.prisma.payroll.delete({
+      where: { id },
+      select: {
+        id: true,
+        employee: { select: { id: true, name: true } },
+        account: { select: { id: true, name: true } },
+        amount: true,
+        paymentMethods: true,
+        creator: { select: { id: true, name: true } },
+        createdAt: true,
+      },
+    });
   }
 
   /**
@@ -132,16 +283,30 @@ export class PayrollsService {
    * @param ids
    * @returns Payroll
    */
-  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{ count: number }> {
+  async bulkDelete(ids: BulkDeleteIdsDto['ids']): Promise<{
+    count: number;
+    deletedIds: number[];
+    skippedIds: { id: number; reasons: string[] }[];
+  }> {
     const payrolls = await this.prisma.payroll.findMany({
       where: { id: { in: ids } },
-      select: { id: true, amount: true, accountId: true },
+      select: { id: true },
     });
 
-    if (!payrolls.length) throw new NotFoundException('No payrolls found.');
+    const foundIds = payrolls.map((p) => p.id);
+    const notFoundIds = ids.filter((id) => !foundIds.includes(id));
 
-    return this.prisma.payroll.deleteMany({
-      where: { id: { in: ids } },
+    if (foundIds.length === 0)
+      throw new NotFoundException('No payrolls found for the given IDs.');
+
+    const result = await this.prisma.payroll.deleteMany({
+      where: { id: { in: foundIds } },
     });
+
+    return {
+      count: result.count,
+      deletedIds: foundIds,
+      skippedIds: notFoundIds.map((id) => ({ id, reasons: ['Not found'] })),
+    };
   }
 }

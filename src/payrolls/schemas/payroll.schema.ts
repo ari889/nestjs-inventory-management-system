@@ -2,10 +2,10 @@ import { Prisma } from 'src/generated/prisma/client';
 import * as z from 'zod';
 
 export const PayrollSchema = z.object({
-  employeeId: z.number({
+  employeeId: z.coerce.number({
     message: 'Select a employee before saving!',
   }),
-  accountId: z.number({ message: 'Account is required!' }),
+  accountId: z.coerce.number({ message: 'Account is required!' }),
   amount: z
     .string({
       message: 'Amount is required!',
