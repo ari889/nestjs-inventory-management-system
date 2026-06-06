@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { AttendanceDto } from './schemas/attendance.schema';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { combineDateAndTime } from 'src/common/date/common';
+import { AttendanceQueryDto } from './schemas/attendance-query.schema';
 
 @Injectable()
 export class AttendancesService {
@@ -15,44 +16,72 @@ export class AttendancesService {
    * @returns Attendance[]
    */
   async findAll({
-    page,
-    limit,
-    order,
-    direction,
-  }: {
-    page: number;
-    limit: number;
-    order: string;
-    direction: string;
-  }): Promise<{ items: Attendance[]; totalItems: number }> {
+    page = 0,
+    limit = 10,
+    order = 'createdAt',
+    direction = 'desc',
+    employeeId = undefined,
+    createdBy = undefined,
+    status = undefined,
+    date = undefined,
+  }: AttendanceQueryDto) {
+    const dateFilter = date
+      ? {
+          date: {
+            gte: new Date(
+              Date.UTC(
+                date.getUTCFullYear(),
+                date.getUTCMonth(),
+                date.getUTCDate(),
+                0,
+                0,
+                0,
+                0,
+              ),
+            ),
+            lte: new Date(
+              Date.UTC(
+                date.getUTCFullYear(),
+                date.getUTCMonth(),
+                date.getUTCDate(),
+                23,
+                59,
+                59,
+                999,
+              ),
+            ),
+          },
+        }
+      : {};
+
+    const where = {
+      ...(employeeId !== undefined && { employeeId }),
+      ...(createdBy !== undefined && { createdBy }),
+      ...(status !== undefined && { status }),
+      ...dateFilter,
+    };
+
     const [items, totalItems] = await Promise.all([
       this.prisma.attendance.findMany({
+        where,
         skip: page * limit,
         take: limit,
-        orderBy: {
-          [order]: direction,
-        },
-        include: {
-          creator: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-          employee: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
+        orderBy: { [order]: direction },
+        select: {
+          id: true,
+          employee: { select: { id: true, name: true } },
+          checkIn: true,
+          checkOut: true,
+          date: true,
+          status: true,
+          creator: { select: { id: true, name: true } },
+          createdAt: true,
         },
       }),
-      this.prisma.attendance.count(),
+      this.prisma.attendance.count({ where }),
     ]);
-    return {
-      items,
-      totalItems,
-    };
+
+    return { items, totalItems };
   }
 
   /**
@@ -62,22 +91,30 @@ export class AttendancesService {
    */
   async findOne(
     id: number,
-  ): Promise<Omit<Attendance, 'createdBy' | 'updatedBy'>> {
+  ): Promise<
+    Omit<Attendance, 'createdBy' | 'updatedBy' | 'employeeId' | 'updatedAt'>
+  > {
     const attendance = await this.prisma.attendance.findUnique({
       where: { id },
-      include: {
-        creator: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+      select: {
+        id: true,
         employee: {
           select: {
             id: true,
             name: true,
           },
         },
+        checkIn: true,
+        checkOut: true,
+        date: true,
+        status: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        createdAt: true,
       },
     });
     if (!attendance) throw new NotFoundException('Attendance not found.');
@@ -89,13 +126,25 @@ export class AttendancesService {
    * @param dto
    * @returns Attendance
    */
-  async create(dto: AttendanceDto, creatorEmail: string) {
-    const creator = await this.prisma.user.findUnique({
-      where: { email: creatorEmail },
-      select: { id: true },
-    });
+  async create(
+    dto: AttendanceDto,
+    creatorEmail: string,
+  ): Promise<
+    Omit<Attendance, 'createdBy' | 'updatedBy' | 'employeeId' | 'updatedAt'>
+  > {
+    const [creator, employee] = await Promise.all([
+      this.prisma.user.findUnique({
+        where: { email: creatorEmail },
+        select: { id: true },
+      }),
+      this.prisma.employee.findUnique({
+        where: { id: dto.employeeId },
+        select: { id: true },
+      }),
+    ]);
 
     if (!creator) throw new NotFoundException('Creator user not found!');
+    if (!employee) throw new NotFoundException('Employee not found!');
 
     const checkIn = combineDateAndTime(dto.date, dto.checkIn);
 
@@ -105,19 +154,25 @@ export class AttendancesService {
 
     return this.prisma.attendance.create({
       data: { ...dto, checkIn, checkOut, createdBy: creator?.id },
-      include: {
-        creator: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+      select: {
+        id: true,
         employee: {
           select: {
             id: true,
             name: true,
           },
         },
+        checkIn: true,
+        checkOut: true,
+        date: true,
+        status: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        createdAt: true,
       },
     });
   }
@@ -129,13 +184,26 @@ export class AttendancesService {
    * @param updatorEmail
    * @returns Attendance
    */
-  async update(id: number, dto: AttendanceDto, updatorEmail: string) {
-    const updator = await this.prisma.user.findUnique({
-      where: { email: updatorEmail },
-      select: { id: true },
-    });
+  async update(
+    id: number,
+    dto: AttendanceDto,
+    updatorEmail: string,
+  ): Promise<
+    Omit<Attendance, 'createdBy' | 'updatedBy' | 'employeeId' | 'updatedAt'>
+  > {
+    const [updator, employee] = await Promise.all([
+      this.prisma.user.findUnique({
+        where: { email: updatorEmail },
+        select: { id: true },
+      }),
+      this.prisma.employee.findUnique({
+        where: { id: dto.employeeId },
+        select: { id: true },
+      }),
+    ]);
 
     if (!updator) throw new NotFoundException('Creator user not found!');
+    if (!employee) throw new NotFoundException('Employee not found!');
 
     const checkIn = combineDateAndTime(dto.date, dto.checkIn);
 
@@ -146,19 +214,25 @@ export class AttendancesService {
     return this.prisma.attendance.update({
       where: { id },
       data: { ...dto, checkIn, checkOut, updatedBy: updator?.id },
-      include: {
-        creator: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
+      select: {
+        id: true,
         employee: {
           select: {
             id: true,
             name: true,
           },
         },
+        checkIn: true,
+        checkOut: true,
+        date: true,
+        status: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        createdAt: true,
       },
     });
   }
@@ -168,7 +242,11 @@ export class AttendancesService {
    * @param id
    * @returns Attendance
    */
-  async remove(id: number): Promise<Attendance> {
+  async remove(
+    id: number,
+  ): Promise<
+    Omit<Attendance, 'createdBy' | 'updatedBy' | 'employeeId' | 'updatedAt'>
+  > {
     const attendance = await this.prisma.attendance.findUnique({
       where: { id },
       select: { id: true },
@@ -176,7 +254,29 @@ export class AttendancesService {
 
     if (!attendance) throw new NotFoundException('Attendance not found.');
 
-    return this.prisma.attendance.delete({ where: { id } });
+    return this.prisma.attendance.delete({
+      where: { id },
+      select: {
+        id: true,
+        employee: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        checkIn: true,
+        checkOut: true,
+        date: true,
+        status: true,
+        creator: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        createdAt: true,
+      },
+    });
   }
 
   /**

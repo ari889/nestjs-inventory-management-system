@@ -1,11 +1,9 @@
 import {
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   NotFoundException,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -23,7 +21,6 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AttendancesService } from './attendances.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import {
   type AttendanceDto,
@@ -32,6 +29,45 @@ import {
 import type { FastifyRequest } from 'fastify';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type AttendanceQueryDto,
+  AttendanceQuerySchema,
+} from './schemas/attendance-query.schema';
+
+const attendanceProperties = {
+  id: { type: 'number', example: 1 },
+  employee: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+  checkIn: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+  checkOut: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+  date: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+  status: { type: 'boolean', example: true },
+  creator: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'John Doe' },
+    },
+  },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -45,18 +81,24 @@ export class AttendancesController {
    * @param limit
    * @param order
    * @param direction
+   * @param employeeId
+   * @param status
+   * @param createdBy
    * @returns Attendance[]
    */
   @ApiQuery({
     name: 'order',
     required: false,
-    example: 'id',
+    example: 'createdAt',
   })
   @ApiQuery({
     name: 'direction',
     required: false,
     enum: ['asc', 'desc'],
-    example: 'asc',
+    schema: {
+      default: 'desc',
+      enum: ['asc', 'desc'],
+    },
   })
   @ApiQuery({
     name: 'page',
@@ -71,10 +113,25 @@ export class AttendancesController {
     example: 10,
   })
   @ApiQuery({
-    name: 'search',
+    name: 'status',
+    required: false,
+    type: Boolean,
+  })
+  @ApiQuery({
+    name: 'employeeId',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'createdBy',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'date',
     required: false,
     type: String,
-    example: 'search',
+    description: 'Please enter date looks like this format yyyy-MM-dd',
   })
   @ApiOkResponse({
     description: 'Attendance fetched successful response!',
@@ -93,31 +150,7 @@ export class AttendancesController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  employeeId: { type: 'number', example: 1 },
-                  checkIn: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  checkOut: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  date: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: attendanceProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -129,23 +162,10 @@ export class AttendancesController {
   @Permission('attendance-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query('search') search?: string,
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
+    @Query(new ZodValidationPipe(AttendanceQuerySchema))
+    query: AttendanceQueryDto,
   ) {
-    const attendance = await this.attendancesService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-    });
+    const attendance = await this.attendancesService.findAll(query);
     return {
       success: true,
       message: 'Attendance fetched successfully!',
@@ -170,31 +190,7 @@ export class AttendancesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            employeeId: { type: 'number', example: 1 },
-            checkIn: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            checkOut: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            date: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: attendanceProperties,
         },
       },
     },
@@ -229,31 +225,7 @@ export class AttendancesController {
         },
         data: {
           type: 'array',
-          properties: {
-            id: { type: 'number', example: 1 },
-            employeeId: { type: 'number', example: 1 },
-            checkIn: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            checkOut: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            date: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: attendanceProperties,
         },
       },
     },
@@ -322,31 +294,7 @@ export class AttendancesController {
         },
         data: {
           type: 'object ',
-          properties: {
-            id: { type: 'number', example: 1 },
-            employeeId: { type: 'number', example: 1 },
-            checkIn: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            checkOut: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            date: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: attendanceProperties,
         },
       },
     },
@@ -417,31 +365,7 @@ export class AttendancesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            employeeId: { type: 'number', example: 1 },
-            checkIn: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            checkOut: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            date: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: attendanceProperties,
         },
       },
     },
