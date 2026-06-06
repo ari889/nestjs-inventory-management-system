@@ -65,6 +65,7 @@ export class ProductCategoriesController {
    * @param order
    * @param direction
    * @param search
+   * @param status
    * @returns ProductCategory
    */
   @ApiQuery({
