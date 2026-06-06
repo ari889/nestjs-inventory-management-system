@@ -1,11 +1,9 @@
 import {
   BadRequestException,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   Param,
-  ParseEnumPipe,
   ParseIntPipe,
   Patch,
   Post,
@@ -24,7 +22,6 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { EmployeesService } from './employees.service';
 import { Permission } from 'src/common/decorators/permission.decorator';
-import { SortDirection } from 'src/@types/default.types';
 import {
   FileFieldsInterceptor,
   MemoryStorageFile,
@@ -35,6 +32,35 @@ import { EmployeeDto, EmployeeSchema } from './schemas/employee.schema';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
+import {
+  type EmployeeQueryDto,
+  EmployeeQuerySchema,
+} from './schemas/employee-query.schema';
+
+const employeeProperties = {
+  id: { type: 'number', example: 1 },
+  name: { type: 'string', example: 'Employee 1' },
+  image: { type: 'string', example: '/uploads/brand/1.jpg' },
+  phone: { type: 'string', example: '1234567890' },
+  address: { type: 'string', example: 'Address 1' },
+  city: { type: 'string', example: 'City 1' },
+  state: { type: 'string', example: 'State 1' },
+  zip: { type: 'string', example: '12345' },
+  postalCode: { type: 'string', example: '12345' },
+  country: { type: 'string', example: 'Country 1' },
+  department: {
+    type: 'object',
+    properties: {
+      id: { type: 'number', example: 1 },
+      name: { type: 'string', example: 'Department 1' },
+    },
+  },
+  status: { type: 'boolean', example: true },
+  createdAt: {
+    type: 'string',
+    example: '2021-01-01T00:00:00.000Z',
+  },
+};
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -48,6 +74,9 @@ export class EmployeesController {
    * @param limit
    * @param order
    * @param direction
+   * @param search
+   * @param createdBy
+   * @param departmentId
    * @returns Employee[]
    */
   @ApiQuery({
@@ -59,7 +88,10 @@ export class EmployeesController {
     name: 'direction',
     required: false,
     enum: ['asc', 'desc'],
-    example: 'asc',
+    schema: {
+      default: 'desc',
+      enum: ['asc', 'desc'],
+    },
   })
   @ApiQuery({
     name: 'page',
@@ -77,7 +109,21 @@ export class EmployeesController {
     name: 'search',
     required: false,
     type: String,
-    example: 'Employee 1',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    type: Boolean,
+  })
+  @ApiQuery({
+    name: 'createdBy',
+    required: false,
+    type: Number,
+  })
+  @ApiQuery({
+    name: 'departmentId',
+    required: false,
+    type: Number,
   })
   @ApiOkResponse({
     description: 'Employee fetched success response!',
@@ -96,28 +142,7 @@ export class EmployeesController {
               type: 'array',
               items: {
                 type: 'object',
-                properties: {
-                  id: { type: 'number', example: 1 },
-                  name: { type: 'string', example: 'Employee 1' },
-                  image: { type: 'string', example: '/uploads/brand/1.jpg' },
-                  phone: { type: 'string', example: '1234567890' },
-                  address: { type: 'string', example: 'Address 1' },
-                  city: { type: 'string', example: 'City 1' },
-                  state: { type: 'string', example: 'State 1' },
-                  zip: { type: 'string', example: '12345' },
-                  postalCode: { type: 'string', example: '12345' },
-                  country: { type: 'string', example: 'Country 1' },
-                  departmentId: { type: 'number', example: 1 },
-                  status: { type: 'boolean', example: true },
-                  createdAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                  updatedAt: {
-                    type: 'string',
-                    example: '2021-01-01T00:00:00.000Z',
-                  },
-                },
+                properties: employeeProperties,
               },
             },
             totalItems: { type: 'number' },
@@ -129,25 +154,10 @@ export class EmployeesController {
   @Permission('employee-access')
   @Get()
   async findAll(
-    @Query('page', new DefaultValuePipe(0), ParseIntPipe)
-    page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Query('order') order: string = 'id',
-    @Query(
-      'direction',
-      new DefaultValuePipe(SortDirection.DESC),
-      new ParseEnumPipe(SortDirection),
-    )
-    direction: string = 'desc',
-    @Query('search') search?: string,
+    @Query(new ZodValidationPipe(EmployeeQuerySchema))
+    query: EmployeeQueryDto,
   ) {
-    const data = await this.employeesService.findAll({
-      page,
-      limit,
-      order,
-      direction,
-      search,
-    });
+    const data = await this.employeesService.findAll(query);
     return {
       success: true,
       message: 'Employees fetched successfully!',
@@ -172,42 +182,7 @@ export class EmployeesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Employee 1' },
-            image: { type: 'string', example: '/uploads/brand/1.jpg' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: 'Address 1' },
-            city: { type: 'string', example: 'City 1' },
-            state: { type: 'string', example: 'State 1' },
-            zip: { type: 'string', example: '12345' },
-            postalCode: { type: 'string', example: '12345' },
-            country: { type: 'string', example: 'Country 1' },
-            departmentId: { type: 'number', example: 1 },
-            status: { type: 'boolean', example: true },
-            creator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            updator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: employeeProperties,
         },
       },
     },
@@ -271,28 +246,7 @@ export class EmployeesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Employee 1' },
-            image: { type: 'string', example: '/uploads/employee/1.jpg' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: 'Address 1' },
-            city: { type: 'string', example: 'City 1' },
-            state: { type: 'string', example: 'State 1' },
-            zip: { type: 'string', example: '12345' },
-            postalCode: { type: 'string', example: '12345' },
-            country: { type: 'string', example: 'Country 1' },
-            departmentId: { type: 'number', example: 1 },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: employeeProperties,
         },
       },
     },
@@ -344,35 +298,7 @@ export class EmployeesController {
         message: { type: 'string' },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Employee 1' },
-            image: { type: 'string', example: '/uploads/brand/1.jpg' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: 'Address 1' },
-            city: { type: 'string', example: 'City 1' },
-            state: { type: 'string', example: 'State 1' },
-            zip: { type: 'string', example: '12345' },
-            postalCode: { type: 'string', example: '12345' },
-            country: { type: 'string', example: 'Country 1' },
-            departmentId: { type: 'number', example: 1 },
-            status: { type: 'boolean', example: true },
-            creator: {
-              type: 'object',
-              properties: {
-                id: { type: 'number', example: 1 },
-                name: { type: 'string', example: 'John Doe' },
-              },
-            },
-            createdAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2024-01-01T00:00:00.000Z',
-            },
-          },
+          properties: employeeProperties,
         },
       },
     },
@@ -393,8 +319,16 @@ export class EmployeesController {
         'status',
       ],
       properties: {
-        title: { type: 'string', example: 'Brand 1' },
+        name: { type: 'string', example: 'Employee 1' },
         image: { type: 'string', format: 'binary' },
+        phone: { type: 'string', example: '1234567890' },
+        address: { type: 'string', example: 'Address 1' },
+        city: { type: 'string', example: 'City 1' },
+        state: { type: 'string', example: 'State 1' },
+        zip: { type: 'string', example: '12345' },
+        postalCode: { type: 'string', example: '12345' },
+        country: { type: 'string', example: 'Country 1' },
+        departmentId: { type: 'number', example: 1 },
         status: { type: 'boolean', example: true },
       },
     },
@@ -446,28 +380,7 @@ export class EmployeesController {
         },
         data: {
           type: 'object',
-          properties: {
-            id: { type: 'number', example: 1 },
-            name: { type: 'string', example: 'Employee 1' },
-            image: { type: 'string', example: '/uploads/employee/1.jpg' },
-            phone: { type: 'string', example: '1234567890' },
-            address: { type: 'string', example: 'Address 1' },
-            city: { type: 'string', example: 'City 1' },
-            state: { type: 'string', example: 'State 1' },
-            zip: { type: 'string', example: '12345' },
-            postalCode: { type: 'string', example: '12345' },
-            country: { type: 'string', example: 'Country 1' },
-            departmentId: { type: 'number', example: 1 },
-            status: { type: 'boolean', example: true },
-            createdAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-            updatedAt: {
-              type: 'string',
-              example: '2021-01-01T00:00:00.000Z',
-            },
-          },
+          properties: employeeProperties,
         },
       },
     },
@@ -495,8 +408,22 @@ export class EmployeesController {
       type: 'object',
       properties: {
         success: { type: 'boolean' },
-        message: { type: 'string', example: 'Brands deleted successfully!' },
+        message: { type: 'string', example: 'Empoyee deleted successfully!' },
         data: { type: 'number', example: 4 },
+      },
+    },
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['ids'],
+      properties: {
+        ids: {
+          type: 'array',
+          items: { type: 'number' },
+          example: [1, 2, 3],
+        },
       },
     },
   })

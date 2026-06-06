@@ -28,9 +28,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const res = exception.getResponse() as HttpExceptionResponse;
 
     if (status === 404) {
+      const customMessage =
+        typeof res === 'object' && res.message && !Array.isArray(res.message)
+          ? res.message
+          : exception.message;
+
       return response.status(status).send({
         success: false,
-        message: "Requested resource doesn't exist!",
+        message: customMessage || "Requested resource doesn't exist!",
       });
     }
 
