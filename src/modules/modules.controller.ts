@@ -94,7 +94,10 @@ export class ModulesController {
     name: 'direction',
     required: false,
     enum: ['asc', 'desc'],
-    example: 'asc',
+    schema: {
+      default: 'desc',
+      enum: ['asc', 'desc'],
+    },
   })
   @ApiQuery({
     name: 'page',
@@ -112,13 +115,11 @@ export class ModulesController {
     name: 'search',
     required: false,
     type: String,
-    example: 'Menu 1',
   })
   @ApiQuery({
-    name: 'deletable',
+    name: 'type',
     required: false,
     type: Boolean,
-    example: undefined,
   })
   @ApiOkResponse({
     description: 'Module fetched successfull response!',

@@ -6,7 +6,7 @@ export const PermissionQuerySchema = z.object({
   limit: z.coerce.number().int().positive().default(10),
 
   order: z
-    .enum(['id', 'menuName', 'deletable', 'createdAt'])
+    .enum(['id', 'name', 'slug', 'deletable', 'createdAt'])
     .default('createdAt'),
 
   direction: z.enum(['asc', 'desc']).default('desc'),

@@ -24,7 +24,11 @@ export const ModuleQuerySchema = z.object({
 
   search: z.string().trim().optional(),
 
-  deletable: z.coerce.boolean().optional(),
+  type: z.preprocess((value) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return undefined;
+  }, z.boolean().optional()),
 });
 
 export type ModuleQueryDto = z.infer<typeof ModuleQuerySchema>;

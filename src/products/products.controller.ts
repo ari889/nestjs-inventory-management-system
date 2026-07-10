@@ -457,11 +457,13 @@ export class ProductsController {
     },
     @Req() req: FastifyRequest,
   ) {
+    console.log({ body });
     const validated = new ZodValidationPipe(ProductSchema).transform({
       ...body,
       status: body.status === 'true' || body.status === true,
       image: files.image?.[0],
     }) as ProductDto;
+    console.log({ validated });
     const product = await this.productsService.update(
       id,
       validated,

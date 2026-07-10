@@ -98,7 +98,11 @@ export const ProductSchema = z.object({
     .optional()
     .nullable(),
 
-  taxMethod: z.coerce.boolean().default(true),
+  taxMethod: z.preprocess((val) => {
+    if (val === 'true') return true;
+    if (val === 'false') return false;
+    return val;
+  }, z.boolean()),
 
   description: z
     .string()

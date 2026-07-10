@@ -51,7 +51,7 @@ export class ModulesService {
     order = 'createdAt',
     direction = 'desc',
     search = '',
-    deletable = undefined,
+    type = undefined,
   }: ModuleQueryDto): Promise<{
     items: Omit<Module, 'menuId' | 'updatedAt'>[];
     totalItems: number;
@@ -63,7 +63,7 @@ export class ModulesService {
           { dividerTitle: { contains: search } },
         ],
       }),
-      ...(deletable !== undefined && { deletable }),
+      ...(type !== undefined && { type }),
     };
     const [items, totalItems] = await Promise.all([
       this.prisma.module.findMany({
