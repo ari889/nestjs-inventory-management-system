@@ -1,98 +1,241 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <a href="https://nestjs.com/" target="_blank">
+    <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="NestJS Logo" />
+  </a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<h1 align="center">Inventory Management System API</h1>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">
+  A scalable and secure REST API for an <strong>Inventory Management System</strong><br />
+  built with <strong>NestJS 11</strong>, <strong>Prisma ORM</strong>, and <strong>MySQL</strong>.
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+<p align="center">
+  <img src="https://img.shields.io/badge/NestJS-v11-E0234E?logo=nestjs&logoColor=white" alt="NestJS">
+  <img src="https://img.shields.io/badge/Node.js-v22+-339933?logo=node.js&logoColor=white" alt="Node.js">
+  <img src="https://img.shields.io/badge/Prisma-v7-2D3748?logo=prisma&logoColor=white" alt="Prisma">
+  <img src="https://img.shields.io/badge/MySQL-8.0+-4479A1?logo=mysql&logoColor=white" alt="MySQL">
+  <img src="https://img.shields.io/badge/Fastify-v5-000000?logo=fastify&logoColor=white" alt="Fastify">
+  <img src="https://img.shields.io/badge/TypeScript-v5-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/License-UNLICENSED-red.svg" alt="License">
+</p>
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
 
-## Project setup
+# 📋 Prerequisites
 
-```bash
-$ npm install
-```
+Before getting started, make sure you have the following installed:
 
-## Compile and run the project
+- **Node.js 22.x or later**
+- **npm 10.x or later**
+- **MySQL 8.0 or later**
+- **Git**
 
-```bash
-# development
-$ npm run start
+---
 
-# watch mode
-$ npm run start:dev
+## 📦 Installation
 
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Clone the repository and install dependencies.
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+git clone <repository_url>
+cd <project_directory>
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## ⚙️ Environment Configuration
 
-Check out a few resources that may come in handy when working with NestJS:
+This project uses separate environment files for development and production.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Create the following files in the project root:
 
-## Support
+- `.development.env`
+- `.production.env`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Development Environment (`.development.env`)
 
-## Stay in touch
+```env
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
+DATABASE_USER=root
+DATABASE_PASSWORD=
+DATABASE_NAME=inventory_management
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+JWT_ACCESS_SECRET=your_access_secret
+JWT_ACCESS_EXPIRATION=1d
 
-## License
+JWT_REFRESH_SECRET=your_refresh_secret
+JWT_REFRESH_EXPIRATION=7d
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+SWAGGER_ENABLED=true
+SWAGGER_URL=http://localhost:6000
+SWAGGER_PATH=/swagger
+
+FRONTEND_URL=http://localhost:3000
+
+PORT=6000
+NODE_ENV=development
+
+THROTTLE_TTL=60
+THROTTLE_LIMIT=10
+THROTTLE_BLOCK_DURATION=60
+```
+
+### Production Environment (`.production.env`)
+
+```env
+DATABASE_HOST=your_database_host
+DATABASE_PORT=3306
+DATABASE_USER=your_database_user
+DATABASE_PASSWORD=your_database_password
+DATABASE_NAME=your_database_name
+
+JWT_ACCESS_SECRET=your_production_access_secret
+JWT_ACCESS_EXPIRATION=1d
+
+JWT_REFRESH_SECRET=your_production_refresh_secret
+JWT_REFRESH_EXPIRATION=7d
+
+SWAGGER_ENABLED=false
+SWAGGER_URL=https://api.example.com
+SWAGGER_PATH=/swagger
+
+FRONTEND_URL=https://your-frontend-domain.com
+
+PORT=6000
+NODE_ENV=production
+
+THROTTLE_TTL=60
+THROTTLE_LIMIT=10
+THROTTLE_BLOCK_DURATION=60
+```
+
+> **Note:** Replace all placeholder values with your actual configuration before running the application.
+
+---
+
+# Database Setup
+
+After installing the project, complete the following steps in order.
+
+## 1. Run Prisma Migrations
+
+For local development:
+
+```bash
+npx prisma migrate dev
+```
+
+For production:
+
+```bash
+npx prisma migrate deploy
+```
+
+## 2. Seed the Database
+
+Run the following command to populate the database with the initial data.
+
+```bash
+npx prisma db seed
+```
+
+---
+
+# Default Administrator Account
+
+After the seed process completes successfully, you can log in using the following credentials.
+
+**Email**
+
+```text
+admin@gmail.com
+```
+
+**Password**
+
+```text
+asdfg1234
+```
+
+> ⚠️ **Security Notice**
+>
+> The default administrator password should be changed immediately after your first login.
+
+Navigate to:
+
+```text
+<base_url>/admin/privacy
+```
+
+Example:
+
+```text
+http://localhost:3000/admin/privacy
+```
+
+---
+
+# Running the Application
+
+### Development
+
+```bash
+npm run start:dev
+```
+
+### Production
+
+```bash
+npm run build
+npm run start:prod
+```
+
+---
+
+# Running Tests
+
+Unit tests
+
+```bash
+npm run test
+```
+
+End-to-end tests
+
+```bash
+npm run test:e2e
+```
+
+Test coverage
+
+```bash
+npm run test:cov
+```
+
+---
+
+# API Documentation
+
+Once the server is running, the Swagger documentation is available at:
+
+Navigate To:
+
+```text
+<base_url>/api
+```
+
+Example:
+
+```text
+http://localhost:5000/api
+```
+
+---
+
+# License
+
+This project is licensed under the MIT License.
