@@ -8,6 +8,11 @@ export const purchaseStatusEnum = z.enum(
   'Select a valid purchase status!',
 );
 
+export const paymentStatus = z.enum(
+  ['PAID', 'PARTIAL', 'DUE'],
+  'Select a valid payment status!',
+);
+
 const decimalString = (fieldName: string) =>
   z
     .string({ message: `${fieldName} is required!` })
@@ -22,7 +27,7 @@ const decimalString = (fieldName: string) =>
     });
 
 const productSchema = z.object({
-  id: z.number({ message: 'Select a product!' }).int().positive().nullable(),
+  id: z.number({ message: 'Select a product!' }).int().nonnegative().nullable(),
   productId: z.number({ message: 'Product ID is required!' }).int().positive(),
   unitId: z.number({ message: 'Select a unit!' }).int().positive(),
   taxId: z.number({ message: 'Select a tax!' }).int().positive().nullable(),
@@ -30,7 +35,7 @@ const productSchema = z.object({
   received: z.coerce
     .number({ message: 'Received is required!' })
     .int()
-    .positive(),
+    .nonnegative(),
   netUnitCost: decimalString('Net unit cost'),
   discount: decimalString('Discount'),
   taxRate: decimalString('Tax rate'),
@@ -38,7 +43,7 @@ const productSchema = z.object({
   total: decimalString('Total'),
 });
 
-export const PurchaseSchema = z.object({
+const basePurchaseSchema = z.object({
   supplierId: z.coerce
     .number({ message: 'Select a supplier!' })
     .int()
@@ -94,6 +99,8 @@ export const PurchaseSchema = z.object({
 
   purchaseStatus: purchaseStatusEnum,
 
+  paymentStatus: paymentStatus.optional(),
+
   products: z.preprocess(
     (val) => {
       if (typeof val === 'string') {
@@ -116,3 +123,80 @@ export const PurchaseSchema = z.object({
 
   note: z.string().optional().nullable(),
 });
+
+const purchaseCreatePaymentSchema = z.object({
+  accountId: z.coerce.number().int().positive().nullable().optional(),
+  amount: z.string().optional().nullable(),
+  change: z.string().optional().nullable(),
+  paymentMethod: z.enum(['CASH', 'CHEQUE', 'BANK']).optional().nullable(),
+  paidAmount: decimalString('Paid Amount'),
+});
+
+const purchaseUpdatePaymentSchema = z.object({
+  accountId: z.coerce.number().int().positive().nullable().optional(),
+  amount: z.string().optional().nullable(),
+  change: z.string().optional().nullable(),
+  paymentMethod: z.enum(['CASH', 'CHEQUE', 'BANK']).optional().nullable(),
+  paidAmount: decimalString('Paid Amount').optional().nullable(),
+});
+
+export const PurchaseCreateSchema = z
+  .object({
+    ...basePurchaseSchema.shape,
+    ...purchaseCreatePaymentSchema.shape,
+  })
+  .superRefine((data, ctx) => {
+    if (!data.paymentStatus) {
+      return;
+    }
+
+    if (data.paymentStatus === 'PAID' || data.paymentStatus === 'PARTIAL') {
+      if (!data.accountId) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['accountId'],
+          message: 'Account is required!',
+        });
+      }
+
+      if (!data.amount) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['amount'],
+          message: 'Amount is required!',
+        });
+      }
+
+      if (!data.change) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['change'],
+          message: 'Change is required!',
+        });
+      }
+
+      if (!data.paymentMethod) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['paymentMethod'],
+          message: 'Payment method is required!',
+        });
+      }
+
+      if (!data.paidAmount) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['paidAmount'],
+          message: 'Paid Amount is required!',
+        });
+      }
+    }
+  });
+
+export const PurchaseUpdateSchema = z.object({
+  ...basePurchaseSchema.shape,
+  ...purchaseUpdatePaymentSchema.shape,
+});
+
+export type PurchaseCreateDto = z.infer<typeof PurchaseCreateSchema>;
+export type PurchaseUpdateDto = z.infer<typeof PurchaseUpdateSchema>;

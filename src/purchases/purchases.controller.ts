@@ -29,7 +29,7 @@ import {
 } from '@blazity/nest-file-fastify';
 import type { FastifyRequest } from 'fastify';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
-import { PurchaseSchema } from './schemas/purchase.schema';
+import { PurchaseCreateSchema } from './schemas/purchase.schema';
 import { CreatePurchaseDto, UpdatePurchaseDto } from './dto/purchase.dto';
 import { BulkDeleteIdsDto } from 'src/common/dto/base.dto';
 import { FormBody } from 'src/common/decorators/form-body.decorator';
@@ -234,12 +234,8 @@ export class PurchasesController {
     @Req() req: FastifyRequest,
   ) {
     const creatorEmail = req?.user?.email;
-    const validated = new ZodValidationPipe(PurchaseSchema).transform({
+    const validated = new ZodValidationPipe(PurchaseCreateSchema).transform({
       ...body,
-      products:
-        typeof body.products === 'string'
-          ? (JSON.parse(body.products) as unknown)
-          : body.products,
       status: body.status === 'true' || body.status === true,
       document: files.document?.[0],
     }) as CreatePurchaseDto;
@@ -288,7 +284,7 @@ export class PurchasesController {
     @UploadedFiles() files: { document?: MemoryStorageFile[] },
     @Req() req: FastifyRequest,
   ) {
-    const validated = new ZodValidationPipe(PurchaseSchema).transform({
+    const validated = new ZodValidationPipe(PurchaseCreateSchema).transform({
       ...body,
       products:
         typeof body.products === 'string'
